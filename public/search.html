@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — Meowji Official</title>
+<meta name="description" content="Search Meowji Official for game top-ups, gift cards and subscriptions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-7xl mx-auto px-4 pt-8 pb-16">
+  <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Find your next top-up or code</h1>
+  <p id="search-count" class="text-gray-500 mt-2 text-sm"></p>
+  <h2 id="search-cat-head" class="hidden text-lg font-extrabold mt-8 mb-1">Categories</h2>
+  <div id="search-grid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5 mt-4"></div>
+  <h2 id="search-prod-head" class="hidden text-lg font-extrabold mt-10 mb-1">Products</h2>
+  <div id="search-prod-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5 mt-4"></div>
+  <div id="search-empty" class="hidden text-center py-16">
+    <div class="text-5xl mb-4">🔍</div>
+    <p id="search-empty-text" class="text-gray-300 font-semibold"></p>
+    <a href="/" class="mg-btn-dark inline-block mt-6">Clear search</a>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  function catAspect() {
+    const s = (window.MDS && window.MDS.settings) || {};
+    return s.category_image_ratio === 'wide' ? 'aspect-video' : 'aspect-square';
+  }
+
+  function skeleton() {
+    document.getElementById('search-grid').innerHTML = Array.from({ length: 6 }).map(() =>
+      `<div class="${catAspect()} rounded-2xl bg-[#f1f3f7] animate-pulse"></div>`
+    ).join('');
+  }
+
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  async function init() {
+    await boot();
+    const q = (new URLSearchParams(location.search).get('q') || '').trim();
+    document.title = q ? `Search: ${q} — Meowji Official` : 'Search — Meowji Official';
+    // Prefill the header search boxes with the current query
+    document.querySelectorAll('form[data-search] input[name="q"]').forEach((i) => { i.value = q; });
+
+    const grid = document.getElementById('search-grid');
+    const empty = document.getElementById('search-empty');
+    const count = document.getElementById('search-count');
+    if (!q) {
+      grid.innerHTML = '';
+      count.textContent = 'Type in the search bar above to find top-ups, gift cards and subscriptions.';
+      return;
+    }
+    skeleton();
+    // Sub-categories: a sub-category matches when the query words appear
+    // in its own name or any parent category name, in the same order.
+    // Products: server-side relevance search across product + category names.
+    const qw = searchWords(q);
+    const subs = flatCategories((window.MDS || {}).categories || []).filter((c) => c.depth > 0);
+    const matched = subs.filter((c) =>
+      wordsInOrder(c.name, qw) || (c.ancestors || []).some((a) => wordsInOrder(a, qw))
+    );
+    let products = [];
+    try {
+      products = (await api('/api/products?search=' + encodeURIComponent(q) + '&limit=24')) || [];
+    } catch (_) { /* categories still render on API failure */ }
+    const prodGrid = document.getElementById('search-prod-grid');
+    const catHead = document.getElementById('search-cat-head');
+    const prodHead = document.getElementById('search-prod-head');
+    const bits = [];
+    if (matched.length) bits.push(`${matched.length} categor${matched.length === 1 ? 'y' : 'ies'}`);
+    if (products.length) bits.push(`${products.length} product${products.length === 1 ? '' : 's'}`);
+    if (matched.length || products.length) {
+      count.textContent = `${bits.join(', ')} for "${q}"`;
+      if (matched.length) {
+        catHead.classList.remove('hidden');
+        grid.innerHTML = matched.map((c) => {
+          const img = c.image_url
+            ? `<img src="${escHtml(c.image_url)}" alt="${escHtml(c.name)}" loading="lazy" class="w-full h-full object-cover">`
+            : `<div class="w-full h-full flex items-center justify-center bg-[#e8f0fe] text-4xl">🏷️</div>`;
+          return `
+          <a href="/?category=${encodeURIComponent(c.slug)}" aria-label="${escHtml(c.name)}" class="group bg-[#151b2e] rounded-2xl border border-[#e2e8f0] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col">
+            <div class="${catAspect()} overflow-hidden bg-[#0d1120]">${img}</div>
+            <div class="p-2.5 sm:p-3 flex flex-col flex-1">
+              <b class="block text-center text-[13px] sm:text-sm font-bold text-gray-100 leading-snug line-clamp-2">${escHtml(c.name)}</b>
+              <span class="mt-2 block w-full py-2 rounded-xl text-white text-xs font-bold text-center transition group-hover:opacity-90 active:scale-[0.98]" style="background:#f97316">Purchase</span>
+            </div>
+          </a>`;
+        }).join('');
+      }
+      if (products.length) {
+        prodHead.classList.remove('hidden');
+        prodGrid.innerHTML = products.map((p) => productCard(p)).join('');
+      }
+    } else {
+      grid.innerHTML = '';
+      prodGrid.innerHTML = '';
+      count.textContent = '';
+      document.getElementById('search-empty-text').textContent = `Nothing found for "${q}"`;
+      empty.classList.remove('hidden');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
