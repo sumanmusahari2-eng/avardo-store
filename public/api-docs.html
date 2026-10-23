@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reseller API v1 — Meowji Official</title>
+<meta name="description" content="Reseller API documentation for Meowji Official (mlbbstore.in): list products at reseller prices, place prepaid orders, track fulfilment.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { colors: { brand: { 500: '#f97316', 600: '#ea580c' } } } } };</script>
+<style>
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  pre { background: #0f172a; color: #e2e8f0; border-radius: 0.75rem; padding: 1rem 1.25rem; overflow-x: auto; font-size: 0.82rem; line-height: 1.55; }
+  pre .c { color: #64748b; } pre .k { color: #7dd3fc; } pre .s { color: #86efac; } pre .n { color: #fbbf24; }
+  code.inline { background: #f1f5f9; color: #b45309; border-radius: 0.375rem; padding: 0.1rem 0.4rem; font-size: 0.85em; }
+  .method { font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 0.5rem; letter-spacing: 0.05em; }
+  .get { background: #dcfce7; color: #166534; } .post { background: #3a2410; color: #c2410c; }
+  h2 { scroll-margin-top: 5.5rem; }
+</style>
+</head>
+<body class="bg-[#0d1120] text-gray-100">
+
+<header class="sticky top-0 z-40 bg-[#151b2e]/95 backdrop-blur border-b border-[#26304a]">
+  <div class="max-w-4xl mx-auto px-5 py-4 flex items-center gap-3">
+    <div class="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center text-white font-extrabold">⚡</div>
+    <div>
+      <div class="font-extrabold leading-tight">Meowji Official — Reseller API</div>
+      <div class="text-xs text-gray-500">Version 1 · Base URL <code class="inline">https://www.mlbbstore.in/api/v1</code></div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-5 py-10 space-y-12">
+
+  <section>
+    <h1 class="text-3xl font-extrabold mb-3">Sell our products from your own website or app</h1>
+    <p class="text-gray-300 leading-relaxed">The Reseller API lets you fetch our live catalogue at <b>your tier's prices</b> (silver), place orders programmatically, and track fulfilment — all paid from your <b>AV COINS wallet</b>. No manual checkout needed.</p>
+    <div class="grid sm:grid-cols-3 gap-4 mt-6">
+      <div class="bg-[#151b2e] rounded-2xl border border-[#1d263e] p-5"><div class="text-2xl mb-2">🔑</div><div class="font-bold mb-1">1. Get an API key</div><p class="text-sm text-gray-500">Ask us for access — we issue a key linked to your reseller account from the admin panel.</p></div>
+      <div class="bg-[#151b2e] rounded-2xl border border-[#1d263e] p-5"><div class="text-2xl mb-2">💰</div><div class="font-bold mb-1">2. Top up your wallet</div><p class="text-sm text-gray-500">Add AV COINS to your wallet (INR and USD wallets are separate). Every API order is prepaid from it.</p></div>
+      <div class="bg-[#151b2e] rounded-2xl border border-[#1d263e] p-5"><div class="text-2xl mb-2">📦</div><div class="font-bold mb-1">3. Place orders</div><p class="text-sm text-gray-500">Send orders via the API. We fulfil them (manually, or automatically where auto-fulfil is enabled).</p></div>
+    </div>
+  </section>
+
+  <section id="auth">
+    <h2 class="text-2xl font-extrabold mb-3">Authentication</h2>
+    <p class="text-gray-300 mb-3">Send your key in the <code class="inline">Authorization</code> header with every request:</p>
+<pre>Authorization: Bearer <span class="s">mk_live_&lt;your-key&gt;</span></pre>
+    <p class="text-sm text-gray-500 mt-3">Keep your key secret. If it leaks, tell us and we will revoke it immediately. Rate limit: <b>60 requests/minute</b> per key (HTTP 429 when exceeded).</p>
+  </section>
+
+  <section id="products">
+    <h2 class="text-2xl font-extrabold mb-3">List products</h2>
+    <p class="text-gray-300 mb-3">All active products with <b>your tier prices</b> (the <code class="inline">tier</code> field tells you whether your key is priced at the silver tier), variants, stock and the extra fields each product needs (e.g. Character ID). Add <code class="inline">?currency=USD</code> for dollar pricing.</p>
+    <p><span class="method get">GET</span> <code class="inline">/products</code> <span class="text-gray-400 text-sm ml-2">also</span> <span class="method get">GET</span> <code class="inline">/products/:id</code></p>
+<pre><span class="c"># list (INR prices by default)</span>
+curl -H <span class="s">"Authorization: Bearer mk_live_&lt;key&gt;"</span> \
+  https://www.mlbbstore.in/api/v1/products
+
+<span class="c"># list with USD prices</span>
+curl -H <span class="s">"Authorization: Bearer mk_live_&lt;key&gt;"</span> \
+  <span class="s">"https://www.mlbbstore.in/api/v1/products?currency=USD"</span></pre>
+<pre>{
+  <span class="k">"currency"</span>: <span class="s">"INR"</span>,
+  <span class="k">"count"</span>: <span class="n">23</span>,
+  <span class="k">"products"</span>: [{
+    <span class="k">"id"</span>: <span class="n">12</span>,
+    <span class="k">"name"</span>: <span class="s">"YouTube Premium India"</span>,
+    <span class="k">"tier"</span>: <span class="s">"silver"</span>,           <span class="c">← your pricing tier</span>
+    <span class="k">"price"</span>: <span class="n">430</span>,              <span class="c">← your tier price</span>
+    <span class="k">"price_regular"</span>: <span class="n">450</span>,
+    <span class="k">"in_stock"</span>: <span class="n">true</span>,
+    <span class="k">"stock"</span>: <span class="n">null</span>,               <span class="c">← null = unlimited</span>
+    <span class="k">"variants"</span>: [{ <span class="k">"id"</span>: <span class="n">31</span>, <span class="k">"name"</span>: <span class="s">"1 Year"</span>, <span class="k">"price"</span>: <span class="n">430</span>, <span class="k">"in_stock"</span>: <span class="n">true</span> }],
+    <span class="k">"required_fields"</span>: [{ <span class="k">"attribute_id"</span>: <span class="n">7</span>, <span class="k">"label"</span>: <span class="s">"Email"</span>, <span class="k">"type"</span>: <span class="s">"text"</span> }]
+  }]
+}</pre>
+    <p class="text-sm text-gray-500 mt-2"><code class="inline">required_fields</code> lists what you must send in each order item's <code class="inline">answers</code> — for <code class="inline">type: "select"</code> the allowed <code class="inline">options</code> are included.</p>
+  </section>
+
+  <section id="balance">
+    <h2 class="text-2xl font-extrabold mb-3">Check wallet balance</h2>
+    <p><span class="method get">GET</span> <code class="inline">/balance</code></p>
+<pre>curl -H <span class="s">"Authorization: Bearer mk_live_&lt;key&gt;"</span> \
+  https://www.mlbbstore.in/api/v1/balance</pre>
+<pre>{ <span class="k">"inr"</span>: <span class="n">1250</span>, <span class="k">"usd"</span>: <span class="n">40.5</span>,
+  <span class="k">"currency_note"</span>: <span class="s">"AV COINS wallets are separate per currency; 1 coin = 1 unit of that currency."</span> }</pre>
+  </section>
+
+  <section id="orders-create">
+    <h2 class="text-2xl font-extrabold mb-3">Place an order</h2>
+    <p class="text-gray-300 mb-3">The <b>full total is debited from your wallet</b> at your tier's prices. The order is created as <code class="inline">paid</code> and queued for fulfilment. If a product has variants, <code class="inline">variant_id</code> is required. Send the product's <code class="inline">required_fields</code> in <code class="inline">answers</code> as <code class="inline">{attribute_id: value}</code>.</p>
+    <p><span class="method post">POST</span> <code class="inline">/orders</code></p>
+<pre>curl -X POST https://www.mlbbstore.in/api/v1/orders \
+  -H <span class="s">"Authorization: Bearer mk_live_&lt;key&gt;"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "currency": "INR",
+    "customer": { "name": "Rahul D", "phone": "+919999999999", "email": "rahul@example.com" },
+    "items": [{
+      "product_id": 12,
+      "variant_id": 31,
+      "qty": 1,
+      "answers": { "7": "rahul@example.com" }
+    }]
+  }'</span></pre>
+<pre><span class="c"># 201 Created</span>
+{
+  <span class="k">"id"</span>: <span class="n">1042</span>,
+  <span class="k">"status"</span>: <span class="s">"paid"</span>,
+  <span class="k">"currency"</span>: <span class="s">"INR"</span>,
+  <span class="k">"total"</span>: <span class="n">430</span>,
+  <span class="k">"items"</span>: [{ <span class="k">"product_id"</span>: <span class="n">12</span>, <span class="k">"variant_id"</span>: <span class="n">31</span>, <span class="k">"variant_name"</span>: <span class="s">"1 Year"</span>,
+                 <span class="k">"name"</span>: <span class="s">"YouTube Premium India"</span>, <span class="k">"qty"</span>: <span class="n">1</span>, <span class="k">"unit_price"</span>: <span class="n">430</span> }]
+}</pre>
+    <div class="bg-brand-50 border border-brand-200 rounded-2xl p-4 mt-4 text-sm text-brand-900">
+      <b>Insufficient balance?</b> You'll get HTTP <code class="inline">402</code> with <code class="inline">need</code> / <code class="inline">have</code> amounts. Top up your wallet and retry — nothing is charged on a 402.
+    </div>
+  </section>
+
+  <section id="orders-track">
+    <h2 class="text-2xl font-extrabold mb-3">Track orders</h2>
+    <p class="text-gray-300 mb-3">Order statuses: <code class="inline">paid</code> (queued) → <code class="inline">delivered</code>, or <code class="inline">cancelled</code>. Poll this to update your customers.</p>
+    <p><span class="method get">GET</span> <code class="inline">/orders</code> <span class="text-gray-400 text-sm ml-2">query: ?status=paid&limit=20&page=1</span></p>
+    <p class="mt-2"><span class="method get">GET</span> <code class="inline">/orders/:id</code></p>
+<pre>curl -H <span class="s">"Authorization: Bearer mk_live_&lt;key&gt;"</span> \
+  https://www.mlbbstore.in/api/v1/orders/1042</pre>
+<pre>{
+  <span class="k">"id"</span>: <span class="n">1042</span>,
+  <span class="k">"status"</span>: <span class="s">"delivered"</span>,
+  <span class="k">"currency"</span>: <span class="s">"INR"</span>,
+  <span class="k">"total"</span>: <span class="n">430</span>,
+  <span class="k">"delivery_note"</span>: <span class="s">"Invite sent to rahul@example.com"</span>,
+  <span class="k">"created_at"</span>: <span class="s">"2026-10-05T09:41:00.000Z"</span>,
+  <span class="k">"items"</span>: [{ <span class="k">"name"</span>: <span class="s">"YouTube Premium India"</span>, <span class="k">"variant_name"</span>: <span class="s">"1 Year"</span>,
+                 <span class="k">"qty"</span>: <span class="n">1</span>, <span class="k">"unit_price"</span>: <span class="n">430</span>,
+                 <span class="k">"answers"</span>: [{ <span class="k">"label"</span>: <span class="s">"Email"</span>, <span class="k">"value"</span>: <span class="s">"rahul@example.com"</span> }] }]
+}</pre>
+  </section>
+
+  <section id="errors">
+    <h2 class="text-2xl font-extrabold mb-3">Errors</h2>
+    <div class="bg-[#151b2e] rounded-2xl border border-[#1d263e] overflow-hidden">
+      <table class="w-full text-sm">
+        <thead><tr class="text-left text-xs uppercase tracking-wide text-gray-400 border-b border-[#1d263e] bg-[#0d1120]/60">
+          <th class="py-3 px-5 font-semibold">Code</th><th class="py-3 px-5 font-semibold">Meaning</th></tr></thead>
+        <tbody class="divide-y divide-gray-50">
+          <tr><td class="py-3 px-5 font-mono font-bold">400</td><td class="py-3 px-5 text-gray-300">Bad request — the <code class="inline">error</code> message says exactly what's wrong (missing field, sold out, invalid variant…).</td></tr>
+          <tr><td class="py-3 px-5 font-mono font-bold">401</td><td class="py-3 px-5 text-gray-300">Missing, invalid or revoked API key.</td></tr>
+          <tr><td class="py-3 px-5 font-mono font-bold">402</td><td class="py-3 px-5 text-gray-300">Insufficient wallet balance — top up and retry.</td></tr>
+          <tr><td class="py-3 px-5 font-mono font-bold">404</td><td class="py-3 px-5 text-gray-300">Product or order not found.</td></tr>
+          <tr><td class="py-3 px-5 font-mono font-bold">429</td><td class="py-3 px-5 text-gray-300">Rate limit exceeded — slow down and retry.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="bg-[#151b2e] rounded-2xl border border-[#1d263e] p-6">
+    <h2 class="text-xl font-extrabold mb-2">Need help?</h2>
+    <p class="text-sm text-gray-300">Message us on the store's support chat or WhatsApp — mention you're using the Reseller API and include your order ID if something looks wrong.</p>
+  </section>
+
+</main>
+
+<footer class="border-t border-[#26304a] py-6 text-center text-xs text-gray-400">
+  Meowji Official · Reseller API v1 · <a href="/" class="underline">www.mlbbstore.in</a>
+</footer>
+
+</body>
+</html>
