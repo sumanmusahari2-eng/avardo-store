@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-5xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-extrabold tracking-tight">Checkout</h1>
+  <nav class="flex flex-wrap items-center gap-2 mt-5" aria-label="Checkout steps">
+    <a href="/cart.html" class="mg-crumb"><span class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#c2410c] text-xs font-extrabold flex items-center justify-center shrink-0">1</span>Cart</a>
+    <span class="mg-crumb bg-[#e8f0fe] !border-[#f97316]"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-extrabold flex items-center justify-center shrink-0">2</span>Details</span>
+    <span class="mg-crumb current"><span class="w-6 h-6 rounded-full bg-[#1b2338] text-gray-500 text-xs font-extrabold flex items-center justify-center shrink-0">3</span>Pay</span>
+  </nav>
+  <div id="checkout-wrap" class="mt-8">
+    <div class="h-40 bg-[#1b2338] rounded-2xl animate-pulse"></div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+(function () {
+  async function init() {
+    await boot();
+    if (!requireLogin()) return;
+
+    const cart = getCart();
+    if (!cart.length) {
+      document.getElementById('checkout-wrap').innerHTML = `
+        <div class="mg-panel text-center py-16">
+          <h2 class="text-xl font-bold">Your cart is empty</h2>
+          <p class="text-gray-500 mt-1 text-sm">Add something before checking out.</p>
+          <a href="/" class="mg-btn-gold mt-6">Continue shopping</a>
+        </div>`;
+      return;
+    }
+
+    let catalog = {};
+    try {
+      const products = await api('/api/products?limit=200');
+      (products || []).forEach((p) => { catalog[p.id] = p; });
+    } catch (_) {}
+
+    const items = [];
+    let subtotal = 0;
+    for (const it of cart) {
+      const p = catalog[it.product_id];
+      if (!p) continue;
+      const variant = it.variant_id ? (p.variants || []).find((v) => Number(v.id) === Number(it.variant_id)) : null;
+      const unitPrice = priceNow(variant || p);
+      const line = Number(unitPrice) * Number(it.qty);
+      subtotal += line;
+      items.push({ product_id: it.product_id, variant_id: variant ? variant.id : null, variant_name: variant ? variant.name : null, qty: Number(it.qty), name: p.name, price: unitPrice, line, attrs: p.checkout_attributes || [] });
+    }
+    if (!items.length) {
+      document.getElementById('checkout-wrap').innerHTML = `<div class="text-center py-16 text-gray-500">The products in your cart are no longer available.</div>`;
+      return;
+    }
+
+    let appliedCoupon = null; // { code, discount, total }
+    let useWallet = false;
+    let walletBalance = 0, walletBalanceUsd = 0;
+    try {
+      const w = await api('/api/wallet');
+      walletBalance = Math.round(Number(w.balance || 0) * 100) / 100;
+      walletBalanceUsd = Math.round(Number(w.balance_usd || 0) * 100) / 100;
+    } catch (_) { walletBalance = 0; walletBalanceUsd = 0; }
+
+    function walletAppliedAmt() {
+      // Separate INR and USD wallets — the order currency picks its wallet.
+      const bal = getCurrency() === 'USD' ? walletBalanceUsd : walletBalance;
+      if (!useWallet || bal <= 0) return 0;
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const total = Math.round((subtotal - discount) * 100) / 100;
+      return Math.round(Math.min(bal, total) * 100) / 100;
+    }
+
+    function totalsHtml() {
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const total = Math.round((subtotal - discount) * 100) / 100;
+      const wapp = walletAppliedAmt();
+      const remaining = Math.round((total - wapp) * 100) / 100;
+      return `
+        <div class="flex justify-between gap-4 text-sm mt-1">
+          <span class="text-gray-500">Subtotal</span>
+          <span class="font-semibold shrink-0">${fmtCur(subtotal)}</span>
+        </div>
+        ${appliedCoupon ? `
+        <div class="flex justify-between gap-4 text-sm mt-1">
+          <span class="text-[#c2410c] font-semibold">Discount (${esc(appliedCoupon.code)})</span>
+          <span class="font-semibold text-[#c2410c] shrink-0">−${fmtCur(discount)}</span>
+        </div>` : ''}
+        ${wapp > 0 ? `
+        <div class="flex justify-between gap-4 text-sm mt-1">
+          <span class="text-[#c2410c] font-semibold">Wallet balance applied</span>
+          <span class="font-semibold text-[#c2410c] shrink-0">−${fmtCur(wapp)}</span>
+        </div>` : ''}
+        <div class="flex justify-between mt-4 pt-4 border-t border-[#1d263e]">
+          <span class="font-bold">${wapp > 0 ? 'Remaining to pay' : 'Total'}</span>
+          <span class="font-extrabold text-2xl">${fmtCur(remaining)}</span>
+        </div>`;
+    }
+    function refreshTotals() {
+      document.getElementById('order-totals').innerHTML = totalsHtml();
+      const discount = appliedCoupon ? appliedCoupon.discount : 0;
+      const total = Math.round((subtotal - discount) * 100) / 100;
+      const remaining = Math.round((total - walletAppliedAmt()) * 100) / 100;
+      document.getElementById('btn-place').textContent =
+        remaining > 0 ? 'Place order — ' + fmtCur(remaining) : 'Pay with wallet — ' + fmtCur(total);
+    }
+
+    // Game-ID check: which checkout questions hold the player ID / zone ID.
+    // Mirrors the server's findPlayerId needles in src/busan-fulfil.js.
+    const PID_NEEDLES = ['user id', 'userid', 'player id', 'playerid', 'game id', 'gameid', 'uid', 'character id', 'characterid', 'character', 'account id', 'accountid', 'open id', 'openid'];
+    const ZONE_NEEDLES = ['zone', 'server id', 'server'];
+    function labelHits(label, needles) {
+      const l = String(label || '').toLowerCase();
+      return needles.some((n) => l.includes(n));
+    }
+    // Verify a game ID against the supplier (Busan) before the customer pays:
+    // shows the account nickname, or an error when the ID can't be found.
+    window.checkGameId = async (btn) => {
+      const productId = btn.getAttribute('data-product');
+      const variantId = btn.getAttribute('data-variant') || '';
+      const attrId = btn.getAttribute('data-attr');
+      const zoneAttrId = btn.getAttribute('data-zone-attr') || '';
+      const msg = btn.parentElement.querySelector('.idcheck-msg');
+      const idInput = document.querySelector('[data-attr-product="' + productId + '"][data-attr-id="' + attrId + '"]');
+      const userId = (idInput && idInput.value || '').trim();
+      if (!userId) {
+        msg.textContent = 'Enter your game ID first.';
+        msg.className = 'idcheck-msg text-xs font-medium text-red-600';
+        return;
+      }
+      let zoneId = '';
+      if (zoneAttrId) {
+        const zEl = document.querySelector('[data-attr-product="' + productId + '"][data-attr-id="' + zoneAttrId + '"]');
+        zoneId = (zEl && zEl.value || '').trim();
+      }
+      msg.textContent = 'Checking…';
+      msg.className = 'idcheck-msg text-xs text-gray-500';
+      btn.disabled = true;
+      try {
+        const r = await api('/api/games/check-id-for-product', {
+          method: 'POST',
+          body: JSON.stringify({ product_id: Number(productId), variant_id: variantId ? Number(variantId) : 0, user_id: userId, zone_id: zoneId }),
+        });
+        msg.textContent = r.nickname ? '✓ ' + r.nickname : '✓ Account found';
+        msg.className = 'idcheck-msg text-xs font-bold text-green-700';
+      } catch (e) {
+        msg.textContent = '✗ ' + ((e && e.data && e.data.error) || 'Could not verify. Try again.');
+        msg.className = 'idcheck-msg text-xs font-medium text-red-600';
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    function attrFieldHtml(p, a) {
+      const base = 'field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition';
+      let field;
+
+      if (a.field_type === 'select' && Array.isArray(a.options) && a.options.length) {
+        field = `<select data-attr-product="${p.product_id}" data-attr-id="${a.id}" class="${base}">
+          <option value="">Choose an option…</option>
+          ${a.options.map((o) => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}
+        </select>`;
+      } else if (a.field_type === 'textarea') {
+        field = `<textarea data-attr-product="${p.product_id}" data-attr-id="${a.id}" rows="2" maxlength="500" placeholder="Your answer" class="${base} resize-none"></textarea>`;
+      } else {
+        field = `<input data-attr-product="${p.product_id}" data-attr-id="${a.id}" maxlength="500" placeholder="Your answer" class="${base}">`;
+      }
+      // Under a player-ID question, offer the supplier ID check (same check
+      // fulfilment will run). The zone field of the same product is picked up
+      // automatically when present.
+      let idCheckRow = '';
+      if (labelHits(a.label, PID_NEEDLES)) {
+        const zoneAttr = (p.attrs || []).find((x) => labelHits(x.label, ZONE_NEEDLES));
+        idCheckRow = `
+          <div class="mt-1.5 flex items-center gap-2">
+            <button type="button" onclick="checkGameId(this)" data-product="${p.product_id}" data-variant="${p.variant_id || ''}" data-attr="${a.id}" data-zone-attr="${zoneAttr ? zoneAttr.id : ''}"
+              class="text-xs font-bold text-[#f97316] border border-[#f97316] rounded-lg px-3 py-1.5 hover:bg-[#2b1c0d] disabled:opacity-50">Check ID</button>
+            <span class="idcheck-msg text-xs text-gray-500"></span>
+          </div>`;
+      }
+      return `
+        <div class="mt-3">
+          <label class="text-sm font-semibold">${esc(a.label)}${a.required ? ' <span class="text-red-500">*</span>' : ''}</label>
+          ${field}
+          ${idCheckRow}
+        </div>`;
+    }
+
+    document.getElementById('checkout-wrap').innerHTML = `
+      <div class="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
+        <div class="space-y-6">
+          <div class="mg-panel p-6">
+            <h2 class="font-bold text-lg mb-4">Order summary</h2>
+            <div class="space-y-5">
+              ${items.map((it) => `
+                <div>
+                  <div class="flex justify-between gap-4 text-sm">
+                    <span class="text-gray-300">${esc(it.name)}${it.variant_name ? ` <span class="font-bold text-[#c2410c]">(${esc(it.variant_name)})</span>` : ''} <span class="text-gray-400">× ${it.qty}</span></span>
+                    <span class="font-semibold shrink-0">${fmtCur(it.line)}</span>
+                  </div>
+                  ${(it.attrs || []).map((a) => attrFieldHtml(it, a)).join('')}
+                </div>`).join('')}
+            </div>
+            <div id="coupon-row" class="mt-6">
+              <div class="flex gap-2">
+                <input id="coupon-code" placeholder="Coupon code" class="field flex-1 text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition uppercase">
+                <button id="btn-coupon" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap">Apply</button>
+              </div>
+              <div id="coupon-msg" class="hidden mt-2 text-sm font-medium"></div>
+            </div>
+            <div id="wallet-row" class="mt-4 ${(getCurrency() === 'USD' ? walletBalanceUsd : walletBalance) > 0 ? '' : 'hidden'}">
+              <label class="flex items-start gap-3 cursor-pointer bg-[#2b1c0d] border border-[#dbe7ff] rounded-xl px-4 py-3">
+                <input id="wallet-toggle" type="checkbox" class="w-5 h-5 mt-0.5 accent-[#f97316]">
+                <span>
+                  <span class="text-sm font-bold">Use AV COINS</span>
+                  <span class="block text-xs text-gray-500 mt-0.5">${getCurrency() === 'USD' ? fmtCur(walletBalanceUsd) : fmtCoins(walletBalance)} available · <a href="/wallet.html" class="underline">manage wallet</a></span>
+                </span>
+              </label>
+            </div>
+            <div id="order-totals" class="mt-2">${totalsHtml()}</div>
+          </div>
+
+          <div class="mg-panel p-6">
+            <h2 class="font-bold text-lg mb-1">Your details</h2>
+            <p class="text-sm text-gray-500 mb-4">Required for order confirmation and delivery.</p>
+            <div class="space-y-4">
+              <div>
+                <label class="text-sm font-semibold" for="buyer-name">Full name <span class="text-red-500">*</span></label>
+                <input id="buyer-name" type="text" maxlength="120" placeholder="Your full name"
+                  class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+              </div>
+              <div>
+                <label class="text-sm font-semibold" for="buyer-phone">Phone number <span class="text-red-500">*</span></label>
+                <div class="flex gap-2 mt-1.5">
+                  <select id="buyer-phone-cc" class="field text-sm border border-[#26304a] rounded-xl px-3 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition shrink-0 max-w-[130px]">
+                    <option value="+91" selected>🇮🇳 +91</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+61">🇦🇺 +61</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+60">🇲🇾 +60</option>
+                    <option value="+63">🇵🇭 +63</option>
+                    <option value="+62">🇮🇩 +62</option>
+                    <option value="+880">🇧🇩 +880</option>
+                    <option value="+92">🇵🇰 +92</option>
+                    <option value="+94">🇱🇰 +94</option>
+                    <option value="+977">🇳🇵 +977</option>
+                    <option value="+81">🇯🇵 +81</option>
+                    <option value="+82">🇰🇷 +82</option>
+                    <option value="+86">🇨🇳 +86</option>
+                    <option value="+49">🇩🇪 +49</option>
+                    <option value="+33">🇫🇷 +33</option>
+                    <option value="+39">🇮🇹 +39</option>
+                    <option value="+34">🇪🇸 +34</option>
+                    <option value="+31">🇳🇱 +31</option>
+                    <option value="+41">🇨🇭 +41</option>
+                    <option value="+46">🇸🇪 +46</option>
+                    <option value="+47">🇳🇴 +47</option>
+                    <option value="+45">🇩🇰 +45</option>
+                    <option value="+358">🇫🇮 +358</option>
+                    <option value="+353">🇮🇪 +353</option>
+                    <option value="+351">🇵🇹 +351</option>
+                    <option value="+30">🇬🇷 +30</option>
+                    <option value="+90">🇹🇷 +90</option>
+                    <option value="+966">🇸🇦 +966</option>
+                    <option value="+974">🇶🇦 +974</option>
+                    <option value="+965">🇰🇼 +965</option>
+                    <option value="+968">🇴🇲 +968</option>
+                    <option value="+973">🇧🇭 +973</option>
+                    <option value="+962">🇯🇴 +962</option>
+                    <option value="+20">🇪🇬 +20</option>
+                    <option value="+27">🇿🇦 +27</option>
+                    <option value="+234">🇳🇬 +234</option>
+                    <option value="+254">🇰🇪 +254</option>
+                    <option value="+55">🇧🇷 +55</option>
+                    <option value="+52">🇲🇽 +52</option>
+                    <option value="+54">🇦🇷 +54</option>
+                    <option value="+56">🇨🇱 +56</option>
+                    <option value="+57">🇨🇴 +57</option>
+                    <option value="+7">🇷🇺 +7</option>
+                    <option value="+380">🇺🇦 +380</option>
+                    <option value="+48">🇵🇱 +48</option>
+                    <option value="+40">🇷🇴 +40</option>
+                    <option value="+36">🇭🇺 +36</option>
+                    <option value="+420">🇨🇿 +420</option>
+                    <option value="+43">🇦🇹 +43</option>
+                    <option value="+32">🇧🇪 +32</option>
+                    <option value="+64">🇳🇿 +64</option>
+                  </select>
+                  <input id="buyer-phone" type="tel" inputmode="numeric" maxlength="15" placeholder="Phone number"
+                    class="field flex-1 text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+                </div>
+              </div>
+              <div>
+                <label class="text-sm font-semibold" for="buyer-email">Email <span class="text-red-500">*</span></label>
+                <input id="buyer-email" type="email" maxlength="160" placeholder="you@example.com"
+                  class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+              </div>
+              <div>
+                <label class="text-sm font-semibold" for="buyer-age">Age <span class="text-red-500">*</span> <span class="text-xs font-normal text-gray-400">(must be 18 or older)</span></label>
+                <input id="buyer-age" type="number" min="18" max="150" placeholder="18"
+                  class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+              </div>
+              <label class="flex items-start gap-3 cursor-pointer bg-[#0d1120] border border-[#26304a] rounded-xl px-4 py-3">
+                <input id="buyer-agree" type="checkbox" class="w-5 h-5 mt-0.5 accent-[#f97316] shrink-0">
+                <span class="text-sm text-gray-300">I confirm that the details above are correct and I agree to proceed with this purchase under the store's <a href="/terms.html" class="underline text-[#c2410c]">terms</a> and <a href="/refunds.html" class="underline text-[#c2410c]">refund policy</a>. <span class="text-red-500">*</span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="mg-panel p-6">
+            <div id="form-error" class="hidden mt-3 text-sm font-medium text-red-600 bg-red-50 rounded-xl px-4 py-3"></div>
+            <div id="turnstile-wrap" class="hidden mt-4 flex justify-center"><div id="turnstile-widget"></div></div>
+            <button id="btn-place" class="mg-btn-gold w-full mt-5 !text-lg">
+              Place order — ${fmtCur(subtotal)}
+            </button>
+            <p class="text-xs text-gray-400 mt-3 text-center">By placing this order you agree to our <a href="/terms.html" class="underline">terms</a> and <a href="/refunds.html" class="underline">refund policy</a>.</p>
+          </div>
+        </div>
+
+        <div class="bg-brand-50 border border-brand-100 rounded-[18px] p-6 lg:sticky lg:top-24">
+          <h3 class="font-bold text-brand-800">How it works</h3>
+          <ol class="mt-3 space-y-3 text-sm text-brand-800/80">
+            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">1</span>Place your order — no payment needed yet.</li>
+            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">2</span>Pay via UPI using the instructions shown next.</li>
+            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">3</span>Tap "I've paid" and get your subscription delivered.</li>
+          </ol>
+        </div>
+      </div>`;
+
+    const walletToggle = document.getElementById('wallet-toggle');
+    if (walletToggle) {
+      walletToggle.addEventListener('change', () => {
+        useWallet = walletToggle.checked;
+        refreshTotals();
+      });
+    }
+
+    document.getElementById('btn-coupon').addEventListener('click', async () => {
+      const msg = document.getElementById('coupon-msg');
+      const code = document.getElementById('coupon-code').value.trim();
+      msg.classList.remove('hidden');
+      if (!code) { msg.textContent = 'Enter a coupon code.'; msg.className = 'mt-2 text-sm font-medium text-red-600'; return; }
+      const btn = document.getElementById('btn-coupon');
+      btn.disabled = true; btn.textContent = 'Checking…';
+      try {
+        const r = await api('/api/coupons/validate', {
+          method: 'POST',
+          body: JSON.stringify({ code, currency: getCurrency(), items: items.map((it) => ({ product_id: it.product_id, variant_id: it.variant_id, qty: it.qty })) }),
+        });
+        appliedCoupon = { code: r.code, discount: r.discount };
+        msg.textContent = `Coupon ${r.code} applied — you save ${fmtCur(r.discount)}.`;
+        msg.className = 'mt-2 text-sm font-medium text-[#c2410c]';
+        refreshTotals();
+      } catch (e) {
+        appliedCoupon = null;
+        msg.textContent = (e && e.data && e.data.error) || 'Could not apply this coupon.';
+        msg.className = 'mt-2 text-sm font-medium text-red-600';
+        refreshTotals();
+      } finally {
+        btn.disabled = false; btn.textContent = 'Apply';
+      }
+    });
+
+    let tsWidget = null;
+    try {
+      const tc = await api('/api/auth/turnstile-config');
+      if (tc.enabled && window.turnstile) {
+        document.getElementById('turnstile-wrap').classList.remove('hidden');
+        tsWidget = turnstile.render('#turnstile-widget', { sitekey: tc.site_key, theme: 'light' });
+      }
+    } catch (_) {}
+    document.getElementById('btn-place').addEventListener('click', async () => {
+      formError(null);
+      const btn = document.getElementById('btn-place');
+      // Validate buyer details (compulsory for every checkout).
+      const buyerName = document.getElementById('buyer-name').value.trim();
+      const buyerCc = document.getElementById('buyer-phone-cc').value;
+      const buyerPhone = document.getElementById('buyer-phone').value.replace(/[\s\-()]/g, '');
+      const buyerEmail = document.getElementById('buyer-email').value.trim().toLowerCase();
+      const buyerAge = parseInt(document.getElementById('buyer-age').value, 10);
+      const buyerAgreed = document.getElementById('buyer-agree').checked;
+      if (!buyerName) { formError('Please enter your full name.'); document.getElementById('buyer-name').focus(); return; }
+      if (!/^\+\d{1,5}$/.test(buyerCc)) { formError('Please select your country code.'); return; }
+      if (!/^\d{6,15}$/.test(buyerPhone)) { formError('Please enter a valid phone number.'); document.getElementById('buyer-phone').focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(buyerEmail)) { formError('Please enter a valid email address.'); document.getElementById('buyer-email').focus(); return; }
+      if (!buyerAge || buyerAge < 18) { formError('You must be at least 18 years old to place an order.'); document.getElementById('buyer-age').focus(); return; }
+      if (!buyerAgreed) { formError('Please tick the agreement box to confirm your purchase.'); document.getElementById('buyer-agree').focus(); return; }
+      // Validate required checkout attributes client-side.
+      const checkout_answers = [];
+      for (const it of items) {
+        for (const a of (it.attrs || [])) {
+          const input = document.querySelector(`[data-attr-product="${it.product_id}"][data-attr-id="${a.id}"]`);
+          const val = input ? input.value.trim() : '';
+          if (a.required && !val) {
+            formError(`Please fill in "${a.label}" for ${it.name}.`);
+            if (input) input.focus();
+            return;
+          }
+          if (val) checkout_answers.push({ product_id: it.product_id, attribute_id: a.id, value: val });
+        }
+      }
+      btn.disabled = true;
+      btn.classList.add('opacity-60');
+      btn.textContent = 'Placing order…';
+      try {
+        const payload = {
+          items: items.map((it) => ({ product_id: it.product_id, variant_id: it.variant_id, qty: it.qty })),
+          currency: getCurrency(),
+          checkout_answers,
+          buyer: { name: buyerName, phone_cc: buyerCc, phone: buyerPhone, email: buyerEmail, age: buyerAge, agreed: true },
+        };
+        if (appliedCoupon) payload.coupon_code = appliedCoupon.code;
+        const _wbal = getCurrency() === 'USD' ? walletBalanceUsd : walletBalance;
+        if (useWallet && _wbal > 0) payload.wallet_use = true;
+        if (tsWidget && window.turnstile) payload.turnstile_token = turnstile.getResponse(tsWidget);
+        const order = await api('/api/checkout', { method: 'POST', body: JSON.stringify(payload) });
+        setCart([]);
+        location.href = '/order.html?id=' + encodeURIComponent(order.id);
+      } catch (e) {
+        if (tsWidget && window.turnstile) turnstile.reset(tsWidget);
+        formError((e && e.data && e.data.error) || 'Could not place the order. Please try again.');
+        btn.disabled = false;
+        btn.classList.remove('opacity-60');
+        refreshTotals();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
