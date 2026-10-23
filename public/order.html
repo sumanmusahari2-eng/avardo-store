@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-3xl mx-auto px-4 py-10">
+  <div id="order-wrap">
+    <div class="h-64 bg-[#1b2338] rounded-3xl animate-pulse"></div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  function render(o, settings) {
+    const siteName = settings.site_name || 'Meowji Official';
+    const pay = o.payment || {};
+    // Order totals are in the order's own currency (locked at checkout).
+    const ocur = o.currency === 'USD' ? 'USD' : 'INR';
+    const ofmt = (n) => ocur === 'USD'
+      ? '$' + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : fmtINR(n);
+    const wa = waDigits(pay.whatsapp_number || settings.whatsapp_number);
+    const waText = encodeURIComponent(`Hi ${siteName}, I placed order #${o.id}. Please confirm my payment.`);
+    const waLink = wa ? `https://wa.me/${wa}?text=${waText}` : '#';
+    const canClaim = String(o.status).toLowerCase() === 'pending' && !Number(o.paid_claimed);
+
+    document.getElementById('order-wrap').innerHTML = `
+      <div class="text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f0fe] text-[#c2410c] flex items-center justify-center">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        </div>
+        <h1 class="text-3xl font-extrabold tracking-tight mt-4">Order placed</h1>
+        <p class="text-gray-500 mt-1">Order <span class="font-bold text-gray-100">#${esc(o.id)}</span> · ${fmtDate(o.created_at)}</p>
+        <div class="mt-3 flex items-center justify-center gap-2">
+          ${statusBadge(o.status)}
+          ${o.topzy_status === 'success' ? '<span class="badge badge-green">⚡ Top-up sent</span>' : ''}
+          ${Number(o.paid_claimed) ? '<span class="badge badge-blue">Payment claimed — under review</span>' : ''}
+        </div>
+        ${['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? `
+        <div class="mt-4">
+          <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-[#26304a] text-sm font-bold text-gray-300 hover:border-[#f97316] hover:text-[#f97316] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            Download invoice
+          </a>
+        </div>` : ''}
+      </div>
+
+      <div class="mt-8 mg-panel p-6">
+        <h2 class="font-bold text-lg mb-4">Items</h2>
+        <div class="space-y-4">
+          ${(o.items || []).map((it) => `
+            <div>
+              <div class="flex justify-between gap-4 text-sm">
+                <span class="text-gray-300">${esc(it.name)} <span class="text-gray-400">× ${it.qty}</span></span>
+                <span class="font-semibold shrink-0">${ofmt(Number(it.unit_price) * Number(it.qty))}</span>
+              </div>
+              ${(it.checkout_answers || []).length ? `
+              <div class="mt-1.5 ml-1 space-y-1">
+                ${it.checkout_answers.map((a) => `<div class="text-xs text-gray-500"><span class="font-semibold text-gray-300">${esc(a.label)}:</span> ${esc(a.value)}</div>`).join('')}
+              </div>` : ''}
+            </div>`).join('')}
+        </div>
+        <div class="mt-4 pt-4 border-t border-[#1d263e] space-y-1.5">
+          ${o.subtotal != null && Number(o.discount) > 0 ? `
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500">Subtotal</span>
+            <span class="font-semibold">${ofmt(o.subtotal)}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-[#c2410c] font-semibold">Discount${o.coupon_code ? ` (${esc(o.coupon_code)})` : ''}</span>
+            <span class="font-semibold text-[#c2410c]">−${ofmt(o.discount)}</span>
+          </div>` : ''}
+          ${Number(o.wallet_applied) > 0 ? `
+          <div class="flex justify-between text-sm">
+            <span class="text-[#c2410c] font-semibold">Paid from wallet</span>
+            <span class="font-semibold text-[#c2410c]">−${ofmt(o.wallet_applied)}</span>
+          </div>` : ''}
+          <div class="flex justify-between">
+            <span class="font-bold">Total payable</span>
+            <span class="font-extrabold text-2xl">${ofmt(o.total)}</span>
+          </div>
+        </div>
+        ${o.payment_note ? `<div class="mt-3 text-xs text-gray-500">Your note: <span class="text-gray-300">${esc(o.payment_note)}</span></div>` : ''}
+      </div>
+
+      ${(o.voucher_codes || []).length && ['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? `
+      <div class="mt-6 rounded-[18px] p-6 border-2 border-dashed border-[#f97316] bg-[#2b1c0d]">
+        <h2 class="font-bold text-lg text-[#0a1f44]">🎁 Your gift card code${o.voucher_codes.length > 1 ? 's' : ''}</h2>
+        <p class="text-sm text-gray-300 mt-1">Redeem ${o.voucher_codes.length > 1 ? 'each code' : 'this code'} once in your <a href="/wallet.html" class="font-semibold text-[#c2410c] underline">wallet</a> to add the amount to your balance.</p>
+        <div class="mt-4 space-y-3">
+          ${o.voucher_codes.map((vc, i) => `
+          <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-xl px-4 py-3 border border-[#dbe7ff]">
+            <div>
+              <div class="font-mono font-extrabold text-lg tracking-wider text-[#0a1f44]">${esc(vc.code)}</div>
+              <div class="text-xs text-gray-500">${vc.currency === 'USD' ? '$' + esc(String(vc.amount)) : '₹' + esc(String(vc.amount))} gift card — value never changes with currency</div>
+            </div>
+            <button data-copy-code="${esc(vc.code)}" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg shrink-0">Copy</button>
+          </div>`).join('')}
+        </div>
+      </div>` : ''}
+
+      ${(o.updates || []).length ? `
+      <div class="mt-6 mg-panel p-6">
+        <h2 class="font-bold text-lg mb-4">Order updates</h2>
+        <div class="space-y-0">
+          ${o.updates.map((u, i) => `
+          <div class="flex gap-4">
+            <div class="flex flex-col items-center">
+              <div class="w-3 h-3 rounded-full ${i === o.updates.length - 1 ? 'bg-[#f97316]' : 'bg-[#2b3554]'} mt-1.5 shrink-0"></div>
+              ${i < o.updates.length - 1 ? '<div class="w-0.5 flex-1 bg-[#232c47]"></div>' : ''}
+            </div>
+            <div class="pb-6">
+              <div class="text-sm font-bold capitalize">${esc(u.status)}</div>
+              <div class="text-sm text-gray-300 mt-0.5">${esc(u.message)}</div>
+              <div class="text-xs text-gray-400 mt-1">${fmtDate(u.created_at)}</div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>` : ''}
+
+      ${String(o.status).toLowerCase() === 'delivered' && o.delivery_note ? `
+      <div class="mt-6 bg-brand-50 border border-brand-200 rounded-[18px] p-6">
+        <h2 class="font-bold text-brand-800 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          Delivered
+        </h2>
+        <div class="mt-2 text-sm text-brand-800/90 whitespace-pre-line">${esc(o.delivery_note)}</div>
+      </div>` : ''}
+
+      ${String(o.status).toLowerCase() !== 'cancelled' && String(o.status).toLowerCase() !== 'delivered' && String(o.status).toLowerCase() !== 'paid' ? `
+      <div class="mt-6 mg-panel p-6">
+        <h2 class="font-bold text-lg">Complete your payment</h2>
+        ${Number(o.wallet_applied) > 0 ? `
+        <div class="mt-3 text-sm bg-[#2b1c0d] border border-[#dbe7ff] rounded-xl px-4 py-3">
+          <span class="font-bold text-[#c2410c]">${ofmt(o.wallet_applied)}</span>
+          <span class="text-gray-300"> already paid from your wallet.</span>
+        </div>` : ''}
+        <div class="mt-4 text-sm font-extrabold text-gray-300">Choose how to pay</div>
+        <div class="mt-2 grid sm:grid-cols-2 gap-3" id="pay-methods">
+          ${pay.xtra_enabled && canClaim && ocur === 'INR' ? `
+          <button type="button" data-paymethod="online" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+            <div class="font-bold text-sm flex items-center gap-2">⚡ Pay Online</div>
+            <p class="text-xs text-gray-500 mt-1">UPI, cards &amp; netbanking via xtragateway.site — instant confirmation.</p>
+          </button>` : ''}
+          <button type="button" data-paymethod="manual" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+            <div class="font-bold text-sm flex items-center gap-2">💬 Manual via WhatsApp</div>
+            <p class="text-xs text-gray-500 mt-1">Pay to our UPI ID yourself, then confirm with us on WhatsApp.</p>
+          </button>
+          ${pay.crypto_enabled && canClaim ? `
+          <button type="button" data-paymethod="crypto" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+            <div class="font-bold text-sm flex items-center gap-2">₮ Pay with Crypto</div>
+            <p class="text-xs text-gray-500 mt-1">USDT — works worldwide, redirected to secure checkout.</p>
+          </button>` : ''}
+          ${pay.divinex_enabled && canClaim ? `
+          <button type="button" data-paymethod="divinex" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+            <div class="font-bold text-sm flex items-center gap-2">₮ Pay with USDT <span class="text-[10px] font-bold bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">BEP20</span></div>
+            <p class="text-xs text-gray-500 mt-1">Send USDT on BNB Chain directly to our wallet — no signup needed.</p>
+          </button>` : ''}
+        </div>
+
+        <div id="paydetail-online" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#1d263e]">
+          <div class="font-bold text-sm">Pay Online — xtragateway.site</div>
+          <p class="text-xs text-gray-500 mt-1">Available for India (INR) only. You'll be redirected to complete the payment securely.</p>
+          <div class="flex flex-col sm:flex-row gap-2 mt-3">
+            <input id="xtra-mobile" inputmode="numeric" maxlength="13" placeholder="10-digit mobile number"
+              class="flex-1 text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+            <button id="btn-xtra-pay" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap">Pay ${ofmt(Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)))}</button>
+          </div>
+          <div id="xtra-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
+        </div>
+
+        <div id="paydetail-manual" class="paydetail hidden mt-4">
+          <div class="space-y-4 text-sm">
+            ${pay.upi_id ? `
+            <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-[18px] px-4 py-3 border border-[#1d263e]">
+              <div><div class="text-xs text-gray-500">Pay to UPI ID</div><div class="font-bold text-base">${esc(pay.upi_id)}</div></div>
+              <button id="btn-copy-upi" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
+            </div>` : ''}
+            ${pay.instructions ? `<div class="text-gray-300 whitespace-pre-line leading-relaxed">${esc(pay.instructions)}</div>`
+              : `<div class="text-gray-300">Pay <span class="font-bold text-gray-100">${ofmt(Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)))}</span>${ocur === 'USD' ? ' (or the INR equivalent)' : ''} via UPI, then confirm with us on WhatsApp so we can verify and deliver your order.</div>`}
+          </div>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            ${canClaim ? `<button id="btn-paid" class="mg-btn-gold flex-1">I've paid</button>` : ''}
+            <a href="${waLink}" target="_blank" rel="noopener" class="mg-btn-cream flex-1">💬 Chat on WhatsApp</a>
+          </div>
+        </div>
+
+        <div id="paydetail-crypto" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#1d263e]">
+          <div class="font-bold text-sm">Pay with Crypto — USDT</div>
+          <p class="text-xs text-gray-500 mt-1">You'll be redirected to a secure checkout to complete the payment.</p>
+          <button id="btn-crypto-pay" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap mt-3">Pay $${(ocur === 'USD' ? Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)) : Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)) / Number(pay.crypto_usd_rate || 88)).toFixed(2)} USDT</button>
+          <div id="crypto-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
+        </div>
+
+        <div id="paydetail-divinex" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#1d263e]">
+          <div class="font-bold text-sm">Pay with USDT <span class="text-[10px] font-bold bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">BEP20 · BNB Chain</span></div>
+          <p class="text-xs text-gray-500 mt-1">Send <b>exactly</b> the amount below in USDT on <b>BNB Chain (BEP20)</b> to our wallet. Other networks will not be detected.</p>
+          <div id="divinex-setup">
+            <button id="btn-divinex-pay" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap mt-3">Get payment address</button>
+            <div id="divinex-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
+          </div>
+          <div id="divinex-details" class="hidden mt-3 space-y-3">
+            <div class="flex items-center justify-between gap-3 bg-[#0d1120] rounded-xl px-4 py-3">
+              <div class="min-w-0"><div class="text-xs text-gray-500">Send exactly</div><div id="divinex-amount" class="font-extrabold text-lg break-all"></div></div>
+              <button id="btn-copy-divinex-amount" class="shrink-0 text-sm font-semibold text-[#c2410c] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
+            </div>
+            <div class="flex items-center justify-between gap-3 bg-[#0d1120] rounded-xl px-4 py-3">
+              <div class="min-w-0"><div class="text-xs text-gray-500">To wallet (BEP20)</div><div id="divinex-wallet" class="font-mono text-sm break-all"></div></div>
+              <button id="btn-copy-divinex-wallet" class="shrink-0 text-sm font-semibold text-[#c2410c] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span id="divinex-expiry" class="text-gray-500"></span>
+              <button id="btn-divinex-check" class="font-bold text-[#c2410c] hover:text-[#0f4bc0]">Check payment status</button>
+            </div>
+            <div id="divinex-status" class="text-sm font-medium text-gray-300">Waiting for your transfer…</div>
+          </div>
+        </div>
+
+        ${!canClaim && String(o.status).toLowerCase() === 'pending' ? `<p class="text-xs text-gray-500 mt-3 text-center">You have already marked this order as paid. We will verify it shortly.</p>` : ''}
+      </div>` : ''}
+
+      <div class="mt-8 text-center">
+        <a href="/account.html" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0]">View all my orders</a>
+      </div>`;
+    document.title = 'Order #' + o.id + ' — Meowji Official';
+
+    // Payment method chooser: online (XtraGateway) vs manual WhatsApp (+ crypto).
+    const methodCards = document.querySelectorAll('[data-paymethod]');
+    const selectPayMethod = (m) => {
+      methodCards.forEach((c) => {
+        const active = c.dataset.paymethod === m;
+        c.classList.toggle('!border-[#f97316]', active);
+        c.classList.toggle('ring-2', active);
+        c.classList.toggle('ring-[#f97316]/20', active);
+      });
+      document.querySelectorAll('.paydetail').forEach((d) => d.classList.add('hidden'));
+      const panel = document.getElementById('paydetail-' + m);
+      if (panel) panel.classList.remove('hidden');
+    };
+    if (methodCards.length) {
+      methodCards.forEach((c) => c.addEventListener('click', () => selectPayMethod(c.dataset.paymethod)));
+      // Default: online first, else manual.
+      const first = document.querySelector('[data-paymethod="online"]') || document.querySelector('[data-paymethod="manual"]');
+      if (first) selectPayMethod(first.dataset.paymethod);
+    }
+
+    const copyBtn = document.getElementById('btn-copy-upi');
+    if (copyBtn && pay.upi_id) {
+      copyBtn.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(pay.upi_id); toast('UPI ID copied'); }
+        catch (_) { toast('Copy failed — note the UPI ID manually'); }
+      });
+    }
+    document.querySelectorAll('[data-copy-code]').forEach((b) => {
+      b.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(b.getAttribute('data-copy-code')); toast('Gift card code copied'); }
+        catch (_) { toast('Copy failed — note the code manually'); }
+      });
+    });
+    const xtraBtn = document.getElementById('btn-xtra-pay');
+    if (xtraBtn) {
+      xtraBtn.addEventListener('click', async () => {
+        const errBox = document.getElementById('xtra-error');
+        const mobile = (document.getElementById('xtra-mobile').value || '').replace(/\D/g, '');
+        errBox.classList.add('hidden');
+        if (!/^\d{10}$/.test(mobile)) {
+          errBox.textContent = 'Please enter a valid 10-digit mobile number.';
+          errBox.classList.remove('hidden');
+          return;
+        }
+        xtraBtn.disabled = true;
+        const origText = xtraBtn.textContent;
+        xtraBtn.textContent = 'Contacting gateway…';
+        try {
+          const r = await api('/api/payments/xtra/create', {
+            method: 'POST',
+            body: JSON.stringify({ order_id: o.id, customer_mobile: mobile }),
+          });
+          location.href = r.payment_url;
+        } catch (e) {
+          errBox.textContent = (e && e.data && e.data.error) || 'Could not start the online payment. Please try again.';
+          errBox.classList.remove('hidden');
+          xtraBtn.disabled = false;
+          xtraBtn.textContent = origText;
+        }
+      });
+    }
+    const cryptoBtn = document.getElementById('btn-crypto-pay');
+    if (cryptoBtn) {
+      cryptoBtn.addEventListener('click', async () => {
+        const errBox = document.getElementById('crypto-error');
+        errBox.classList.add('hidden');
+        cryptoBtn.disabled = true;
+        const origText = cryptoBtn.textContent;
+        cryptoBtn.textContent = 'Creating invoice…';
+        try {
+          const r = await api('/api/payments/crypto/create', {
+            method: 'POST',
+            body: JSON.stringify({ order_id: o.id }),
+          });
+          location.href = r.checkout_url;
+        } catch (e) {
+          errBox.textContent = (e && e.data && e.data.error) || 'Could not start the crypto payment. Please try again.';
+          errBox.classList.remove('hidden');
+          cryptoBtn.disabled = false;
+          cryptoBtn.textContent = origText;
+        }
+      });
+    }
+    // DivineXPay USDT (BEP20) manual-transfer flow.
+    const divinexBtn = document.getElementById('btn-divinex-pay');
+    let divinexPoll = null, divinexExpiresAt = 0;
+    const divinexCopy = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(text()); toast('Copied'); }
+        catch (_) { toast('Copy failed — long-press to copy'); }
+      });
+    };
+    async function divinexCheckStatus(silent) {
+      const stEl = document.getElementById('divinex-status');
+      try {
+        const r = await api('/api/payments/divinex/status?order_id=' + encodeURIComponent(o.id));
+        if (r.status === 'paid' || r.status === 'delivered') {
+          if (divinexPoll) clearInterval(divinexPoll);
+          if (stEl) { stEl.textContent = 'Payment confirmed! Your order is being processed.'; stEl.className = 'text-sm font-bold text-green-700'; }
+          setTimeout(() => init(true), 1500);
+          return true;
+        }
+        if (!silent && stEl) {
+          const gs = String(r.gateway_status || '').toLowerCase();
+          stEl.textContent = gs === 'expired' ? 'This payment address expired — click "Get payment address" for a fresh one.'
+            : 'Still waiting — no transfer detected yet. Make sure you sent the exact amount on BNB Chain (BEP20).';
+        }
+      } catch (_) { /* keep waiting */ }
+      return false;
+    }
+    function divinexTick() {
+      const el = document.getElementById('divinex-expiry');
+      if (!el || !divinexExpiresAt) return;
+      const ms = divinexExpiresAt - Date.now();
+      if (ms <= 0) { el.textContent = 'Expired — get a fresh address.'; if (divinexPoll) clearInterval(divinexPoll); return; }
+      const m = Math.floor(ms / 60000), s = Math.floor(ms % 60000 / 1000);
+      el.textContent = 'Address expires in ' + m + 'm ' + String(s).padStart(2, '0') + 's';
+    }
+    if (divinexBtn) {
+      divinexBtn.addEventListener('click', async () => {
+        const errBox = document.getElementById('divinex-error');
+        errBox.classList.add('hidden');
+        divinexBtn.disabled = true;
+        divinexBtn.textContent = 'Creating…';
+        try {
+          const r = await api('/api/payments/divinex/create', {
+            method: 'POST',
+            body: JSON.stringify({ order_id: o.id }),
+          });
+          document.getElementById('divinex-setup').classList.add('hidden');
+          const det = document.getElementById('divinex-details');
+          det.classList.remove('hidden');
+          document.getElementById('divinex-amount').textContent = r.exact_amount + ' USDT';
+          document.getElementById('divinex-wallet').textContent = r.wallet_address;
+          divinexExpiresAt = Number(r.expires_at) || 0;
+          divinexCopy('btn-copy-divinex-amount', () => String(r.exact_amount));
+          divinexCopy('btn-copy-divinex-wallet', () => String(r.wallet_address));
+          divinexTick();
+          if (divinexPoll) clearInterval(divinexPoll);
+          divinexPoll = setInterval(async () => {
+            divinexTick();
+            await divinexCheckStatus(true);
+          }, 15000);
+          setInterval(divinexTick, 1000);
+        } catch (e) {
+          errBox.textContent = (e && e.data && e.data.error) || 'Could not start the crypto payment. Please try again.';
+          errBox.classList.remove('hidden');
+          divinexBtn.disabled = false;
+          divinexBtn.textContent = 'Get payment address';
+        }
+      });
+      const chk = document.getElementById('btn-divinex-check');
+      if (chk) chk.addEventListener('click', () => divinexCheckStatus(false));
+    }
+    const paidBtn = document.getElementById('btn-paid');
+    if (paidBtn) {
+      paidBtn.addEventListener('click', async () => {
+        paidBtn.disabled = true;
+        paidBtn.textContent = 'Confirming…';
+        try {
+          await api('/api/orders/' + encodeURIComponent(o.id) + '/mark-paid', { method: 'POST' });
+          toast('Payment marked — we will verify shortly');
+          init(true);
+        } catch (e) {
+          toast((e && e.data && e.data.error) || 'Could not update the order');
+          paidBtn.disabled = false;
+          paidBtn.textContent = "I've paid";
+        }
+      });
+    }
+  }
+
+  async function init(reload) {
+    if (!reload) await boot();
+    if (!requireLogin()) return;
+    const id = new URLSearchParams(location.search).get('id');
+    if (!id) {
+      document.getElementById('order-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">Order not found. <a href="/account.html" class="text-[#c2410c] font-semibold">My orders</a></div>`;
+      return;
+    }
+    try {
+      const o = await api('/api/orders/' + encodeURIComponent(id));
+      render(o, (window.MDS && window.MDS.settings) || {});
+    } catch (e) {
+      document.getElementById('order-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">${esc((e && e.data && e.data.error) || 'Could not load this order.')} <a href="/account.html" class="text-[#c2410c] font-semibold">My orders</a></div>`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => init(false));
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
