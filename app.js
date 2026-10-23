@@ -301,4 +301,24 @@ if (require.main === module) {
   });
 }
 
-module.exports = { buildApp };
+// Vercel's Express preset loads this file directly as the function entry and
+// requires the default export to be a (req, res) handler — delegate to the
+// lazily built Express app (built once per cold start, rejection not cached).
+// api/index.js keeps working via the .buildApp property.
+let appPromise = null;
+module.exports = async (req, res) => {
+  try {
+    if (!appPromise) {
+      appPromise = buildApp().then(({ app }) => app);
+      appPromise.catch(() => { appPromise = null; });
+    }
+    const app = await appPromise;
+    return app(req, res);
+  } catch (err) {
+    console.error('[app] boot failed:', err && err.message);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
+  }
+};
+module.exports.buildApp = buildApp;
