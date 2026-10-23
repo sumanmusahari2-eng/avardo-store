@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-5xl mx-auto px-4 py-10">
+  <nav class="flex items-center gap-2 mb-4" aria-label="Breadcrumb">
+    <a href="/" class="mg-crumb">Home</a>
+    <span class="mg-crumb current">Cart</span>
+  </nav>
+  <h1 class="text-3xl font-extrabold tracking-tight">Your cart</h1>
+  <div id="cart-wrap" class="mt-8">
+    <div class="space-y-4 animate-pulse">
+      <div class="h-24 bg-[#1b2338] rounded-2xl"></div>
+      <div class="h-24 bg-[#1b2338] rounded-2xl"></div>
+    </div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  let catalog = {};
+
+  function render() {
+    const wrap = document.getElementById('cart-wrap');
+    const cart = getCart();
+    if (!cart.length) {
+      wrap.innerHTML = `
+        <div class="mg-panel text-center py-16">
+          <div class="w-16 h-16 mx-auto rounded-[18px] bg-[#e8f0fe] text-[#c2410c] flex items-center justify-center">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+          </div>
+          <h2 class="mt-4 text-xl font-bold">Your cart is empty</h2>
+          <p class="text-gray-500 mt-1 text-sm">Browse the store and add some subscriptions.</p>
+          <a href="/" class="mg-btn-gold mt-6">Continue shopping</a>
+        </div>`;
+      return;
+    }
+
+    let subtotal = 0;
+    let hasUnavailable = false;
+    const rows = cart.map((item) => {
+      const p = catalog[item.product_id];
+      const key = `'${Number(item.product_id)}:${Number(item.variant_id || 0)}'`;
+      if (!p) {
+        return `
+        <div class="mg-panel flex items-center gap-4 p-4">
+          <div class="flex-1 text-sm text-gray-500">This product is no longer available.</div>
+          <button onclick="mdsRemove(${key})" class="text-red-600 hover:text-red-700 p-2" aria-label="Remove">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+          </button>
+        </div>`;
+      }
+      if (!isAvailableInCurrency(p)) {
+        hasUnavailable = true;
+        return `
+        <div class="mg-panel flex items-center gap-4 p-4 border-brand-200 bg-brand-50/50">
+          <div class="flex-1 min-w-0">
+            <div class="font-semibold text-sm sm:text-base leading-snug">${esc(p.name)}</div>
+            <div class="text-xs text-brand-700 font-semibold mt-1">Not available in ${getCurrency() === 'USD' ? 'USD ($)' : 'INR (₹)'} — remove it or switch currency to check out.</div>
+          </div>
+          <button onclick="mdsRemove(${key})" class="text-xs font-medium text-red-600 hover:text-red-700 shrink-0">Remove</button>
+        </div>`;
+      }
+      const variant = item.variant_id ? (p.variants || []).find((v) => Number(v.id) === Number(item.variant_id)) : null;
+      const unitPrice = priceNow(variant || p);
+      const line = Number(unitPrice) * Number(item.qty);
+      subtotal += line;
+      return `
+      <div class="mg-panel flex items-center gap-4 p-4">
+        <a href="/product.html?slug=${esc(p.slug)}" class="w-20 h-20 rounded-[18px] overflow-hidden bg-[#0d1120] shrink-0">${productImage(p, 'w-full h-full')}</a>
+        <div class="flex-1 min-w-0">
+          <a href="/product.html?slug=${esc(p.slug)}" class="font-semibold text-sm sm:text-base leading-snug hover:text-[#c2410c] line-clamp-2">${esc(p.name)}</a>
+          ${variant ? `<div class="text-xs font-bold text-[#c2410c] mt-0.5">${esc(variant.name)}</div>` : ''}
+          <div class="text-sm text-gray-500 mt-1">${fmtCur(unitPrice)} each</div>
+          <div class="flex items-center gap-3 mt-2">
+            <div class="mg-stepper">
+              <button onclick="mdsDec(${key})" class="w-11 h-11 flex items-center justify-center text-gray-300 hover:bg-[#0d1120]" aria-label="Decrease">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg>
+              </button>
+              <span class="w-8 text-center text-sm font-bold">${Number(item.qty)}</span>
+              <button onclick="mdsInc(${key})" class="w-11 h-11 flex items-center justify-center text-gray-300 hover:bg-[#0d1120]" aria-label="Increase">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              </button>
+            </div>
+            <button onclick="mdsRemove(${key})" class="text-xs font-medium text-red-600 hover:text-red-700">Remove</button>
+          </div>
+        </div>
+        <div class="font-extrabold text-sm sm:text-base shrink-0">${fmtCur(line)}</div>
+      </div>`;
+    }).join('');
+
+    wrap.innerHTML = `
+      <div class="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
+        <div class="space-y-4">${rows}</div>
+        <div class="mg-panel p-6 lg:sticky lg:top-24">
+          <h2 class="font-bold text-lg">Order summary</h2>
+          <div class="flex justify-between text-sm mt-4"><span class="text-gray-500">Items</span><span class="font-semibold">${cartCount()}</span></div>
+          <div class="flex justify-between mt-2 pt-4 border-t border-[#26304a]"><span class="font-bold">Subtotal</span><span class="font-extrabold text-xl text-[#c2410c]">${fmtCur(subtotal)}</span></div>
+          <p class="text-xs text-gray-500 mt-3">Pay securely via UPI on the next step. Delivery details are shared after payment confirmation.</p>
+          <button id="btn-checkout" class="mg-btn-gold w-full mt-5" ${hasUnavailable ? 'disabled style="opacity:.5;cursor:not-allowed"' : ''}>${hasUnavailable ? 'Remove unavailable items to continue' : 'Proceed to checkout'}</button>
+          <a href="/" class="mg-btn-cream w-full mt-3">Continue shopping</a>
+        </div>
+      </div>`;
+
+    document.getElementById('btn-checkout').addEventListener('click', () => {
+      if (!requireLogin()) return;
+      location.href = '/checkout.html';
+    });
+  }
+
+  function findLine(key) {
+    const [pid, vid] = String(key).split(':').map(Number);
+    return getCart().find((i) => Number(i.product_id) === pid && Number(i.variant_id || 0) === (vid || 0));
+  }
+  window.mdsInc = function (key) {
+    const cart = getCart();
+    const it = findLine(key);
+    if (it) { it.qty = Math.min(99, Number(it.qty) + 1); setCart(cart); render(); }
+  };
+  window.mdsDec = function (key) {
+    const cart = getCart();
+    const it = findLine(key);
+    if (it) {
+      it.qty = Number(it.qty) - 1;
+      if (it.qty <= 0) cart.splice(cart.indexOf(it), 1);
+      setCart(cart); render();
+    }
+  };
+  window.mdsRemove = function (key) {
+    const [pid, vid] = String(key).split(':').map(Number);
+    setCart(getCart().filter((i) => !(Number(i.product_id) === pid && Number(i.variant_id || 0) === (vid || 0))));
+    toast('Removed from cart');
+    render();
+  };
+
+  async function init() {
+    await boot();
+    try {
+      const products = await api('/api/products?limit=200');
+      catalog = {};
+      (products || []).forEach((p) => { catalog[p.id] = p; });
+    } catch (_) { catalog = {}; }
+    render();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
