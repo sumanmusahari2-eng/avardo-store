@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My account — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
+  <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">My account</h1>
+  <div class="grid md:grid-cols-[300px_1fr] gap-4 sm:gap-6 mt-5 sm:mt-8 items-start">
+    <div class="mg-panel p-4 sm:p-6">
+      <div class="flex items-center gap-3">
+        <div class="relative shrink-0">
+          <span id="avatar" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl placeholder-gradient text-white text-lg sm:text-xl font-extrabold flex items-center justify-center overflow-hidden">?</span>
+          <button id="btn-avatar" title="Change profile photo" aria-label="Change profile photo" class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-[#f97316] text-white flex items-center justify-center shadow-md hover:bg-[#c2410c]">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
+          </button>
+          <input id="avatar-file" type="file" accept="image/*" class="hidden">
+        </div>
+        <div class="min-w-0 flex-1">
+          <div id="u-name" class="font-bold truncate">—</div>
+          <div id="u-email" class="text-sm text-gray-500 truncate">—</div>
+        </div>
+        <span id="u-role" class="badge badge-green capitalize shrink-0">—</span>
+      </div>
+      <div class="mt-3 pt-3 border-t border-[#1d263e] flex items-center justify-between text-sm">
+        <span class="text-gray-500">AV COINS</span>
+        <a href="/wallet.html" id="u-balance" class="font-bold text-[#c2410c] hover:text-[#0f4bc0]">—</a>
+      </div>
+      <div class="flex gap-2.5 mt-3">
+        <a href="/wallet.html" class="mg-btn-dark flex-1 !py-2 !text-sm text-center">Wallet & gift cards</a>
+        <button id="btn-logout" class="mg-btn-cream flex-1 !py-2 !text-sm">Log out</button>
+      </div>
+      <div id="membership-card" class="mt-4"></div>
+    </div>
+
+    <div class="mg-panel p-4 sm:p-6">
+      <h2 class="font-bold text-lg">My orders</h2>
+      <div id="orders-wrap" class="mt-4">
+        <div class="h-24 bg-[#1b2338] rounded-xl animate-pulse"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  function renderAvatar(user) {
+    const el = document.getElementById('avatar');
+    if (user.avatar_url) {
+      el.innerHTML = `<img src="${esc(user.avatar_url)}" alt="" class="w-full h-full object-cover">`;
+    } else {
+      el.textContent = (user.name || '?').trim().charAt(0).toUpperCase();
+    }
+  }
+
+  // Downscale the chosen photo client-side so the data URL stays tiny.
+  function resizeAvatar(file) {
+    return new Promise((resolve, reject) => {
+      if (!file || !String(file.type || '').startsWith('image/')) {
+        reject(new Error('Please choose an image file.'));
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const MAX = 256;
+        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const c = document.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Could not read that image.'));
+      };
+      img.src = url;
+    });
+  }
+
+
+  async function loadMembershipCard(user) {
+    const card = document.getElementById('membership-card');
+    if (!card) return;
+    let ms;
+    try { ms = await api('/api/memberships/status'); }
+    catch (e) { return; }
+    if (user.role === 'admin') {
+      card.innerHTML = `<div class="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-sm">
+        <div class="font-bold text-brand-900">👑 Admin — full access</div>
+        <div class="text-brand-700 text-xs mt-1">You see gold-tier prices everywhere. Manage memberships in Admin → Memberships.</div></div>`;
+      return;
+    }
+    if (ms.tier) {
+      const exp = ms.expires_at ? new Date(ms.expires_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+      card.innerHTML = `<div class="rounded-2xl border border-[#26304a] bg-[#0d1120] p-4">
+        <div class="flex items-center justify-between">
+          <div class="font-extrabold text-gray-200">🥈 Silver member</div>
+          <span class="text-xs text-gray-500">until ${exp}</span>
+        </div>
+        <button onclick="buyMembership('silver')" class="mt-3 w-full mg-btn-dark !py-2 !text-sm">Extend Silver (+${ms.duration_days} days)</button>
+      </div>`;
+      return;
+    }
+    card.innerHTML = `<div class="rounded-2xl border border-[#1d263e] bg-[#151b2e] p-4">
+      <div class="font-extrabold text-sm mb-1">🥈 Silver reseller membership</div>
+      <p class="text-xs text-gray-500 mb-3">Unlock reseller prices for ${ms.duration_days} days. Auto-disconnects after expiry — no renewal trap.</p>
+      <div class="rounded-xl border-2 border-gray-800 p-4 text-center bg-[#0d1120]">
+        <div class="text-2xl font-extrabold">₹${ms.silver_price}<span class="text-sm font-normal text-gray-400"> / ${ms.duration_days} days</span></div>
+        <button onclick="buyMembership('silver')" class="mt-3 w-full text-sm font-bold py-2.5 rounded-xl bg-gray-900 text-white hover:bg-black">Get Silver</button>
+      </div>
+      <p class="text-[11px] text-gray-400 mt-2 text-center">Paid from your AV COINS (INR) wallet · <a href="/wallet.html" class="underline">top up</a></p>
+    </div>`;
+  }
+  async function buyMembership(tier) {
+    if (tier !== 'silver') { toast('Only the Silver plan is available.'); return; }
+    if (!confirm('Buy the Silver package? It will be deducted from your AV COINS (INR) wallet.')) return;
+    try {
+      const r = await api('/api/memberships/buy', { method: 'POST', body: JSON.stringify({ tier }) });
+      toast(`Silver activated until ${new Date(r.expires_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}!`);
+      setTimeout(() => location.reload(), 1200);
+    } catch (e) {
+      toast((e && e.data && e.data.error) || 'Could not complete the purchase.');
+    }
+  }
+
+  async function init() {
+    const user = await guard(['customer', 'silver', 'admin'], '/');
+    if (!user) return;
+
+    renderAvatar(user);
+    document.getElementById('u-name').textContent = user.name || '—';
+    document.getElementById('u-email').textContent = user.email || '—';
+    document.getElementById('u-role').textContent = user.role || 'customer';
+    // Show the wallet balance for the active currency: USD balance in $ mode,
+    // INR (AV COINS) balance in ₹ mode.
+    document.getElementById('u-balance').textContent = getCurrency() === 'USD'
+      ? '$' + Number(user.balance_usd || 0).toFixed(2)
+      : fmtCoins(user.balance);
+    document.getElementById('btn-logout').addEventListener('click', logout);
+    loadMembershipCard(user);
+    document.getElementById('btn-avatar').addEventListener('click', () => document.getElementById('avatar-file').click());
+    document.getElementById('avatar-file').addEventListener('change', async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      try {
+        const dataUrl = await resizeAvatar(f);
+        const r = await api('/api/auth/profile', { method: 'PUT', body: JSON.stringify({ avatar_url: dataUrl }) });
+        if (window.MDS) window.MDS.user = r.user;
+        renderAvatar(r.user);
+        toast('Profile photo updated');
+      } catch (err) {
+        toast((err && err.data && err.data.error) || 'Could not update photo. Please try again.');
+      }
+      e.target.value = '';
+    });
+
+    try {
+      const orders = await api('/api/orders');
+      const wrap = document.getElementById('orders-wrap');
+      if (!orders.length) {
+        wrap.innerHTML = `
+          <div class="text-center py-10 text-gray-500">
+            <p class="text-sm">You have no orders yet.</p>
+            <a href="/" class="inline-block mt-4 text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0]">Browse subscriptions</a>
+          </div>`;
+        return;
+      }
+      wrap.innerHTML = `
+        <div class="overflow-x-auto -mx-6 px-6">
+          <table class="w-full text-sm min-w-[560px]">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-gray-400 border-b border-[#1d263e]">
+                <th class="py-2.5 pr-4 font-semibold">Order</th>
+                <th class="py-2.5 pr-4 font-semibold">Date</th>
+                <th class="py-2.5 pr-4 font-semibold">Items</th>
+                <th class="py-2.5 pr-4 font-semibold">Total</th>
+                <th class="py-2.5 pr-4 font-semibold">Status</th>
+                <th class="py-2.5 font-semibold"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${orders.map((o) => `
+              <tr class="border-b border-[#1d263e] hover:bg-[#0d1120]/60">
+                <td class="py-3 pr-4 font-bold">#${esc(o.id)}</td>
+                <td class="py-3 pr-4 text-gray-500 whitespace-nowrap">${fmtDate(o.created_at)}</td>
+                <td class="py-3 pr-4 text-gray-500">${esc(o.item_count)}</td>
+                <td class="py-3 pr-4 font-semibold">${fmt(o.total)}</td>
+                <td class="py-3 pr-4">${statusBadge(o.status)}${Number(o.paid_claimed) ? ' <span class="badge badge-blue">Paid claimed</span>' : ''}</td>
+                <td class="py-3 text-right whitespace-nowrap"><a href="/order.html?id=${encodeURIComponent(o.id)}" class="text-[#c2410c] font-semibold hover:text-[#0f4bc0]">View</a>${['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? ` <span class="text-gray-300">·</span> <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="text-[#c2410c] font-semibold hover:text-[#0f4bc0]">Invoice</a>` : ''}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    } catch (_) {
+      document.getElementById('orders-wrap').innerHTML = `<div class="text-center py-10 text-gray-400 text-sm">Could not load orders.</div>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
