@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-7xl mx-auto px-4 py-8">
+  <div class="mb-8">
+    <div class="mg-eyebrow">Blog</div>
+    <h1 class="text-3xl font-extrabold tracking-tight mt-1">Meowji Official blog</h1>
+    <p class="text-gray-500 mt-2">Guides, deals and news from the store.</p>
+  </div>
+  <div id="posts-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="rounded-2xl bg-[#1b2338] animate-pulse h-64"></div>
+    <div class="rounded-2xl bg-[#1b2338] animate-pulse h-64"></div>
+    <div class="rounded-2xl bg-[#1b2338] animate-pulse h-64"></div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  function fmtDate(s) {
+    try { return new Date(s).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); }
+    catch (_) { return ''; }
+  }
+  function card(p) {
+    const img = p.image_url
+      ? `<img src="${esc(p.image_url)}" alt="${esc(p.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">`
+      : `<div class="w-full h-full placeholder-gradient flex items-center justify-center"><span class="text-white text-4xl font-extrabold opacity-90">${esc((p.title || '?').trim().charAt(0).toUpperCase())}</span></div>`;
+    return `
+    <a href="/post/${encodeURIComponent(p.slug)}" class="group mg-card hoverable flex flex-col">
+      <div class="relative aspect-[16/9] overflow-hidden bg-[#0d1120]">${img}</div>
+      <div class="p-5 flex flex-col flex-1">
+        <div class="text-xs text-gray-400 font-medium mb-2">${esc(fmtDate(p.created_at))}</div>
+        <h2 class="font-bold text-lg leading-snug group-hover:text-[#c2410c] transition">${esc(p.title)}</h2>
+        ${p.excerpt ? `<p class="text-sm text-gray-500 mt-2 line-clamp-2">${esc(p.excerpt)}</p>` : ''}
+        <span class="mt-4 text-sm font-semibold text-[#c2410c]">Read →</span>
+      </div>
+    </a>`;
+  }
+  async function init() {
+    try {
+      const posts = await api('/api/posts');
+      document.getElementById('posts-grid').innerHTML = posts.length
+        ? posts.map(card).join('')
+        : `<div class="col-span-full text-center py-20 text-gray-500">No posts yet. Check back soon.</div>`;
+    } catch (e) {
+      document.getElementById('posts-grid').innerHTML = `<div class="col-span-full text-center py-20 text-gray-500">Could not load posts.</div>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
