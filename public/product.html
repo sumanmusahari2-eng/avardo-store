@@ -20,11 +20,6 @@
 <body class="bg-[#151b2e] text-gray-100 antialiased">
 <body class="antialiased">
 <!-- Loading screen -->
-<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
-  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
-  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-  <div style="font-size:14px;color:#687080;">Loading...</div>
-</div>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <div id="navbar"></div>
 
@@ -163,6 +158,15 @@
     let selVariant = urlVariant || variants.find((v) => !String(v.stock_status || '').toLowerCase().includes('out')) || variants[0] || null;
     window._selVariant = selVariant;
 
+    const attrs = Array.isArray(p.checkout_attributes) ? p.checkout_attributes : [];
+    const attrLabels = attrs.map((a) => String(a.label || '').toLowerCase());
+    let fmtNoteHtml = '';
+    if (attrLabels.some((l) => l.includes('user') && l.includes('id'))) {
+      fmtNoteHtml = `<div class="fmt-note mt-5">\u{1F4DD} Format: <b>User ID (Zone ID)</b> \u2014 e.g. 12345678 (2345). Find yours in the game: tap your avatar (top-left corner); the number under your name is your User ID and the number in brackets is your Zone ID.</div>`;
+    } else if (attrLabels.some((l) => l.includes('character'))) {
+      fmtNoteHtml = `<div class="fmt-note mt-5">\u{1F4DD} Format: <b>Character ID</b> \u2014 open the game and tap your profile to find your Character ID.</div>`;
+    }
+
     document.getElementById('product-wrap').innerHTML = `
     <nav class="flex items-center gap-2 flex-wrap mb-6" aria-label="Breadcrumb">
       <a class="mg-crumb" href="/"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>Home</a>
@@ -170,80 +174,75 @@
       <span class="mg-crumb current truncate max-w-[220px] sm:max-w-xs" title="${esc(p.name)}">${esc(p.name)}</span>
     </nav>
 
-    <div class="grid lg:grid-cols-2 gap-8">
-      <div class="mg-panel p-4">
-        <div class="relative rounded-[14px] overflow-hidden aspect-square bg-[#151b2e]">
-          <div id="product-img-wrap" class="w-full h-full">${productImage(p, 'w-full h-full')}</div>
-          ${d ? `<span class="absolute top-3 left-3 mg-badge-gold">-${d}% OFF</span>` : (p.featured ? `<span class="absolute top-3 left-3 mg-badge-gold">POPULAR</span>` : '')}
-          ${stockBadge(p) ? `<span class="absolute top-3 right-3">${stockBadge(p)}</span>` : ''}
-        </div>
-        <div class="px-1 pt-3 pb-1">
-          <div class="text-xs font-extrabold">⚡ Fast digital fulfilment</div>
-          <div class="mt-1.5 flex items-center gap-1.5 text-xs text-gray-500">
-            <svg class="w-4 h-4 text-[#c2410c] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-            Official digital product
-          </div>
-        </div>
+    <div class="relative rounded-[20px] overflow-hidden border border-[#26304a]">
+      <div class="relative h-44 sm:h-60">
+        <div id="product-img-wrap" class="absolute inset-0">${productImage(p, 'w-full h-full object-cover')}</div>
+        <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(180deg,rgba(7,10,20,.02),rgba(7,10,20,.5))"></div>
+        ${d ? `<span class="absolute top-3 left-3 mg-badge-gold">-${d}% OFF</span>` : (p.featured ? `<span class="absolute top-3 left-3 mg-badge-gold">POPULAR</span>` : '')}
+        ${stockBadge(p) ? `<span class="absolute top-3 right-3">${stockBadge(p)}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="mg-panel p-5 sm:p-7 -mt-8 relative z-10 mx-1 sm:mx-5">
+      ${p.category_name ? `<span class="mg-cat-chip">${esc(p.category_name)}</span>` : ''}
+      <h1 id="product-title" class="text-2xl sm:text-3xl font-extrabold mt-2.5">${esc(p.name)}</h1>
+      <div id="variant-title" class="hidden text-lg font-bold text-[#f97316] mt-1"></div>
+      <div class="mt-3 flex items-center gap-2 flex-wrap">${(out || notForCurrency) ? '<span class="badge badge-red">Out of stock</span>' : (stockBadge(p) || lowStockBadge || '<span class="badge badge-green">In stock</span>')}</div>
+
+      <div class="mt-5 flex items-center gap-2 flex-wrap">
+        <span class="mg-trust-pill">⚡ Instant delivery</span>
+        <span class="mg-trust-pill">🛡 Secure payment</span>
+        <span class="mg-trust-pill">🎧 24/7 support</span>
+        ${isTopup ? `<span class="mg-trust-pill">🎮 Official top-up</span>` : ''}
       </div>
 
-      <div class="mg-panel p-6 sm:p-8">
-        ${p.category_name ? `<span class="mg-cat-chip">${esc(p.category_name)}</span>` : ''}
-        <h1 id="product-title" class="text-3xl sm:text-4xl font-extrabold mt-3">${esc(p.name)}</h1>
-        <div id="variant-title" class="hidden text-lg font-bold text-[#f97316] mt-1"></div>
-        <div class="mt-3 flex items-center gap-2 flex-wrap">${(out || notForCurrency) ? '<span class="badge badge-red">Out of stock</span>' : (stockBadge(p) || lowStockBadge || '<span class="badge badge-green">In stock</span>')}</div>
+      ${fmtNoteHtml}
 
-        <div class="mg-price-banner mt-5 p-5" id="price-banner"></div>
-
-        <div id="opt-pills-wrap"></div>
-
-        ${isTopup ? `<div class="mg-trust-pill mt-5">⚡ You'll enter your Player ID / game details at checkout</div>` : ''}
-
-        ${shouldShowIdChecker(p) ? `
-        <div class="mt-6 rounded-2xl border border-[#e2e8f0] bg-[#f6f7f9] p-5">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🔍</span>
-            <h3 class="font-extrabold">Verify your Game ID</h3>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">Enter your User ID and Zone ID to see your in-game nickname before you buy.</p>
-          <div class="grid grid-cols-2 gap-3 mt-4">
-            <div>
-              <label class="text-xs font-bold text-gray-300" for="check-user-id">User ID</label>
-              <input id="check-user-id" inputmode="numeric" placeholder="e.g. 12345678" class="mt-1 w-full text-sm border border-[#26304a] rounded-xl px-4 py-2.5 bg-[#151b2e] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
-            </div>
-            <div id="check-zone-wrap">
-              <label class="text-xs font-bold text-gray-300" for="check-zone-id">Zone ID</label>
-              <input id="check-zone-id" inputmode="numeric" placeholder="e.g. 1234" class="mt-1 w-full text-sm border border-[#26304a] rounded-xl px-4 py-2.5 bg-[#151b2e] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
-            </div>
-          </div>
-          <button id="check-id-btn" class="mt-3 w-full py-3 rounded-xl bg-[#f97316] text-white text-sm font-bold hover:opacity-90 active:scale-[0.99] transition disabled:opacity-50">Check nickname</button>
-          <div id="check-id-result" class="mt-3 hidden"></div>
-        </div>` : ''}
-
-        ${notForCurrency ? `
-        <div class="mt-6 rounded-2xl border border-[#26304a] bg-[#0d1120] p-4 text-sm text-gray-300">
-          <span class="font-extrabold">Out of stock in ${getCurrency() === 'USD' ? 'USD ($)' : 'INR (₹)'}.</span>
-          This product is only sold in ${otherCur}.
-        </div>` : ''}
-        <div class="mt-6 flex items-center gap-3 flex-wrap">
-          <div class="mg-stepper">
-            <button id="qty-minus" aria-label="Decrease quantity">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg>
-            </button>
-            <span id="qty-val" class="w-10 text-center font-bold">1</span>
-            <button id="qty-plus" aria-label="Increase quantity">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-            </button>
-          </div>
-          <button id="btn-add" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-cream flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Add to cart'}</button>
-          <button id="btn-buy" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-gold flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Buy now'}</button>
+      ${shouldShowIdChecker(p) ? `
+      <div class="mt-6 rounded-2xl border border-[#26304a] bg-[#0d1120] p-5">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🔍</span>
+          <h3 class="font-extrabold">Verify your Game ID</h3>
         </div>
-
-        <div class="mt-6 flex items-center gap-2 flex-wrap">
-          <span class="mg-trust-pill">⚡ Instant delivery</span>
-          <span class="mg-trust-pill">🛡 Secure payment</span>
-          <span class="mg-trust-pill">🎧 24/7 support</span>
+        <p class="text-xs text-gray-500 mt-1">Enter your User ID and Zone ID to see your in-game nickname before you buy.</p>
+        <div class="grid grid-cols-2 gap-3 mt-4">
+          <div>
+            <label class="text-xs font-bold text-gray-300" for="check-user-id">User ID</label>
+            <input id="check-user-id" inputmode="numeric" placeholder="e.g. 12345678" class="mt-1 w-full text-sm border border-[#26304a] rounded-xl px-4 py-2.5 bg-[#151b2e] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+          </div>
+          <div id="check-zone-wrap">
+            <label class="text-xs font-bold text-gray-300" for="check-zone-id">Zone ID</label>
+            <input id="check-zone-id" inputmode="numeric" placeholder="e.g. 1234" class="mt-1 w-full text-sm border border-[#26304a] rounded-xl px-4 py-2.5 bg-[#151b2e] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+          </div>
         </div>
+        <button id="check-id-btn" class="mt-3 w-full py-3 rounded-xl bg-[#f97316] text-white text-sm font-bold hover:opacity-90 active:scale-[0.99] transition disabled:opacity-50">Check nickname</button>
+        <div id="check-id-result" class="mt-3 hidden"></div>
+      </div>` : ''}
+
+      ${notForCurrency ? `
+      <div class="mt-6 rounded-2xl border border-[#26304a] bg-[#0d1120] p-4 text-sm text-gray-300">
+        <span class="font-extrabold">Out of stock in ${getCurrency() === 'USD' ? 'USD ($)' : 'INR (₹)'}.</span>
+        This product is only sold in ${otherCur}.
+      </div>` : ''}
+
+      <div id="opt-pills-wrap"></div>
+
+      <div class="mt-6 p-5 rounded-2xl border border-[#26304a] bg-[#0d1120]" id="price-banner"></div>
+
+      <div class="mt-6 flex items-center gap-3 flex-wrap">
+        <div class="mg-stepper">
+          <button id="qty-minus" aria-label="Decrease quantity">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg>
+          </button>
+          <span id="qty-val" class="w-10 text-center font-bold">1</span>
+          <button id="qty-plus" aria-label="Increase quantity">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          </button>
+        </div>
+        <button id="btn-add" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-cream flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Add to cart'}</button>
+        <button id="btn-buy" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-gold flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Buy now'}</button>
       </div>
+      <p class="text-[11px] text-gray-500 mt-3">You'll enter your game ID details at checkout. Pay via UPI, wallet or WhatsApp.</p>
     </div>
 
     <div class="mg-panel p-6 mt-10">
@@ -331,10 +330,10 @@
       // No options: classic single-price layout.
       const d = p.price_mrp && Number(p.price_mrp) > Number(p.price)
         ? Math.round((1 - Number(p.price) / Number(p.price_mrp)) * 100) : 0;
-      banner.className = 'mg-price-banner mt-5 p-5 flex justify-between items-center gap-4';
+      banner.className = 'mt-6 p-5 rounded-2xl border border-[#26304a] bg-[#0d1120] flex justify-between items-center gap-4';
       banner.innerHTML = `
         <div>
-          <div class="text-[11px] font-extrabold tracking-widest text-[#f97316]">PRICE</div>
+          <div class="text-[11px] font-extrabold tracking-widest text-[#f97316]">AMOUNT PAYABLE</div>
           <div class="text-3xl font-extrabold">${fmtPrice(p)}</div>
           ${p.price_mrp && Number(p.price_mrp) > Number(p.price) ? `<div class="mt-1.5 flex items-center gap-2 flex-wrap"><span class="text-sm text-white/50 line-through">${fmt(p.price_mrp)}</span>${d ? `<span class="mg-badge-gold">SAVE ${d}%</span>` : ''}</div>` : ''}
         </div>`;
@@ -355,7 +354,7 @@
         setSeoMeta(p, sel);
       } else {
         titleEl.textContent = p.name;
-        titleEl.className = 'text-3xl sm:text-4xl font-extrabold mt-3';
+        titleEl.className = 'text-2xl sm:text-3xl font-extrabold mt-2.5';
         vTitleEl.classList.add('hidden');
         setSeoMeta(p, null);
       }
@@ -370,21 +369,34 @@
     }
     const vd = sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price)
       ? Math.round((1 - Number(sel.price) / Number(sel.price_mrp)) * 100) : 0;
-    banner.className = 'mg-price-banner mt-5 p-5';
+    banner.className = 'mt-6 p-5 rounded-2xl border border-[#26304a] bg-[#0d1120]';
     banner.innerHTML = `
-      <div class="text-[11px] font-extrabold tracking-widest text-[#f97316]">${sel ? esc(sel.name).toUpperCase() : 'SELECT AN OPTION'}</div>
+      <div class="text-[11px] font-extrabold tracking-widest text-[#f97316]">AMOUNT PAYABLE</div>
       <div class="text-3xl font-extrabold mt-1">${sel ? fmtPrice(sel) : '—'}</div>
       ${sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price) ? `<div class="mt-1.5 flex items-center gap-2 flex-wrap"><span class="text-sm text-white/50 line-through">${fmt(sel.price_mrp)}</span>${vd ? `<span class="mg-badge-gold">SAVE ${vd}%</span>` : ''}</div>` : ''}
       ${p.price_tier ? `<div class="mt-2 text-xs font-bold text-white/70">Silver reseller: ${fmtPrice(sel || p)}</div>` : ''}
-      <div class="text-[11px] text-white/50 mt-1">Inclusive of all taxes. Digital delivery.</div>`;
+      ${sel ? `<div class="text-[11px] text-gray-500 mt-1">${esc(sel.name)} \u00B7 Inclusive of all taxes. Digital delivery.</div>` : `<div class="text-[11px] text-gray-500 mt-1">Select a pack above</div>`}`;
+    const catOf = (v) => /double/i.test(v.name) ? 'double' : /(pass|weekly|twilight)/i.test(v.name) ? 'passes' : 'diamonds';
+    const emojiOf = (v) => catOf(v) === 'double' ? '✨' : catOf(v) === 'passes' ? '🎟️' : '💎';
+    const showFilters = variants.length > 8;
     wrap.innerHTML = `
-      <div class="mt-6">
-        <div class="text-sm font-extrabold mb-3">Choose an option</div>
-        <div class="grid grid-cols-1 gap-2.5">
+      <div class="mt-7">
+        <div class="text-base font-extrabold mb-3">Select your pack</div>
+        ${showFilters ? `<div class="flex gap-2 flex-wrap mb-4" id="pack-filters">
+          <button type="button" data-filter="all" class="av-navpill pack-filter" style="border-color:var(--mg-gold);background:#2b1c0d">All Packs</button>
+          <button type="button" data-filter="diamonds" class="av-navpill pack-filter">💎 Diamonds</button>
+          <button type="button" data-filter="double" class="av-navpill pack-filter">✨ Double</button>
+          <button type="button" data-filter="passes" class="av-navpill pack-filter">🎟️ Passes</button>
+        </div>` : ''}
+        <div class="pack-grid">
           ${variants.map((v) => `
-            <button type="button" data-variant="${v.id}" ${vOut(v) ? 'disabled' : ''}
-              class="mg-opt-pill ${sel && sel.id === v.id ? 'active' : ''} ${vOut(v) ? 'opacity-40 cursor-not-allowed' : ''}">
-              ${esc(v.name)}${vOut(v) ? ' — out of stock' : ''}
+            <button type="button" data-variant="${v.id}" data-cat="${catOf(v)}" ${vOut(v) ? 'disabled' : ''}
+              class="pack-card ${sel && sel.id === v.id ? 'active' : ''}">
+              <div class="pk-emoji">${emojiOf(v)}</div>
+              <div class="pk-name">${esc(v.name)}</div>
+              <div class="pk-price">${fmtPrice(v)}</div>
+              ${v.price_mrp && Number(v.price_mrp) > Number(v.price) ? `<div class="pk-mrp">${fmt(v.price_mrp)}</div>` : ''}
+              ${vOut(v) ? '<div class="text-[10px] font-bold text-red-400 mt-1">Out of stock</div>' : ''}
             </button>`).join('')}
         </div>
       </div>`;
@@ -399,6 +411,20 @@
       } catch (_) {}
       renderVariantUI();
     }));
+    const fwrap = document.getElementById('pack-filters');
+    if (fwrap) {
+      fwrap.querySelectorAll('[data-filter]').forEach((fb) => fb.addEventListener('click', () => {
+        const f = fb.dataset.filter;
+        fwrap.querySelectorAll('[data-filter]').forEach((x) => {
+          const on = x === fb;
+          x.style.borderColor = on ? 'var(--mg-gold)' : '';
+          x.style.background = on ? '#2b1c0d' : '';
+        });
+        wrap.querySelectorAll('[data-variant]').forEach((c) => {
+          c.style.display = (f === 'all' || c.dataset.cat === f) ? '' : 'none';
+        });
+      }));
+    }
     // Toggle buy buttons with the selected option's stock (currency-unavailable stays out of stock).
     const btnAdd = document.getElementById('btn-add'), btnBuy = document.getElementById('btn-buy');
     const dis = (sel && vOut(sel)) || !isAvailableInCurrency(product);

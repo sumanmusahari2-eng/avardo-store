@@ -257,15 +257,15 @@ function renderNavbar() {
         <div class="mg-navdrop-menu">${kids.map((k) => `<a href="/?category=${esc(k.slug)}">${esc(k.name)}</a>`).join('')}</div>
       </div>`;
     }
-    return `<a href="/?category=${esc(c.slug)}" class="px-3 py-2 text-sm font-bold text-gray-200 hover:text-[#c2410c] rounded-lg transition">${esc(c.name)}</a>`;
+    return `<a href="/?category=${esc(c.slug)}" class="av-navpill">${esc(c.name)}</a>`;
   }).join('');
 
   const acctLabel = user ? (user.name || 'Account') : 'Login';
   const acctHref = user ? '/account.html' : '/login.html';
   const roleLink = user && user.role === 'admin'
-    ? `<a href="/admin.html" class="px-3 py-2 text-sm font-bold text-[#c2410c] rounded-lg transition">Admin</a>`
+    ? `<a href="/admin.html" class="av-navpill">Admin</a>`
     : user && user.role === 'reseller'
-    ? `<a href="/reseller.html" class="px-3 py-2 text-sm font-bold text-[#c2410c] rounded-lg transition">Reseller dashboard</a>`
+    ? `<a href="/reseller.html" class="av-navpill">Reseller dashboard</a>`
     : '';
 
   const curOptions = Object.entries(CURRENCIES).map(([code, c]) =>
@@ -278,13 +278,7 @@ function renderNavbar() {
   const headsetSm = '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 14v-2a8 8 0 0116 0v2"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 14h2.5v5.5H5.75A1.75 1.75 0 014 17.75V14zm16 0h-2.5v5.5h.75a1.75 1.75 0 001.75-1.75V14z"/></svg>';
 
   host.innerHTML = `
-  <div class="mg-trustbar">
-    <div class="tb-row max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-center gap-6">
-      <span class="tb-item">${boltSm}Instant delivery</span>
-      <span class="tb-item">${shieldSm}Secure payment</span>
-      <span class="tb-item">${headsetSm}24/7 support</span>
-    </div>
-  </div>
+  ${waSupportLink ? `<div class="av-strip">\u{1F4AC} Join our WhatsApp channel for daily offers &amp; giveaways &nbsp;<a href="${waSupportLink}" target="_blank" rel="noopener">Join Now</a></div>` : ''}
   <header class="sticky top-0 z-40 bg-[#151b2e]/90 backdrop-blur-md border-b border-[#e2e8f0]">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center gap-2 h-16">
@@ -293,13 +287,14 @@ function renderNavbar() {
           ${logoHtml(settings)}
         </a>
         <nav class="hidden md:flex items-center gap-0.5 mx-auto">
-          <a href="/" class="px-3 py-2 text-sm font-bold text-gray-200 hover:text-[#c2410c] rounded-lg transition">Home</a>
+          <a href="/" class="av-navpill">Home</a>
           ${catLinks}
-          <a href="/blog.html" class="px-3 py-2 text-sm font-bold text-gray-200 hover:text-[#c2410c] rounded-lg transition">Blog</a>
+          <a href="/blog.html" class="av-navpill">Blog</a>
+          <a href="/search.html" class="av-navpill">🔍 Search</a>
         </nav>
         <div class="flex items-center gap-1 ml-auto md:ml-0">
           <label class="mg-cur-pill hidden sm:inline-flex" aria-label="Country / currency">${globeSm}<select id="currency-select" style="background:transparent;border:none;outline:none;font:inherit;cursor:pointer">${curOptions}</select></label>
-          <a href="${acctHref}" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-gray-200 hover:text-[#c2410c] rounded-lg transition"><span class="text-gray-500">${ICON.user}</span><span class="max-w-28 truncate">${esc(acctLabel)}</span></a>
+          <a href="${acctHref}" class="av-login-btn hidden sm:inline-flex items-center gap-1.5"><span class="text-gray-500">${ICON.user}</span><span class="max-w-28 truncate">${esc(acctLabel)}</span></a>
           ${roleLink}
           <a href="/cart.html" class="relative p-2 text-gray-300 hover:text-[#c2410c] rounded-lg transition" aria-label="Cart">${ICON.cart}<span id="cart-count" class="hidden absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full bg-[#f97316] text-[#ffffff] text-[11px] font-bold flex items-center justify-center">0</span></a>
           <button id="theme-toggle" class="p-2 text-gray-300 hover:text-[#c2410c] rounded-lg transition" aria-label="Toggle dark mode">
@@ -309,18 +304,13 @@ function renderNavbar() {
         </div>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-4 pb-3">
-      <form data-search class="mg-searchpill max-w-2xl mx-auto">
-        <span class="text-gray-400 shrink-0">${ICON.search}</span>
-        <input name="q" placeholder="Find games, gift cards or top-ups" aria-label="Search products">
-        <span class="mg-kbd">/</span>
-        <button type="submit" class="mg-btn-dark shrink-0" style="padding:.6rem 1.5rem;font-size:.85rem">Search</button>
-      </form>
-    </div>
+    
     <div class="max-w-7xl mx-auto px-4">
-      <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-[#e2e8f0]">
+      <div id="menu-backdrop" class="hidden"></div>
+      <div id="mobile-menu" class="hidden md:hidden av-drawer">
+        <div class="flex items-center gap-2 pb-3 mb-1 border-b border-[#26304a]"><span class="text-xl">💎</span><span class="font-extrabold text-lg">${esc(siteName)}</span><button id="nav-close" class="ml-auto w-9 h-9 rounded-lg bg-[#1b2338] text-gray-200" aria-label="Close menu">✕</button></div>
         <form data-search class="flex items-center relative mt-3 sm:hidden">
-          <input type="text" name="q" placeholder="Find games, gift cards or top-ups" class="field w-full text-sm border border-[#e2e8f0] rounded-full pl-9 pr-3 py-2.5 bg-[#f6f7f9]">
+          <input type="text" name="q" placeholder="Find games, gift cards or top-ups" class="field w-full text-sm border border-[#e2e8f0] rounded-full pl-9 pr-3 py-2.5 bg-[#1b2338]">
           <span class="absolute left-3 text-gray-400">${ICON.search}</span>
         </form>
         <div class="mt-3 bg-[#2b1c0d] rounded-2xl px-5 py-3.5 flex items-center justify-between">
@@ -331,11 +321,11 @@ function renderNavbar() {
           </span>
         </div>
         <nav class="flex flex-col gap-2.5 mt-3">
-          <a href="/" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">Home</a>
+          <a href="/" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">Home</a>
           ${menuCats.map((c) => {
             const kids = (Array.isArray(c.children) ? c.children : []).filter(inMenu);
-            if (!kids.length) return `<a href="/?category=${esc(c.slug)}" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">${esc(c.name)}</a>`;
-            return `<div class="bg-[#f6f7f9] rounded-2xl overflow-hidden">
+            if (!kids.length) return `<a href="/?category=${esc(c.slug)}" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">${esc(c.name)}</a>`;
+            return `<div class="bg-[#1b2338] rounded-2xl overflow-hidden">
               <div class="flex items-center">
                 <a href="/?category=${esc(c.slug)}" class="flex-1 px-5 py-4 text-[15px] font-extrabold text-gray-100">${esc(c.name)}</a>
                 <button type="button" class="mm-sub-toggle p-4 mr-1 text-gray-400 transition-transform" aria-label="Show sub-categories">${chevDown}</button>
@@ -345,12 +335,12 @@ function renderNavbar() {
               </div>
             </div>`;
           }).join('')}
-          <a href="/" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">All Products</a>
-          <a href="/blog.html" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">Blog</a>
-          ${waSupportLink ? `<a href="${waSupportLink}" target="_blank" rel="noopener" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">24/7 Support</a>` : ''}
-          <a href="${acctHref}" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">${user ? 'My Account' : 'Sign in'}</a>
-          ${user && user.role === 'admin' ? '<a href="/admin.html" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#c2410c]">Admin</a>' : ''}
-          ${user && user.role === 'reseller' ? '<a href="/reseller.html" class="block bg-[#f6f7f9] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#c2410c]">Reseller dashboard</a>' : ''}
+          <a href="/" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">All Products</a>
+          <a href="/blog.html" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">Blog</a>
+          ${waSupportLink ? `<a href="${waSupportLink}" target="_blank" rel="noopener" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">24/7 Support</a>` : ''}
+          <a href="${acctHref}" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">${user ? 'My Account' : 'Sign in'}</a>
+          ${user && user.role === 'admin' ? '<a href="/admin.html" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#c2410c]">Admin</a>' : ''}
+          ${user && user.role === 'reseller' ? '<a href="/reseller.html" class="block bg-[#1b2338] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#c2410c]">Reseller dashboard</a>' : ''}
         </nav>
       </div>
     </div>
@@ -358,7 +348,16 @@ function renderNavbar() {
 
   const toggle = document.getElementById('nav-toggle');
   const menu = document.getElementById('mobile-menu');
-  if (toggle && menu) toggle.addEventListener('click', () => menu.classList.toggle('hidden'));
+  const backdrop = document.getElementById('menu-backdrop');
+  const setMenu = (open) => {
+    menu.classList.toggle('hidden', !open);
+    if (backdrop) backdrop.classList.toggle('hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  if (toggle && menu) toggle.addEventListener('click', () => setMenu(menu.classList.contains('hidden')));
+  if (backdrop) backdrop.addEventListener('click', () => setMenu(false));
+  const navClose = document.getElementById('nav-close');
+  if (navClose) navClose.addEventListener('click', () => setMenu(false));
 
   host.querySelectorAll('form[data-search]').forEach((f) => {
     f.addEventListener('submit', (e) => {
@@ -632,7 +631,7 @@ function productCard(p) {
   if (soldOut) {
     actions = `<span class="text-xs font-bold text-red-400">Out of stock</span>`;
   } else if (hasVariants) {
-    actions = `<a href="${href}" class="flex-1 text-center text-xs font-extrabold text-white bg-[#f97316] rounded-full px-4 py-3.5 hover:opacity-90 active:scale-[0.98] transition">Choose option</a>`;
+    actions = `<a href="${href}" class="flex-1 text-center text-xs font-extrabold text-white bg-[#f97316] rounded-full px-4 py-3.5 hover:opacity-90 active:scale-[0.98] transition">Top Up →</a>`;
   } else {
     actions = `
       <button onclick="mdsQuickAdd(event, ${Number(p.id)})" class="flex-1 text-xs font-extrabold text-[#101828] bg-[#151b2e] rounded-full px-3 py-3.5 hover:bg-[#1b2338] active:scale-[0.98] transition">Add to cart</button>
@@ -644,7 +643,7 @@ function productCard(p) {
   return `<div class="h-full rounded-[1.25rem] bg-[#151d38] p-4 shadow-sm hover:shadow-lg transition ${soldOut ? 'opacity-70' : ''}">
     <div class="flex gap-1.5 flex-wrap">${badges}</div>
     ${cardImg}
-    <a href="${href}" class="block mt-1.5 text-[#5b8cff] text-[12px] font-extrabold uppercase tracking-wider line-clamp-2 leading-snug break-words hover:text-[#7da2ff]">${esc(p.name)}</a>
+    <a href="${href}" class="block mt-1.5 text-white text-[13px] font-bold line-clamp-2 leading-snug break-words">${esc(p.name)}</a>
     <div class="mt-1.5 text-white text-[26px] font-extrabold leading-none">${hasVariants ? '<span class="text-[13px] font-bold text-[#8b93b0]">From </span>' : ''}${priceStr}${mrpStr}</div>
     ${resellerLine}
     <div class="flex gap-2 mt-3">${actions}</div>

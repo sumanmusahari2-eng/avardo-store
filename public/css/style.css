@@ -888,3 +888,84 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
   /* Header icon buttons: 36px -> 44px tap targets on phones only */
   #nav-toggle, #theme-toggle, a[aria-label="Cart"] { padding: 0.75rem; }
 }
+
+/* ============================================================
+   Avardo static-design port (2026-10-23): WhatsApp strip,
+   slide-in drawer, section titles, top-up panel pack grid.
+   ============================================================ */
+.av-strip {
+  background: #128c4b;
+  color: #fff;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+}
+.av-strip a { color: #fff; text-decoration: underline; font-weight: 800; }
+
+.av-navpill {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #d5dbe8;
+  border: 1px solid transparent;
+  transition: all .15s ease;
+  white-space: nowrap;
+}
+.av-navpill:hover { background: #1b2338; color: #fff; border-color: var(--mg-line); }
+
+.av-login-btn {
+  background: linear-gradient(135deg, var(--mg-gold), #c2410c);
+  color: #fff !important;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+.av-login-btn:hover { opacity: .92; }
+
+/* Mobile drawer (the #mobile-menu panel becomes a left slide-in) */
+#menu-backdrop {
+  position: fixed; inset: 0; background: rgba(4,6,10,.7); z-index: 49;
+}
+@media (max-width: 767px) {
+  #mobile-menu.av-drawer {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 284px; max-width: 84vw;
+    background: #0e1220; z-index: 50; overflow-y: auto;
+    border-right: 1px solid var(--mg-line); border-top: none !important;
+    padding: 14px 14px 24px !important; margin: 0 !important;
+    box-shadow: 12px 0 32px rgba(0,0,0,.5);
+  }
+}
+
+/* Static-style section heading */
+.sec-title { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.sec-title .bar { width: 5px; height: 24px; border-radius: 3px; background: linear-gradient(180deg, var(--mg-gold), #c2410c); }
+.sec-title h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: .01em; }
+@media (min-width: 640px) { .sec-title h2 { font-size: 1.5rem; } }
+
+/* Product page: ID format note + pack grid */
+.fmt-note {
+  background: #2b1c0d; border: 1px solid #4a2f14; color: #ffb37a;
+  border-radius: 12px; padding: 10px 14px; font-size: 0.82rem; font-weight: 600;
+}
+.pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (min-width: 768px) { .pack-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .pack-grid { grid-template-columns: repeat(4, 1fr); } }
+.pack-card {
+  background: #0d1120; border: 1.5px solid var(--mg-line); border-radius: 14px;
+  padding: 14px 10px 12px; text-align: center; cursor: pointer; color: var(--mg-ink);
+  transition: all .15s ease; width: 100%;
+}
+.pack-card:hover { border-color: var(--mg-gold); transform: translateY(-1px); }
+.pack-card.active { border-color: var(--mg-gold); background: #2b1c0d; box-shadow: 0 0 0 3px rgba(249,115,22,.18); }
+.pack-card:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.pack-card .pk-emoji { font-size: 26px; line-height: 1; }
+.pack-card .pk-name { font-size: 0.78rem; font-weight: 700; margin-top: 7px; line-height: 1.25; }
+.pack-card .pk-price { font-size: 1.02rem; font-weight: 800; color: var(--mg-gold); margin-top: 4px; }
+.pack-card .pk-mrp { font-size: 0.7rem; color: var(--mg-muted); text-decoration: line-through; }
+
+.mg-panel { border-color: rgba(255,255,255,0.08); }
