@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reseller dashboard — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-7xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-extrabold tracking-tight">Reseller dashboard</h1>
+  <p class="text-gray-500 mt-1 text-sm">Your wholesale pricing, balance and orders at a glance.</p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+    <div class="mg-pastel mg-pastel-cream p-6">
+      <div class="text-sm text-gray-500 font-medium">Wallet balance</div>
+      <div id="stat-balance" class="text-3xl font-extrabold mt-1">—</div>
+      <div class="text-xs text-gray-400 mt-2">Top up via WhatsApp support</div>
+    </div>
+    <div class="mg-pastel mg-pastel-lavender p-6">
+      <div class="text-sm text-gray-500 font-medium">Total orders</div>
+      <div id="stat-orders" class="text-3xl font-extrabold mt-1">—</div>
+    </div>
+    <div class="mg-pastel mg-pastel-blue p-6">
+      <div class="text-sm text-gray-500 font-medium">Total spent</div>
+      <div id="stat-spent" class="text-3xl font-extrabold mt-1">—</div>
+    </div>
+  </div>
+
+  <div class="mt-12">
+    <h2 class="text-2xl font-extrabold tracking-tight">Reseller catalog</h2>
+    <p class="text-sm text-gray-500 mt-1">Green "Reseller" prices are your wholesale rates.</p>
+    <div id="catalog-grid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6 mt-6">
+      <div class="col-span-full h-40 bg-[#1b2338] rounded-2xl animate-pulse"></div>
+    </div>
+  </div>
+
+  <div class="mt-12 mg-panel p-6">
+    <h2 class="text-xl font-extrabold">My orders</h2>
+    <div id="orders-wrap" class="mt-4"><div class="h-24 bg-[#1b2338] rounded-xl animate-pulse"></div></div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  async function init() {
+    const user = await guard(['silver', 'admin'], '/');
+    if (!user) return;
+
+    // Summary
+    try {
+      const s = await api('/api/reseller/summary');
+      document.getElementById('stat-balance').textContent = fmtCoins(s.balance);
+      document.getElementById('stat-orders').textContent = s.orders_count ?? 0;
+      document.getElementById('stat-spent').textContent = fmt(s.total_spent);
+    } catch (_) {
+      document.getElementById('stat-balance').textContent = fmtCoins(user.balance);
+    }
+
+    // Catalog with reseller prices
+    try {
+      const products = await api('/api/products?limit=100');
+      document.getElementById('catalog-grid').innerHTML = products.length
+        ? products.map((p) => `<div class="reveal">${productCard(p)}</div>`).join('')
+        : `<div class="col-span-full text-center text-gray-400 py-10 text-sm">No products available.</div>`;
+      initReveal();
+    } catch (_) {
+      document.getElementById('catalog-grid').innerHTML = `<div class="col-span-full text-center text-gray-400 py-10 text-sm">Could not load catalog.</div>`;
+    }
+
+    // Orders
+    try {
+      const orders = await api('/api/orders');
+      const wrap = document.getElementById('orders-wrap');
+      if (!orders.length) {
+        wrap.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">No orders yet. Add products from the catalog above.</div>`;
+        return;
+      }
+      wrap.innerHTML = `
+        <div class="overflow-x-auto -mx-6 px-6">
+          <table class="w-full text-sm min-w-[560px]">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-gray-500 border-b border-[#1d263e] bg-[#e8f0fe]">
+                <th class="py-2.5 pr-4 font-semibold">Order</th>
+                <th class="py-2.5 pr-4 font-semibold">Date</th>
+                <th class="py-2.5 pr-4 font-semibold">Items</th>
+                <th class="py-2.5 pr-4 font-semibold">Total</th>
+                <th class="py-2.5 pr-4 font-semibold">Status</th>
+                <th class="py-2.5 font-semibold"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${orders.map((o) => `
+              <tr class="border-b border-[#1d263e] hover:bg-[#0d1120]/60">
+                <td class="py-3 pr-4 font-bold">#${esc(o.id)}</td>
+                <td class="py-3 pr-4 text-gray-500 whitespace-nowrap">${fmtDate(o.created_at)}</td>
+                <td class="py-3 pr-4 text-gray-500">${esc(o.item_count)}</td>
+                <td class="py-3 pr-4 font-semibold">${fmt(o.total)}</td>
+                <td class="py-3 pr-4">${statusBadge(o.status)}</td>
+                <td class="py-3 text-right"><a href="/order.html?id=${encodeURIComponent(o.id)}" class="text-[#c2410c] font-semibold hover:text-[#0f4bc0] whitespace-nowrap">View</a></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    } catch (_) {
+      document.getElementById('orders-wrap').innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Could not load orders.</div>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
