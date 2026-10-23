@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meowji Official — BGMI UC, MLBB Diamonds, Game Top-Ups & Gift Cards</title>
+<meta name="description" content="Buy BGMI UC, Mobile Legends diamonds, game top-ups, gift cards & OTT subscriptions at Meowji Official. Instant delivery, secure payments, best prices in India.">
+<link rel="canonical" href="https://www.mlbbstore.in/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meowji Official">
+<meta property="og:title" content="Meowji Official — BGMI UC, MLBB Diamonds, Game Top-Ups & Gift Cards">
+<meta property="og:description" content="Buy BGMI UC, Mobile Legends diamonds, game top-ups, gift cards & OTT subscriptions. Instant delivery, secure payments.">
+<meta property="og:url" content="https://www.mlbbstore.in/">
+<meta property="og:image" content="https://www.mlbbstore.in/images/products/bgmi-uc.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meowji Official — BGMI UC, MLBB Diamonds, Game Top-Ups & Gift Cards">
+<meta name="twitter:description" content="Buy BGMI UC, Mobile Legends diamonds, game top-ups, gift cards & OTT subscriptions. Instant delivery, secure payments.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Meowji Official","url":"https://www.mlbbstore.in/","logo":"https://www.mlbbstore.in/img/logo.svg","sameAs":[]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"Meowji Official","url":"https://www.mlbbstore.in/","potentialAction":{"@type":"SearchAction","target":"https://www.mlbbstore.in/search.html?q={search_term_string}","query-input":"required name=search_term_string"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#f97316">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main>
+  <!-- 1. HERO / banner slider -->
+  <section class="max-w-7xl mx-auto px-4 pt-6">
+    <div id="hero"></div>
+  </section>
+
+  <!-- 2. QUICK-CATEGORY RAIL -->
+  <section id="sec-quick" class="max-w-7xl mx-auto px-4 mt-12">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div>
+        <div class="mg-eyebrow">Start here</div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1.5">Choose what you need</h2>
+      </div>
+      <a href="/" class="text-sm font-bold hover:text-[#c2410c] whitespace-nowrap shrink-0">Explore all &rarr;</a>
+    </div>
+    <div id="quick-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+  </section>
+
+  <!-- 10. SEARCH / CATEGORY RESULTS -->
+  <section id="sec-results" class="hidden max-w-7xl mx-auto px-4 mt-8">
+    <div id="results-head"></div>
+    <div id="results-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5"></div>
+  </section>
+
+  <!-- 3. HOT PRODUCTS -->
+  <section id="sec-featured" class="max-w-7xl mx-auto px-4 mt-12">
+    <div id="featured-head"></div>
+    <div id="featured-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5"></div>
+  </section>
+
+  <!-- 4. GOLD PROMO BAND -->
+  <section id="sec-promo" class="max-w-7xl mx-auto px-4 mt-12 hidden">
+    <div id="promo-grid" class="grid gap-4"></div>
+  </section>
+
+  <section id="sec-band" class="max-w-7xl mx-auto px-4 mt-12">
+    <div class="mg-band reveal p-8 sm:p-12">
+      <div class="mg-ring w-72 h-72 -right-20 -top-24"></div>
+      <div class="mg-ring w-44 h-44 right-1/4 -bottom-20"></div>
+      <div class="mg-ring w-24 h-24 left-1/3 -top-8"></div>
+      <div class="relative flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
+        <span class="w-16 h-16 rounded-full bg-[#151b2e] shadow-xl flex items-center justify-center text-3xl shrink-0">&#x26A1;</span>
+        <div class="flex-1 min-w-0">
+          <div class="text-[0.72rem] font-extrabold tracking-[0.14em] uppercase text-[#101828]">Ready when you are</div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#101828] mt-2">Instant top-ups &amp; gift cards</h2>
+          <p class="text-[#101828]/70 mt-2 text-sm sm:text-base">Secure digital delivery for your favourite games and apps.</p>
+        </div>
+        <a class="mg-btn-dark shrink-0" href="/#sec-featured">Shop now &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. WHY SHOP WITH US -->
+  <section id="sec-trust" class="max-w-7xl mx-auto px-4 mt-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="reveal mg-trust-card p-6 flex items-start gap-4">
+        <span class="mg-icon-tile" style="color:#c2410c"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></span>
+        <div><div class="font-bold">Instant Delivery</div><div class="text-sm text-gray-500 mt-1">Top-ups and codes delivered in minutes.</div></div>
+      </div>
+      <div class="reveal mg-trust-card p-6 flex items-start gap-4">
+        <span class="mg-icon-tile" style="color:#c2410c"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg></span>
+        <div><div class="font-bold">Secure Checkout</div><div class="text-sm text-gray-500 mt-1">Encrypted payments and data protection.</div></div>
+      </div>
+      <div class="reveal mg-trust-card p-6 flex items-start gap-4">
+        <span class="mg-icon-tile" style="color:#c2410c"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M12 3c2.5 2.6 3.9 5.7 3.9 9s-1.4 6.4-3.9 9c-2.5-2.6-3.9-5.7-3.9-9S9.5 5.6 12 3z"/></svg></span>
+        <div><div class="font-bold">Wherever You Play</div><div class="text-sm text-gray-500 mt-1">Game top-ups and gift cards, delivered wherever you are.</div></div>
+      </div>
+      <div class="reveal mg-trust-card p-6 flex items-start gap-4">
+        <span class="mg-icon-tile" style="color:#c2410c"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+        <div><div class="font-bold">24/7 Support</div><div class="text-sm text-gray-500 mt-1">Real help whenever you need us.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. SHOP BY CATEGORY -->
+  <section id="sec-categories" class="max-w-7xl mx-auto px-4 mt-16">
+    <div class="mb-6">
+      <div class="mg-eyebrow">Find it faster</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1.5">Browse categories</h2>
+      <p class="text-gray-500 mt-1.5 text-sm sm:text-base">Choose your platform and jump straight to gift cards, top-ups and digital rewards.</p>
+    </div>
+    <div id="categories-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+  </section>
+
+  <!-- 8. HOW IT WORKS -->
+  <section id="sec-how" class="max-w-7xl mx-auto px-4 mt-16">
+    <div class="mb-6">
+      <div class="mg-eyebrow">Quick and simple</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1.5">How it works</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="reveal mg-pastel mg-pastel-cream p-6">
+        <span class="mg-step-num">1</span>
+        <div class="font-bold mt-4">Choose a product</div>
+        <p class="text-sm text-gray-500 mt-1">Pick your game, gift card or top-up.</p>
+      </div>
+      <div class="reveal mg-pastel mg-pastel-lavender p-6">
+        <span class="mg-step-num">2</span>
+        <div class="font-bold mt-4">Pay securely</div>
+        <p class="text-sm text-gray-500 mt-1">Complete your purchase with a trusted method.</p>
+      </div>
+      <div class="reveal mg-pastel mg-pastel-blue p-6">
+        <span class="mg-step-num">3</span>
+        <div class="font-bold mt-4">Receive instantly</div>
+        <p class="text-sm text-gray-500 mt-1">Get your top-up or code delivered right away.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. TESTIMONIALS -->
+  <section id="sec-testimonials" class="max-w-7xl mx-auto px-4 mt-16">
+    <div id="testimonials-head"></div>
+    <div class="relative">
+      <div id="testimonials-grid" class="hero-track flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-1"></div>
+      <div id="testimonials-dots" class="hero-dots-dark flex justify-center gap-2 mt-4"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const searchQ = params.get('search') || '';
+  const catSlug = params.get('category') || '';
+
+  const pastelCycle = ['mg-pastel-cream', 'mg-pastel-lavender', 'mg-pastel-blue', 'mg-pastel-peach'];
+  const catEmoji = {
+    'game-top-ups': '🎮', 'gift-cards': '🎁', 'ott-subscriptions': '🎬',
+    'ai-tools': '✨', 'popular-subscriptions': '🔥', 'featured': '⭐'
+  };
+  const chevSvg = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>';
+  const checkGold = '<span class="w-6 h-6 rounded-full bg-[#f97316] flex items-center justify-center shrink-0"><svg class="w-3.5 h-3.5" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>';
+
+  /* ---------- Hero: .mg-hero slider ---------- */
+  let heroIdx = 0, heroTimer = null, heroCount = 0;
+
+  function heroTitleHtml(raw) {
+    const at = raw.indexOf('@');
+    if (at < 0) return esc(raw);
+    // Keep the "@ price" part together so it never wraps onto its own line.
+    return esc(raw.slice(0, at)) + '<span class="hl-gold" style="white-space:nowrap">' + esc(raw.slice(at)) + '</span>';
+  }
+
+  function heroSlideHtml(b, i) {
+    const raw = b.title || '';
+    const bg = b.image_url
+      ? `<img src="${esc(b.image_url)}" alt="${esc(raw)}" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+         <div class="absolute inset-0" style="background:linear-gradient(to right,#0a1f44 5%,rgba(10,31,68,.8) 42%,rgba(10,31,68,0) 78%)"></div>`
+      : `<div class="mg-ring w-72 h-72 -left-24 -top-24"></div>
+         <div class="mg-ring w-96 h-96 -right-24 -bottom-28"></div>
+         <div class="absolute inset-0" style="background:radial-gradient(640px 320px at 85% 18%,rgba(242,168,0,.18),transparent 70%)"></div>`;
+    const ctas = (b.link ? `<a href="${esc(b.link)}" class="mg-btn-gold">Shop now &rarr;</a>` : '') +
+      `<a href="/?category=gift-cards" class="mg-btn-ghost hidden sm:inline-flex">Browse gift cards</a>`;
+    return `<div class="hero-slide absolute inset-0 transition-opacity duration-700 ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}" data-slide="${i}">
+      <div class="mg-hero h-full">
+        ${bg}
+        <div class="relative z-10 flex flex-col justify-center h-full px-6 sm:px-12 max-w-xl">
+          <div class="mg-eyebrow on-dark">Instant digital delivery</div>
+          ${raw ? `<h2 class="text-2xl sm:text-6xl font-extrabold mt-2 sm:mt-3" style="text-wrap:balance">${heroTitleHtml(raw)}</h2>` : ''}
+          ${b.subtitle ? `<p class="hidden sm:block text-white/70 mt-3 text-sm sm:text-lg">${esc(b.subtitle)}</p>` : ''}
+          <div class="hidden sm:flex items-center gap-2.5 mt-4">${checkGold}<b class="text-white">Delivered in minutes</b></div>
+          <div class="flex flex-wrap gap-3 mt-6">${ctas}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function defaultHero(siteName) {
+    return `
+      <div class="mg-hero aspect-video">
+        <div class="mg-ring w-72 h-72 -left-24 -top-24"></div>
+        <div class="mg-ring w-96 h-96 -right-24 -bottom-28"></div>
+        <div class="absolute inset-0" style="background:radial-gradient(640px 320px at 85% 18%,rgba(242,168,0,.16),transparent 70%)"></div>
+        <div class="relative z-10 flex flex-col justify-center h-full px-6 sm:px-12 max-w-xl">
+          <div class="mg-eyebrow on-dark">Instant digital delivery</div>
+          <h2 class="text-2xl sm:text-6xl font-extrabold mt-2 sm:mt-3" style="text-wrap:balance">Level up your <span class="hl-gold">game.</span></h2>
+          <p class="hidden sm:block text-white/70 mt-3 text-sm sm:text-lg">Game top-ups, gift cards &amp; subscriptions &mdash; delivered fast.</p>
+          <div class="hidden sm:flex items-center gap-2.5 mt-4">${checkGold}<b class="text-white">Delivered in minutes</b></div>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <a href="#sec-featured" class="mg-btn-gold">Shop now &rarr;</a>
+            <a href="/?category=gift-cards" class="mg-btn-ghost hidden sm:inline-flex">Browse gift cards</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function updateHeroDots() {
+    document.querySelectorAll('#hero .hero-dot').forEach((d, k) => d.classList.toggle('active', k === heroIdx));
+  }
+  function showHero(i) {
+    if (!heroCount) return;
+    heroIdx = (i + heroCount) % heroCount;
+    document.querySelectorAll('#hero .hero-slide').forEach((s, k) => {
+      const on = k === heroIdx;
+      s.classList.toggle('opacity-100', on);
+      s.classList.toggle('z-10', on);
+      s.classList.toggle('opacity-0', !on);
+      s.classList.toggle('z-0', !on);
+    });
+    updateHeroDots();
+  }
+  function startHero() {
+    stopHero();
+    if (heroCount > 1) heroTimer = setInterval(() => showHero(heroIdx + 1), 6000);
+  }
+  function stopHero() { if (heroTimer) { clearInterval(heroTimer); heroTimer = null; } }
+
+  function renderHero(banners, siteName) {
+    const hero = document.getElementById('hero');
+    stopHero();
+    heroIdx = 0; heroCount = 0;
+    if (!banners.length) { hero.innerHTML = defaultHero(siteName); return; }
+    heroCount = banners.length;
+    hero.innerHTML = `
+      <div class="relative aspect-video">
+        ${banners.map(heroSlideHtml).join('')}
+        ${heroCount > 1 ? `
+        <button id="hero-prev" aria-label="Previous" class="hero-arrow absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#151b2e]/90 text-[#101828] shadow-lg hidden sm:flex items-center justify-center hover:bg-[#151b2e]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg></button>
+        <button id="hero-next" aria-label="Next" class="hero-arrow absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#151b2e]/90 text-[#101828] shadow-lg hidden sm:flex items-center justify-center hover:bg-[#151b2e]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></button>
+        <div class="absolute right-6 sm:right-12 bottom-6 z-20 flex gap-2">
+          ${banners.map((_, i) => `<button class="hero-dot ${i === 0 ? 'active' : ''}" data-dot="${i}" aria-label="Banner ${i + 1}"></button>`).join('')}
+        </div>` : ''}
+      </div>`;
+    if (heroCount > 1) {
+      document.getElementById('hero-prev').addEventListener('click', () => { showHero(heroIdx - 1); startHero(); });
+      document.getElementById('hero-next').addEventListener('click', () => { showHero(heroIdx + 1); startHero(); });
+      hero.querySelectorAll('.hero-dot').forEach((d) =>
+        d.addEventListener('click', () => { showHero(Number(d.dataset.dot)); startHero(); }));
+      hero.addEventListener('mouseenter', stopHero);
+      hero.addEventListener('mouseleave', startHero);
+      startHero();
+    }
+  }
+
+  /* ---------- Shared section header (eyebrow + title + sub + view-all) ---------- */
+  function mgHead(eyebrow, title, sub, viewAll) {
+    return `<div class="flex items-end justify-between gap-4 mb-6 reveal">
+      <div class="min-w-0">
+        <div class="mg-eyebrow">${esc(eyebrow)}</div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1.5">${esc(title)}</h2>
+        ${sub ? `<p class="text-gray-500 mt-1.5 text-sm sm:text-base">${esc(sub)}</p>` : ''}
+      </div>
+      ${viewAll ? `<a href="${esc(viewAll)}" class="text-sm font-bold hover:text-[#c2410c] whitespace-nowrap shrink-0">View all &rarr;</a>` : ''}
+    </div>`;
+  }
+
+  /* ---------- Testimonials slider (logic unchanged) ---------- */
+  let testiIdx = 0, testiTimer = null;
+  function testiCardStep() {
+    const track = document.getElementById('testimonials-grid');
+    const card = track && track.querySelector(':scope > div');
+    return card ? card.offsetWidth + 16 : 300;
+  }
+  function testiGo(i) {
+    const track = document.getElementById('testimonials-grid');
+    const n = track ? track.children.length : 0;
+    if (!n) return;
+    testiIdx = ((i % n) + n) % n;
+    track.scrollTo({ left: testiIdx * testiCardStep(), behavior: 'smooth' });
+    document.querySelectorAll('#testimonials-dots .hero-dot').forEach((d, k) => d.classList.toggle('active', k === testiIdx));
+  }
+  function startTesti() {
+    stopTesti();
+    const track = document.getElementById('testimonials-grid');
+    if (track && track.children.length > 1) testiTimer = setInterval(() => testiGo(testiIdx + 1), 5000);
+  }
+  function stopTesti() { if (testiTimer) { clearInterval(testiTimer); testiTimer = null; } }
+
+  /* ---------- Section loaders ---------- */
+  function fillSection(secId, headId, gridId, eyebrow, title, sub, products, viewAll) {
+    const sec = document.getElementById(secId);
+    if (!products || !products.length) { sec.style.display = 'none'; return; }
+    document.getElementById(headId).innerHTML = mgHead(eyebrow, title, sub, viewAll);
+    document.getElementById(gridId).innerHTML = products.map((p) =>
+      `<div class="reveal h-full">${productCard(p)}</div>`).join('');
+    initReveal();
+  }
+
+  /* Auto-play for the "Hot right now" slide layout: advances one card every 3s,
+     loops back to the start, pauses while the user touches/drags/hovers or the tab is hidden. */
+  function startFeaturedAutoplay() {
+    const grid = document.getElementById('featured-grid');
+    if (!grid) return;
+    let timer = null;
+    const step = () => {
+      const max = grid.scrollWidth - grid.clientWidth;
+      if (max <= 4) return; // everything fits on screen, nothing to slide
+      if (grid.scrollLeft >= max - 8) { grid.scrollTo({ left: 0, behavior: 'smooth' }); return; }
+      const card = grid.querySelector(':scope > *');
+      grid.scrollBy({ left: (card ? card.getBoundingClientRect().width : 200) + 12, behavior: 'smooth' });
+    };
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    const start = () => { stop(); timer = setInterval(step, 1000); };
+    grid.addEventListener('pointerdown', stop, { passive: true });
+    grid.addEventListener('touchstart', stop, { passive: true });
+    grid.addEventListener('mouseenter', stop);
+    grid.addEventListener('mouseleave', start);
+    grid.addEventListener('touchend', () => setTimeout(() => { if (!document.hidden) start(); }, 5000), { passive: true });
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    start();
+  }
+
+  function skeleton(gridId) {
+    const aspect = catImgAspect();
+    document.getElementById(gridId).innerHTML = Array.from({ length: 4 }).map(() =>
+      `<div class="bg-[#ffffff] rounded-2xl border border-[#e2e8f0] overflow-hidden"><div class="${aspect} bg-[#f1f3f7] animate-pulse"></div><div class="p-2.5 sm:p-4 space-y-2"><div class="h-4 bg-[#f1f3f7] rounded animate-pulse"></div><div class="h-4 w-1/2 bg-[#f1f3f7] rounded animate-pulse"></div></div></div>`
+    ).join('');
+  }
+
+  function renderQuickRail(cats) {
+    const grid = document.getElementById('quick-grid');
+    const sec = document.getElementById('sec-quick');
+    if (!grid || !cats || !cats.length) { if (sec) sec.style.display = 'none'; return; }
+    grid.innerHTML = cats.slice(0, 4).map((c) => catTileHtml(c)).join('');
+    initReveal();
+  }
+
+  /* Category tile image shape: square (1:1) or wide (16:9), from Admin → Settings. */
+  function catImgAspect() {
+    const s = (window.MDS && window.MDS.settings) || {};
+    return s.category_image_ratio === 'wide' ? 'aspect-video' : 'aspect-square';
+  }
+
+  /* Category tile: image on top, bold centered title, action button — like a product card. */
+  function catTileHtml(c) {
+    const aspect = catImgAspect();
+    const img = c.image_url
+      ? `<img src="${esc(c.image_url)}" alt="${esc(c.name)}" loading="lazy" class="w-full h-full object-cover">`
+      : `<div class="w-full h-full flex items-center justify-center bg-[#e8f0fe] text-5xl">${catEmoji[c.slug] || '🏷️'}</div>`;
+    return `
+      <a href="/?category=${esc(c.slug)}" class="reveal bg-[#151b2e] rounded-2xl border border-[#e2e8f0] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col">
+        <div class="${aspect} overflow-hidden bg-[#0d1120]">${img}</div>
+        <div class="p-3 sm:p-4 flex flex-col flex-1">
+          <b class="block text-center text-sm sm:text-base font-bold text-gray-100 leading-snug line-clamp-2">${esc(c.name)}</b>
+          ${c.description ? `<small class="block text-center text-xs text-gray-500 mt-1 line-clamp-2">${esc(c.description)}</small>` : ''}
+          <span class="mt-3 block w-full py-2.5 rounded-xl text-white text-xs sm:text-sm font-bold text-center transition hover:opacity-90 active:scale-[0.98]" style="background:#f97316">Purchase</span>
+        </div>
+      </a>`;
+  }
+
+  function renderCategories(cats) {
+    const grid = document.getElementById('categories-grid');
+    const sec = document.getElementById('sec-categories');
+    if (!grid || !cats || !cats.length) { if (sec) sec.style.display = 'none'; return; }
+    grid.innerHTML = cats.map((c) => catTileHtml(c)).join('');
+    initReveal();
+  }
+
+  /* Find a category by slug anywhere in the tree; returns { cat, parent } or null. */
+  function findCat(tree, slug, parent) {
+    for (const c of tree || []) {
+      if (c.slug === slug) return { cat: c, parent: parent || null };
+      const f = findCat(c.children, slug, c);
+      if (f) return f;
+    }
+    return null;
+  }
+  function renderResultsHead(searchQ, found, count) {
+    const cat = !searchQ && found ? found.cat : null;
+    const parent = !searchQ && found ? found.parent : null;
+    const eyebrow = searchQ ? 'Search results' : 'Level up for less';
+    const title = searchQ ? `Results for "${searchQ}"` : (cat ? cat.name : 'Category');
+    const desc = searchQ ? `${count} product${count === 1 ? '' : 's'} found` : (cat ? (cat.description || '') : '');
+    const kids = !searchQ && cat && Array.isArray(cat.children) ? cat.children : [];
+    const deco = searchQ ? '🔍' : (catEmoji[cat ? cat.slug : ''] || '🎮');
+    const crumbs = [`<a href="/" class="mg-crumb">Home</a>`];
+    if (searchQ) crumbs.push(`<span class="mg-crumb current">Search</span>`);
+    else if (cat && parent) crumbs.push(`<a href="/?category=${esc(parent.slug)}" class="mg-crumb">${esc(parent.name)}</a>`, `<span class="mg-crumb current">${esc(cat.name)}</span>`);
+    else if (cat) crumbs.push(`<span class="mg-crumb current">${esc(cat.name)}</span>`);
+    else crumbs.push(`<span class="mg-crumb current">Category</span>`);
+    const subTiles = kids.length ? `
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        ${kids.map((k) => catTileHtml(k)).join('')}
+      </div>` : '';
+    document.getElementById('results-head').innerHTML = `
+      <div class="flex items-center gap-2 flex-wrap">
+        ${crumbs.join('<span class="text-gray-300 font-bold">&rsaquo;</span>')}
+      </div>
+      <div class="mg-cat-hero mt-4 p-8 sm:p-10">
+        <div class="mg-ring w-64 h-64 -right-16 -top-20"></div>
+        <div class="mg-ring w-40 h-40 right-1/3 -bottom-16"></div>
+        <div class="relative flex items-center justify-between gap-6">
+          <div class="min-w-0">
+            <div class="text-[0.72rem] font-extrabold tracking-[0.14em] uppercase text-[#101828]">${esc(eyebrow)}</div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-[#101828] mt-2 break-words">${esc(title)}</h2>
+            ${desc ? `<p class="text-[#101828]/70 mt-2 text-sm sm:text-base">${esc(desc)}</p>` : ''}
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="mg-trust-pill">&#x26A1; Fast digital fulfilment</span>
+              <span class="mg-trust-pill">&#x1F6E1; Secure payment</span>
+              <span class="mg-trust-pill">&#x1F3A7; 24/7 support</span>
+            </div>
+          </div>
+          <div class="hidden sm:flex w-28 h-28 rounded-3xl bg-[#151b2e]/60 items-center justify-center text-6xl shrink-0 shadow-lg">${deco}</div>
+        </div>
+      </div>
+      ${subTiles}
+      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-8 mb-6">${kids.length ? `All ${esc(cat.name)} products` : 'Choose your product'}</h2>`;
+  }
+
+  async function init() {
+    const ctx = await boot();
+    const siteName = ctx.settings.site_name || 'Meowji Official';
+
+    // Hero
+    try {
+      const banners = await api('/api/banners');
+      renderHero(Array.isArray(banners) ? banners : [], siteName);
+    } catch (_) { renderHero([], siteName); }
+
+    // Quick category rail + shop-by-category grid (homepage-visible only)
+    const homeCats = (ctx.categories || []).filter((c) => c.show_on_homepage !== 0);
+    renderQuickRail(homeCats);
+    renderCategories(homeCats);
+
+    // Search / category results mode
+    if (searchQ || catSlug) {
+      ['sec-featured', 'sec-categories', 'sec-how', 'sec-testimonials', 'sec-band'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      const sec = document.getElementById('sec-results');
+      sec.classList.remove('hidden');
+      skeleton('results-grid');
+      try {
+        const q = searchQ ? '?search=' + encodeURIComponent(searchQ) : '?category=' + encodeURIComponent(catSlug);
+        const products = await api('/api/products' + q + '&limit=24');
+        renderResultsHead(searchQ, findCat(ctx.categories, catSlug), products.length);
+        document.getElementById('results-grid').innerHTML = products.length
+          ? products.map((p) => `<div class="reveal h-full">${productCard(p)}</div>`).join('')
+          : `<div class="col-span-full text-center text-gray-500 py-10">No products found. Try another search.</div>`;
+        initReveal();
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {
+        document.getElementById('results-grid').innerHTML = `<div class="col-span-full text-center text-gray-500 py-10">Could not load products.</div>`;
+      }
+    }
+
+    // Featured section: grid (default) or auto-sliding horizontal carousel, from Admin → Settings.
+    const featuredSlide = (((window.MDS && window.MDS.settings) || {}).featured_layout || 'grid') === 'slide';
+    document.getElementById('featured-grid').classList.toggle('featured-slide', featuredSlide);
+    ['featured-grid'].forEach(skeleton);
+    try {
+      const posters = await api('/api/banners?placement=featured').catch(() => []);
+      if (Array.isArray(posters) && posters.length) {
+        document.getElementById('featured-head').innerHTML = `
+          <div class="text-[#f97316] text-xs font-extrabold tracking-[0.2em] uppercase">Customer favourites</div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-100 mt-1">Hot right now</h2>
+          <p class="text-gray-500 text-sm mt-1">Top picks this week</p>`;
+        document.getElementById('featured-grid').innerHTML = posters.map((b) => `
+          <a href="${esc(b.link || '/')}" class="block rounded-[1.25rem] overflow-hidden shadow-sm hover:shadow-lg transition group">
+            <img src="${esc(b.image_url || '')}" alt="${esc(b.title || '')}" loading="lazy"
+                 class="w-full aspect-[4/5] object-cover group-hover:scale-[1.02] transition duration-300">
+          </a>`).join('');
+      } else {
+        const featured = await api('/api/products?featured=1&limit=10').catch(() => []);
+        fillSection('sec-featured', 'featured-head', 'featured-grid', 'Customer favourites', 'Hot right now', 'Top sellers this week', featured, '/');
+      }
+    } catch (_) {
+      document.getElementById('featured-grid').innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 text-sm">Could not load right now.</div>`;
+    }
+    if (featuredSlide) startFeaturedAutoplay();
+
+    // Promo strip: wide banners below the featured section.
+    try {
+      const promos = await api('/api/banners?placement=promo').catch(() => []);
+      if (Array.isArray(promos) && promos.length) {
+        document.getElementById('sec-promo').classList.remove('hidden');
+        document.getElementById('promo-grid').innerHTML = promos.map((b) => `
+          <a href="${esc(b.link || '/')}" class="block rounded-[1.25rem] overflow-hidden shadow-sm hover:shadow-lg transition group">
+            <img src="${esc(b.image_url || '')}" alt="${esc(b.title || '')}" loading="lazy"
+                 class="w-full aspect-[21/9] sm:aspect-[21/7] object-cover group-hover:scale-[1.01] transition duration-300">
+          </a>`).join('');
+      }
+    } catch (_) { /* no promos — section stays hidden */ }
+
+    // Testimonials (logic identical, cards restyled)
+    try {
+      const list = await api('/api/testimonials');
+      const sec = document.getElementById('sec-testimonials');
+      if (list && list.length) {
+        document.getElementById('testimonials-head').innerHTML = mgHead('Reviews', 'What our customers say', 'Real reviews from happy customers');
+        const cards = list.slice(0, 6);
+        const track = document.getElementById('testimonials-grid');
+        track.innerHTML = cards.map((t) => `
+          <div class="reveal snap-start shrink-0 w-[82%] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] mg-testi-card p-6 flex flex-col gap-3">
+            ${stars(t.rating)}
+            <p class="text-gray-300 text-sm leading-relaxed flex-1">"${esc(t.text)}"</p>
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-[#f97316] text-white font-bold flex items-center justify-center shrink-0">${esc((t.name || '?').trim().charAt(0).toUpperCase())}</span>
+              <span class="font-semibold text-sm">${esc(t.name)}</span>
+            </div>
+          </div>`).join('');
+        document.getElementById('testimonials-dots').innerHTML = cards.map((_, i) =>
+          `<button class="hero-dot${i === 0 ? ' active' : ''}" data-tdot="${i}" aria-label="Review ${i + 1}"></button>`).join('');
+        sec.querySelectorAll('#testimonials-dots .hero-dot').forEach((d) =>
+          d.addEventListener('click', () => { testiGo(Number(d.dataset.tdot)); startTesti(); }));
+        track.addEventListener('pointerdown', stopTesti, { passive: true });
+        sec.addEventListener('mouseenter', stopTesti);
+        sec.addEventListener('mouseleave', startTesti);
+        let tRaf = null;
+        track.addEventListener('scroll', () => {
+          if (tRaf) return;
+          tRaf = requestAnimationFrame(() => {
+            tRaf = null;
+            const step = testiCardStep();
+            if (step > 0) {
+              testiIdx = Math.min(cards.length - 1, Math.max(0, Math.round(track.scrollLeft / step)));
+              document.querySelectorAll('#testimonials-dots .hero-dot').forEach((d, k) => d.classList.toggle('active', k === testiIdx));
+            }
+          });
+        }, { passive: true });
+        testiIdx = 0;
+        initReveal();
+        startTesti();
+      } else sec.style.display = 'none';
+    } catch (_) { document.getElementById('sec-testimonials').style.display = 'none'; }
+  }
+
+  // Hide loading screen when init completes
+  const _origInit = init;
+  init = async function() { await _origInit(); const l = document.getElementById('page-loader'); if (l) { l.style.opacity = '0'; setTimeout(() => l.remove(), 400); } };
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+// Register the service worker (PWA installability + offline icons).
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
