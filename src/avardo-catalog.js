@@ -5670,6 +5670,10 @@ async function seedCatalogIfEmpty(db) {
     { name: 'Mobile Legends', slug: 'mobile-legends', sort_order: 0 },
     { name: 'BGMI', slug: 'bgmi', sort_order: 1 },
   ];
+  const CAT_IMAGES = {
+    'mobile-legends': '/images/products/mlbb-diamonds.webp',
+    'bgmi': '/images/products/bgmi-uc.webp',
+  };
   const catIds = {};
   for (const cat of catDefs) {
     const existing = await db.prepare('SELECT id FROM categories WHERE slug = ?').get(cat.slug);
@@ -5678,8 +5682,8 @@ async function seedCatalogIfEmpty(db) {
       continue;
     }
     const res = await db
-      .prepare('INSERT INTO categories (name, slug, sort_order, active) VALUES (?, ?, ?, 1)')
-      .run(cat.name, cat.slug, cat.sort_order);
+      .prepare('INSERT INTO categories (name, slug, sort_order, active, image_url) VALUES (?, ?, ?, 1, ?)')
+      .run(cat.name, cat.slug, cat.sort_order, CAT_IMAGES[cat.slug] || null);
     catIds[cat.slug] = res.lastInsertRowid;
   }
 
