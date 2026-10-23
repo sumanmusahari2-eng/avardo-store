@@ -5719,7 +5719,7 @@ async function seedCatalogIfEmpty(db) {
       p.name,
       p.slug,
       p.description,
-      p.image_url,
+      (p.image_url && !String(p.image_url).includes('mlbbstore.in')) ? p.image_url : (categorySlug === 'bgmi' ? '/images/products/bgmi-uc.webp' : '/images/products/mlbb-diamonds.webp'),
       p.price_regular,
       p.price_silver != null ? p.price_silver : p.price_regular,
       p.price_silver,
