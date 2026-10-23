@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wallet — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-3xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-extrabold tracking-tight">ML COINS Wallet</h1>
+  <p class="text-gray-500 mt-1 text-sm">Redeem gift-card codes and pay for orders with your ML COINS. Separate balances for ₹ and $ — each pays only in its own currency.</p>
+
+  <div class="mt-6" id="wallet-cards"></div>
+
+  <div class="mg-panel p-6 mt-6">
+    <h2 class="font-bold text-lg">Redeem a gift card</h2>
+    <p class="text-sm text-gray-500 mt-1">Enter the code from your gift card (e.g. MO-XXXX-XXXX-XXXX). Each code works once.</p>
+    <div class="flex flex-col sm:flex-row gap-2 mt-4">
+      <input id="redeem-code" placeholder="MO-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false"
+        class="field flex-1 text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition uppercase font-mono tracking-wider">
+      <button id="btn-redeem" class="mg-btn-dark !py-3 !px-6 !text-sm whitespace-nowrap">Redeem</button>
+    </div>
+    <div id="redeem-msg" class="hidden mt-3 text-sm font-medium rounded-xl px-4 py-3"></div>
+  </div>
+
+  <div class="mg-panel p-6 mt-6">
+    <h2 class="font-bold text-lg">Transaction history</h2>
+    <div id="txns-wrap" class="mt-4">
+      <div class="h-24 bg-[#1b2338] rounded-xl animate-pulse"></div>
+    </div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  function txnRow(t) {
+    const credit = t.type === 'credit';
+    return `
+      <tr class="border-b border-[#1d263e]">
+        <td class="py-3 pr-4 text-gray-500 whitespace-nowrap text-xs">${fmtDate(t.created_at)}</td>
+        <td class="py-3 pr-4 text-sm">${esc(t.reason || '')}</td>
+        <td class="py-3 text-right font-bold whitespace-nowrap ${credit ? 'text-emerald-600' : 'text-gray-100'}">${credit ? '+' : '−'}${fmtCoins(t.amount)}</td>
+      </tr>`;
+  }
+
+  function renderTxns(txns) {
+    const wrap = document.getElementById('txns-wrap');
+    if (!txns.length) {
+      wrap.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">No transactions yet. Redeem a gift card to get started.</div>`;
+      return;
+    }
+    wrap.innerHTML = `
+      <div class="overflow-x-auto -mx-6 px-6">
+        <table class="w-full min-w-[480px]">
+          <thead>
+            <tr class="text-left text-xs uppercase tracking-wide text-gray-400 border-b border-[#1d263e]">
+              <th class="py-2.5 pr-4 font-semibold">Date</th>
+              <th class="py-2.5 pr-4 font-semibold">Details</th>
+              <th class="py-2.5 font-semibold text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>${txns.map(txnRow).join('')}</tbody>
+        </table>
+      </div>`;
+  }
+
+  async function init() {
+    const user = await guard(['customer', 'silver', 'admin'], '/');
+    if (!user) return;
+    try {
+      const w = await api('/api/wallet');
+    function renderWalletCard(w) {
+      const isUsd = getCurrency() === 'USD';
+      const el = document.getElementById('wallet-cards');
+      if (isUsd) {
+        el.innerHTML = `
+        <div class="rounded-[22px] p-6 sm:p-8 text-white relative overflow-hidden"
+             style="background: linear-gradient(135deg, #f97316 0%, #0a1f44 100%);">
+          <div class="text-sm font-medium text-white/70">🇺🇸 ML COINS (USD)</div>
+          <div class="text-4xl font-extrabold mt-1">$${Number(w.balance_usd || 0).toFixed(2)}</div>
+          <div class="text-xs text-white/60 mt-2">Use it at checkout — full or partial payment.</div>
+        </div>`;
+      } else {
+        el.innerHTML = `
+        <div class="rounded-[22px] p-6 sm:p-8 text-white relative overflow-hidden"
+             style="background: linear-gradient(135deg, #f97316 0%, #0a1f44 100%);">
+          <div class="text-sm font-medium text-white/70">🇮🇳 ML COINS (INR)</div>
+          <div class="text-4xl font-extrabold mt-1">${esc(fmtCoins(w.balance))}</div>
+          <div class="text-xs text-white/60 mt-1">≈ ${esc(fmtINR(w.balance))}</div>
+          <div class="text-xs text-white/60 mt-2">Use it at checkout — full or partial payment.</div>
+        </div>`;
+      }
+    }
+
+      renderWalletCard(w);
+      renderTxns(w.transactions || []);
+    } catch (e) {
+      document.getElementById('w-balance').textContent = '—';
+      document.getElementById('txns-wrap').innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Could not load wallet.</div>`;
+    }
+
+    const msg = document.getElementById('redeem-msg');
+    const showMsg = (text, ok) => {
+      msg.textContent = text;
+      msg.className = 'mt-3 text-sm font-medium rounded-xl px-4 py-3 ' +
+        (ok ? 'text-emerald-700 bg-emerald-50' : 'text-red-600 bg-red-50');
+    };
+    document.getElementById('btn-redeem').addEventListener('click', async () => {
+      const code = document.getElementById('redeem-code').value.trim();
+      if (!code) { showMsg('Enter your gift-card code first.', false); return; }
+      const btn = document.getElementById('btn-redeem');
+      btn.disabled = true; btn.textContent = 'Redeeming…';
+      try {
+        const r = await api('/api/wallet/redeem', {
+          method: 'POST',
+          body: JSON.stringify({ code, currency: getCurrency() }),
+        });
+        showMsg(`Success! ${r.currency === 'USD' ? '$' + r.amount + ' added to your USD wallet' : '₹' + r.amount + ' added to your INR wallet'}.`, true);
+        document.getElementById('redeem-code').value = '';
+        const w = await api('/api/wallet');
+        renderWalletCard(w);
+        renderTxns(w.transactions || []);
+      } catch (e) {
+        showMsg((e && e.data && e.data.error) || 'Could not redeem this code.', false);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Redeem';
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
