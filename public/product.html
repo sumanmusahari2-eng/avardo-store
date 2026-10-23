@@ -407,21 +407,23 @@
     const catOf = (v) => /double/i.test(v.name) ? 'double' : /(pass|weekly|twilight)/i.test(v.name) ? 'passes' : 'diamonds';
     const emojiOf = (v) => catOf(v) === 'double' ? '✨' : catOf(v) === 'passes' ? '🎟️' : '💎';
     const showFilters = variants.length > 8;
+    const curFilter = window._packFilter || 'all';
     wrap.innerHTML = `
       <div class="mt-7">
-        <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">SELECT PACKAGE</div>
         ${showFilters ? `<div class="mb-5">
           <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">CHOOSE CATEGORY</div>
           <div class="flex gap-2.5 flex-wrap" id="pack-filters">
-            <button type="button" data-filter="all" class="cat-card pack-filter active">🎮 All Packs</button>
-            <button type="button" data-filter="diamonds" class="cat-card pack-filter">💎 Top Up Diamonds</button>
-            <button type="button" data-filter="double" class="cat-card pack-filter">✨ Double Diamonds</button>
-            <button type="button" data-filter="passes" class="cat-card pack-filter">🎟️ Weekly &amp; Passes</button>
+            <button type="button" data-filter="all" class="cat-card pack-filter ${curFilter === 'all' ? 'active' : ''}">🎮 All Packs</button>
+            <button type="button" data-filter="diamonds" class="cat-card pack-filter ${curFilter === 'diamonds' ? 'active' : ''}">💎 Top Up Diamonds</button>
+            <button type="button" data-filter="double" class="cat-card pack-filter ${curFilter === 'double' ? 'active' : ''}">✨ Double Diamonds</button>
+            <button type="button" data-filter="passes" class="cat-card pack-filter ${curFilter === 'passes' ? 'active' : ''}">🎟️ Weekly &amp; Passes</button>
           </div>
         </div>` : ''}
+        <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">SELECT PACKAGE</div>
         <div class="pack-grid">
           ${variants.map((v) => `
             <button type="button" data-variant="${v.id}" data-cat="${catOf(v)}" ${vOut(v) ? 'disabled' : ''}
+              style="${curFilter !== 'all' && catOf(v) !== curFilter ? 'display:none' : ''}"
               class="pack-card ${sel && sel.id === v.id ? 'active' : ''}">
               <div class="pk-emoji">${emojiOf(v)}</div>
               <div class="pk-name">${esc(v.name)}</div>
@@ -446,15 +448,15 @@
     if (fwrap) {
       fwrap.querySelectorAll('[data-filter]').forEach((fb) => fb.addEventListener('click', () => {
         const f = fb.dataset.filter;
-        fwrap.querySelectorAll('[data-filter]').forEach((x) => x.classList.toggle('active', x === fb));
-        wrap.querySelectorAll('[data-variant]').forEach((c) => {
-          c.style.display = (f === 'all' || c.dataset.cat === f) ? '' : 'none';
-        });
-        const cur = wrap.querySelector('.pack-card.active');
-        if (cur && cur.style.display === 'none') {
-          const vis = Array.from(wrap.querySelectorAll('[data-variant]')).find((c) => c.style.display !== 'none' && !c.disabled);
-          if (vis) vis.click();
+        window._packFilter = f;
+        if (f !== 'all') {
+          const selNow = window._selVariant;
+          if (!selNow || catOf(selNow) !== f) {
+            const first = variants.find((v) => catOf(v) === f && !vOut(v));
+            if (first) window._selVariant = first;
+          }
         }
+        renderVariantUI();
       }));
     }
     // Toggle buy buttons with the selected option's stock (currency-unavailable stays out of stock).
