@@ -47,25 +47,18 @@
     <div id="hero"></div>
   </section>
 
-  <!-- 2. QUICK-CATEGORY RAIL -->
-  <section id="sec-quick" class="max-w-7xl mx-auto px-4 mt-12">
-    <div class="flex items-end justify-between gap-4 mb-6">
-      <div class="sec-title" style="margin-bottom:0"><span class="bar"></span><h2>Choose your game</h2></div>
-      <a href="/" class="text-sm font-bold hover:text-[#c2410c] whitespace-nowrap shrink-0">Explore all &rarr;</a>
-    </div>
-    <div id="quick-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
-  </section>
+  
 
   <!-- 10. SEARCH / CATEGORY RESULTS -->
   <section id="sec-results" class="hidden max-w-7xl mx-auto px-4 mt-8">
     <div id="results-head"></div>
-    <div id="results-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5"></div>
+    <div id="results-grid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4"></div>
   </section>
 
   <!-- 3. HOT PRODUCTS -->
   <section id="sec-featured" class="max-w-7xl mx-auto px-4 mt-12">
     <div id="featured-head"></div>
-    <div id="featured-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5"></div>
+    <div id="featured-grid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4"></div>
   </section>
 
   <!-- 4. GOLD PROMO BAND -->
@@ -73,22 +66,7 @@
     <div id="promo-grid" class="grid gap-4"></div>
   </section>
 
-  <section id="sec-band" class="max-w-7xl mx-auto px-4 mt-12">
-    <div class="mg-band reveal p-8 sm:p-12">
-      <div class="mg-ring w-72 h-72 -right-20 -top-24"></div>
-      <div class="mg-ring w-44 h-44 right-1/4 -bottom-20"></div>
-      <div class="mg-ring w-24 h-24 left-1/3 -top-8"></div>
-      <div class="relative flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
-        <span class="w-16 h-16 rounded-full bg-[#151b2e] shadow-xl flex items-center justify-center text-3xl shrink-0">&#x26A1;</span>
-        <div class="flex-1 min-w-0">
-          <div class="text-[0.72rem] font-extrabold tracking-[0.14em] uppercase text-[#101828]">Ready when you are</div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#101828] mt-2">Instant top-ups &amp; gift cards</h2>
-          <p class="text-[#101828]/70 mt-2 text-sm sm:text-base">Secure digital delivery for your favourite games and apps.</p>
-        </div>
-        <a class="mg-btn-dark shrink-0" href="/#sec-featured">Shop now &rarr;</a>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- 5. WHY SHOP WITH US -->
   <section id="sec-trust" class="max-w-7xl mx-auto px-4 mt-12">
@@ -114,12 +92,8 @@
 
   <!-- 7. SHOP BY CATEGORY -->
   <section id="sec-categories" class="max-w-7xl mx-auto px-4 mt-16">
-    <div class="mb-6">
-      <div class="mg-eyebrow">Find it faster</div>
-      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1.5">Browse categories</h2>
-      <p class="text-gray-500 mt-1.5 text-sm sm:text-base">Choose your platform and jump straight to gift cards, top-ups and digital rewards.</p>
-    </div>
-    <div id="categories-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    <div class="sec-title"><span class="bar"></span><h2>Choose your game</h2></div>
+    <div id="categories-grid" class="grid grid-cols-2 gap-4 max-w-2xl"></div>
   </section>
 
   <!-- 8. HOW IT WORKS -->
@@ -258,8 +232,8 @@
       <div class="relative aspect-video">
         ${banners.map(heroSlideHtml).join('')}
         ${heroCount > 1 ? `
-        <button id="hero-prev" aria-label="Previous" class="hero-arrow absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#151b2e]/90 text-[#101828] shadow-lg hidden sm:flex items-center justify-center hover:bg-[#151b2e]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg></button>
-        <button id="hero-next" aria-label="Next" class="hero-arrow absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#151b2e]/90 text-[#101828] shadow-lg hidden sm:flex items-center justify-center hover:bg-[#151b2e]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></button>
+        <button id="hero-prev" aria-label="Previous" class="hero-arrow absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#16161a]/90 text-white shadow-lg hidden sm:flex items-center justify-center hover:bg-[#16161a]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg></button>
+        <button id="hero-next" aria-label="Next" class="hero-arrow absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#16161a]/90 text-white shadow-lg hidden sm:flex items-center justify-center hover:bg-[#16161a]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></button>
         <div class="absolute right-6 sm:right-12 bottom-6 z-20 flex gap-2">
           ${banners.map((_, i) => `<button class="hero-dot ${i === 0 ? 'active' : ''}" data-dot="${i}" aria-label="Banner ${i + 1}"></button>`).join('')}
         </div>` : ''}
@@ -369,14 +343,12 @@
     const aspect = catImgAspect();
     const img = c.image_url
       ? `<img src="${esc(c.image_url)}" alt="${esc(c.name)}" loading="lazy" class="w-full h-full object-cover">`
-      : `<div class="w-full h-full flex items-center justify-center bg-[#e8f0fe] text-5xl">${catEmoji[c.slug] || '🏷️'}</div>`;
+      : `<div class="w-full h-full flex items-center justify-center text-5xl" style="background:#1e1e22">${catEmoji[c.slug] || '🏷️'}</div>`;
     return `
-      <a href="/?category=${esc(c.slug)}" class="reveal bg-[#151b2e] rounded-2xl border border-[#e2e8f0] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col">
-        <div class="${aspect} overflow-hidden bg-[#0d1120]">${img}</div>
-        <div class="p-3 sm:p-4 flex flex-col flex-1">
-          <b class="block text-center text-sm sm:text-base font-bold text-gray-100 leading-snug line-clamp-2">${esc(c.name)}</b>
-          ${c.description ? `<small class="block text-center text-xs text-gray-500 mt-1 line-clamp-2">${esc(c.description)}</small>` : ''}
-          <span class="mt-3 block w-full py-2.5 rounded-xl text-white text-xs sm:text-sm font-bold text-center transition hover:opacity-90 active:scale-[0.98]" style="background:#f97316">Purchase</span>
+      <a href="/?category=${esc(c.slug)}" class="reveal rounded-2xl overflow-hidden flex flex-col transition hover:-translate-y-0.5" style="background:#16161a;border:1px solid #232329">
+        <div class="${aspect} overflow-hidden" style="background:#111114">${img}</div>
+        <div class="px-2.5 py-3 text-center">
+          <b class="block text-white text-[13px] font-extrabold uppercase leading-snug line-clamp-2">${esc(c.name)}</b>
         </div>
       </a>`;
   }
@@ -433,7 +405,7 @@
               <span class="mg-trust-pill">&#x1F3A7; 24/7 support</span>
             </div>
           </div>
-          <div class="hidden sm:flex w-28 h-28 rounded-3xl bg-[#151b2e]/60 items-center justify-center text-6xl shrink-0 shadow-lg">${deco}</div>
+          <div class="hidden sm:flex w-28 h-28 rounded-3xl bg-[#16161a]/60 items-center justify-center text-6xl shrink-0 shadow-lg">${deco}</div>
         </div>
       </div>
       ${subTiles}
@@ -494,8 +466,8 @@
                  class="w-full aspect-[4/5] object-cover group-hover:scale-[1.02] transition duration-300">
           </a>`).join('');
       } else {
-        const featured = await api('/api/products?featured=1&limit=10').catch(() => []);
-        fillSection('sec-featured', 'featured-head', 'featured-grid', 'Bestsellers', '🔥 MOST SELLING', 'The packs everyone is buying', featured, '/');
+        const featured = await api('/api/products?limit=14').catch(() => []);
+        fillSection('sec-featured', 'featured-head', 'featured-grid', '', '🔥 MOST SELLING', '', featured, '/');
       }
     } catch (_) {
       document.getElementById('featured-grid').innerHTML = `<div class="col-span-full text-center text-gray-400 py-8 text-sm">Could not load right now.</div>`;

@@ -9,14 +9,14 @@
   --mg-gold-deep: #ff8a3c;
   --mg-gold-soft: #2b1c0d;
   --mg-ink: #eef1f8;
-  --mg-navy: #0d1120;
+  --mg-navy: #111114;
   --mg-muted: #98a2b8;
-  --mg-line: #26304a;
-  --mg-soft: #151b2e;
-  --mg-cream: #0d1120;
-  --mg-pastel-cream: #151b2e;
-  --mg-pastel-lavender: #1b2338;
-  --mg-pastel-blue: #1b2338;
+  --mg-line: #2e2e33;
+  --mg-soft: #16161a;
+  --mg-cream: #111114;
+  --mg-pastel-cream: #16161a;
+  --mg-pastel-lavender: #1e1e22;
+  --mg-pastel-blue: #1e1e22;
   --mg-pastel-peach: #2b1c0d;
 }
 
@@ -913,7 +913,7 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
   transition: all .15s ease;
   white-space: nowrap;
 }
-.av-navpill:hover { background: #1b2338; color: #fff; border-color: var(--mg-line); }
+.av-navpill:hover { background: #1e1e22; color: #fff; border-color: var(--mg-line); }
 
 .av-login-btn {
   background: linear-gradient(135deg, var(--mg-gold), #c2410c);
@@ -956,7 +956,7 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 @media (min-width: 768px) { .pack-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 1024px) { .pack-grid { grid-template-columns: repeat(4, 1fr); } }
 .pack-card {
-  background: #0d1120; border: 1.5px solid var(--mg-line); border-radius: 14px;
+  background: #111114; border: 1.5px solid var(--mg-line); border-radius: 14px;
   padding: 14px 10px 12px; text-align: center; cursor: pointer; color: var(--mg-ink);
   transition: all .15s ease; width: 100%;
 }
@@ -969,3 +969,101 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 .pack-card .pk-mrp { font-size: 0.7rem; color: var(--mg-muted); text-decoration: line-through; }
 
 .mg-panel { border-color: rgba(255,255,255,0.08); }
+
+/* ============================================================
+   digitaltopup.in fidelity pass (2026-10-23): near-black base,
+   charcoal pills, lime tags, crimson badges, package cards.
+   ============================================================ */
+.wa-pill {
+  display: flex; align-items: center; gap: 12px;
+  background: #2a1110; border: 1px solid #5c2620; border-radius: 12px;
+  padding: 10px 14px; color: #fff;
+}
+.wa-pill .wa-ic {
+  width: 40px; height: 40px; border-radius: 10px; background: #14231a;
+  display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+}
+.wa-pill .wa-title { font-weight: 800; font-size: 0.92rem; line-height: 1.2; }
+.wa-pill .wa-sub { color: #c9a79b; font-size: 0.76rem; margin-top: 1px; }
+.wa-pill .wa-x {
+  margin-left: auto; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,.06); color: #e8cfc8; font-size: 13px;
+}
+
+.av-navpill {
+  background: #1a1a1a; border: 1px solid #4a2c14; color: #fff;
+  padding: 0.5rem 1.05rem; font-weight: 700;
+}
+.av-navpill:hover { background: #232323; border-color: #b3541e; color: #fff; }
+.av-navpill.active { background: #ff5c1e; border-color: #ff5c1e; color: #fff; }
+
+.av-login-btn {
+  background: #2e1c10; border: 1px solid #b3541e; color: #fff !important;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+}
+.av-login-btn:hover { background: #3a2413; opacity: 1; }
+.av-login-btn svg { color: #ff5c1e; }
+
+.sec-title .bar { display: none; }
+.sec-title { margin-bottom: 20px; }
+.sec-title h2 { font-size: 1.75rem; font-weight: 800; color: #fff; }
+@media (min-width: 640px) { .sec-title h2 { font-size: 2rem; } }
+
+.mg-hero { border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.mg-btn-gold { background: linear-gradient(90deg, #ff6b00, #e53935); }
+.mg-btn-gold:hover { background: linear-gradient(90deg, #ff7d22, #ef4444); box-shadow: 0 16px 32px rgba(229,57,53,.3); }
+
+.dt-tag {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  background: #7cb342; color: #10130a; font-size: 10px; font-weight: 800;
+  padding: 4px 8px; border-radius: 9999px; line-height: 1; white-space: nowrap;
+}
+.dt-tag.red { background: #d32f2f; color: #fff; }
+
+.dt-badge {
+  background: #d32f2f; color: #fff; font-size: 10px; font-weight: 800;
+  padding: 5px 10px; border-radius: 9999px; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+
+.cat-card {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  background: #1e1e1e; border: 1.5px solid #2e2e33; border-radius: 10px;
+  padding: 13px 14px; font-size: 12px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .03em; color: #fff; cursor: pointer; transition: all .15s ease;
+}
+.cat-card:hover { border-color: #b3541e; }
+.cat-card.active { border-color: #ff4500; box-shadow: 0 0 0 1px #ff4500, 0 0 16px rgba(255,69,0,.35); }
+.cat-card.active::after {
+  content: '✓'; position: absolute; top: -8px; right: -8px;
+  width: 20px; height: 20px; border-radius: 9999px; background: #7cb342; color: #10130a;
+  font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+}
+
+.pack-card { background: #2b2b30; border-color: #3a3a40; border-radius: 12px; padding: 16px 10px 10px; }
+.pack-card:hover { border-color: #b3541e; }
+.pack-card.active { border-color: #ff4500; background: #2b2b30; box-shadow: 0 0 0 1px #ff4500, 0 0 18px rgba(255,69,0,.35); }
+.pack-card .pk-emoji { font-size: 34px; }
+.pack-card .pk-name { font-size: 0.86rem; font-weight: 800; color: #fff; margin-top: 9px; }
+.pack-card .pk-price {
+  background: #17171a; border-radius: 8px; padding: 8px 4px; margin-top: 11px;
+  color: #fff; font-size: 0.98rem; font-weight: 800;
+}
+.pack-card .pk-mrp { margin-top: 5px; }
+
+.pay-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; background: #151515; border: 1.5px solid #2e2e33; border-radius: 12px;
+  padding: 14px 16px; font-weight: 800; font-size: 0.9rem; color: #fff; cursor: pointer;
+  transition: all .15s ease; text-align: left;
+}
+.pay-bar:hover { border-color: #b3541e; }
+.pay-bar.active { border-color: #ff4500; box-shadow: 0 0 0 1px #ff4500, 0 0 16px rgba(255,69,0,.3); }
+.pay-radio {
+  width: 19px; height: 19px; border-radius: 9999px; border: 2px solid #ff5c1e;
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 11px; font-weight: 900;
+}
+.pay-bar.active .pay-radio { background: #ff5c1e; }
+.pay-bar.active .pay-radio::after { content: '✓'; }
