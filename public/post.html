@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .post-body p { margin: 0 0 1rem; line-height: 1.75; color: #374151; }
+  .post-body h3 { font-size: 1.25rem; font-weight: 800; margin: 1.75rem 0 0.75rem; color: #111827; }
+  .post-body ul { list-style: disc; padding-left: 1.5rem; margin: 0 0 1rem; color: #374151; line-height: 1.75; }
+  .post-body strong { color: #111827; }
+  .post-body a { color: #f97316; font-weight: 600; }
+</style>
+</head>
+<body class="text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-3xl mx-auto px-4 py-8">
+  <nav class="flex flex-wrap items-center gap-2 mb-6" aria-label="Breadcrumb">
+    <a href="/" class="mg-crumb">Home</a>
+    <a href="/blog.html" class="mg-crumb">Blog</a>
+    <span id="crumb-title" class="mg-crumb current">Post</span>
+  </nav>
+  <article id="post-wrap" class="mg-panel p-6 sm:p-8">
+    <div class="animate-pulse space-y-4"><div class="h-8 bg-[#1b2338] rounded w-3/4"></div><div class="h-4 bg-[#1b2338] rounded w-1/4"></div><div class="h-64 bg-[#1b2338] rounded-2xl"></div></div>
+  </article>
+  <div class="mt-12 pt-8 border-t border-[#1d263e] text-center">
+    <a href="/" class="mg-btn-gold">Browse the store</a>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  function fmtDate(s) {
+    try { return new Date(s).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); }
+    catch (_) { return ''; }
+  }
+  function setMeta(attr, key, val) {
+    if (!val) return;
+    let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+    el.setAttribute('content', val);
+  }
+  function setCanonical(href) {
+    let el = document.head.querySelector('link[rel="canonical"]');
+    if (!el) { el = document.createElement('link'); el.setAttribute('rel', 'canonical'); document.head.appendChild(el); }
+    el.setAttribute('href', href);
+  }
+  async function init() {
+    const pathSlug = location.pathname.indexOf('/post/') === 0
+      ? decodeURIComponent(location.pathname.slice(6).split('/')[0].split('?')[0]) : '';
+    const slug = new URLSearchParams(location.search).get('slug') || pathSlug;
+    const wrap = document.getElementById('post-wrap');
+    try {
+      const p = await api('/api/posts/' + encodeURIComponent(slug));
+      const canonical = location.origin + '/post/' + encodeURIComponent(p.slug);
+      document.title = p.title + ' — Meowji Official';
+      setMeta('name', 'description', p.excerpt || (p.title + ' — Meowji Official'));
+      setMeta('property', 'og:title', p.title);
+      setMeta('property', 'og:description', p.excerpt || '');
+      setMeta('property', 'og:type', 'article');
+      setMeta('property', 'og:url', canonical);
+      if (p.image_url) setMeta('property', 'og:image', p.image_url);
+      setCanonical(canonical);
+      wrap.innerHTML = `
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">${esc(p.title)}</h1>
+        <div class="text-sm text-gray-400 font-medium mt-3">${esc(fmtDate(p.created_at))}</div>
+        ${p.image_url ? `<img src="${esc(p.image_url)}" alt="${esc(p.title)}" class="w-full rounded-[18px] mt-6 object-cover">` : ''}
+        <div class="post-body mt-6">${p.body || ''}</div>`;
+      document.getElementById('crumb-title').textContent = p.title;
+    } catch (e) {
+      wrap.innerHTML = `<div class="text-center py-20 text-gray-500">This post could not be found. <a href="/blog.html" class="text-[#c2410c] font-semibold">Back to blog</a></div>`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
