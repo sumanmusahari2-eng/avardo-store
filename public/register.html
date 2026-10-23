@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create account — Meowji Official</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="text-gray-100 antialiased min-h-screen flex flex-col">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="flex-1 flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md">
+    <div class="mg-panel p-8">
+      <div class="text-center">
+        <span class="mg-icon-tile placeholder-gradient text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 019.374 21c-2.388 0-4.626-.378-6.374-1.03z"/></svg>
+        </span>
+        <h1 class="text-2xl font-extrabold tracking-tight mt-4">Create your account</h1>
+        <p class="text-sm text-gray-500 mt-1">Join to buy subscriptions and track your orders.</p>
+      </div>
+
+      <div class="mt-6 flex justify-center"><div id="google-btn"></div></div>
+      <p id="google-notice" class="hidden mt-2 text-center text-xs text-gray-400">Google sign-up is not configured on this store.</p>
+
+      <div class="flex items-center gap-3 my-6">
+        <div class="flex-1 h-px bg-[#1b2338]"></div><span class="text-xs text-gray-400 font-medium">or with email</span><div class="flex-1 h-px bg-[#1b2338]"></div>
+      </div>
+
+      <form id="register-form" class="space-y-4" novalidate>
+        <div>
+          <label class="text-sm font-semibold" for="name">Full name</label>
+          <input id="name" type="text" autocomplete="name" placeholder="Your name"
+            class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+        </div>
+        <div>
+          <label class="text-sm font-semibold" for="email">Email</label>
+          <input id="email" type="email" autocomplete="email" placeholder="you@example.com"
+            class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+        </div>
+        <div>
+          <label class="text-sm font-semibold" for="password">Password</label>
+          <input id="password" type="password" autocomplete="new-password" placeholder="Minimum 8 characters"
+            class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+        </div>
+        <div>
+          <label class="text-sm font-semibold" for="confirm">Confirm password</label>
+          <input id="confirm" type="password" autocomplete="new-password" placeholder="Repeat your password"
+            class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+        </div>
+        <div id="form-error" class="hidden text-sm font-medium text-red-600 bg-red-50 rounded-xl px-4 py-3"></div>
+        <div id="turnstile-wrap" class="hidden"><div id="turnstile-widget"></div></div>
+        <button type="submit" id="btn-submit" class="mg-btn-gold w-full">Create account</button>
+      </form>
+
+      <p class="text-center text-sm text-gray-500 mt-6">Already have an account? <a href="/login.html" class="font-semibold text-[#c2410c] hover:text-[#0f4bc0]">Log in</a></p>
+    </div>
+  </div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+(function () {
+  async function init() {
+    await boot();
+    if (currentUser) { afterAuth(currentUser); return; }
+    initGoogleAuth('google-btn', 'google-notice');
+
+    let tsWidget = null;
+    try {
+      const tc = await api('/api/auth/turnstile-config');
+      if (tc.enabled && window.turnstile) {
+        document.getElementById('turnstile-wrap').classList.remove('hidden');
+        tsWidget = turnstile.render('#turnstile-widget', { sitekey: tc.site_key, theme: 'light' });
+      }
+    } catch (_) {}
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formError(null);
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+      if (name.length < 2) { formError('Please enter your name.'); return; }
+      if (!validEmail(email)) { formError('Please enter a valid email address.'); return; }
+      if (password.length < 8) { formError('Password must be at least 8 characters.'); return; }
+      if (password !== confirm) { formError('Passwords do not match.'); return; }
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true; btn.classList.add('opacity-60'); btn.textContent = 'Creating account…';
+      try {
+        const turnstile_token = tsWidget && window.turnstile ? turnstile.getResponse(tsWidget) : undefined;
+        const d = await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password, turnstile_token }) });
+        toast('Account created — welcome!');
+        afterAuth(d.user);
+      } catch (err) {
+        if (tsWidget && window.turnstile) turnstile.reset(tsWidget);
+        formError((err && err.data && err.data.error) || 'Could not create the account. Please try again.');
+        btn.disabled = false; btn.classList.remove('opacity-60'); btn.textContent = 'Create account';
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
