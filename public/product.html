@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — Meowji Official</title>
+<meta name="description" content="Buy game top-ups, gift cards & subscriptions at Meowji Official. Instant delivery, secure payments.">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="Meowji Official">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-[#151b2e] text-gray-100 antialiased">
+<body class="antialiased">
+<!-- Loading screen -->
+<div id="page-loader" style="position:fixed;inset:0;z-index:9999;background:#0d1120;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;">
+  <div style="font-size:28px;font-weight:800;color:#eef1f8;">Meowji <span style="color:#f97316;">Official</span></div>
+  <div style="width:48px;height:48px;border:4px solid #3a2410;border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:14px;color:#687080;">Loading...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<div id="navbar"></div>
+
+<main class="max-w-7xl mx-auto px-4 py-8">
+  <div id="product-wrap">
+    <div class="grid md:grid-cols-2 gap-8 animate-pulse">
+      <div class="aspect-square rounded-3xl bg-[#1b2338]"></div>
+      <div class="space-y-4"><div class="h-8 bg-[#1b2338] rounded w-3/4"></div><div class="h-6 bg-[#1b2338] rounded w-1/3"></div><div class="h-24 bg-[#1b2338] rounded"></div></div>
+    </div>
+  </div>
+  <div id="related-wrap" class="mt-16 hidden">
+    <div id="related-head"></div>
+    <div id="related-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-5"></div>
+  </div>
+  <div id="reviews-wrap" class="mt-16"></div>
+</main>
+
+<div id="footer"></div>
+
+<script src="/js/app.js"></script>
+<script>
+(function () {
+  let product = null, qty = 1;
+
+  function renderQty() {
+    const el = document.getElementById('qty-val');
+    if (el) el.textContent = qty;
+  }
+
+  // Description images: ![caption](url) -> <img>. URLs restricted to
+  // http(s) and data:image; everything else stays escaped plain text.
+  function renderDescription(text) {
+    return String(text || '').split(/(!\[[^\]]*\]\([^)]+\))/g).map((part) => {
+      const m = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+      if (m && /^(https?:\/\/|data:image\/)/i.test(m[2].trim())) {
+        return `<img src="${esc(m[2].trim())}" alt="${esc(m[1])}" loading="lazy" class="rounded-2xl my-3 max-w-full">`;
+      }
+      return esc(part);
+    }).join('');
+  }
+
+  // SEO: dynamic meta + structured data per product (crawlers that render JS pick these up).
+  function setSeoMeta(p, variant) {
+    const name = variant ? variant.name + ' — ' + p.name : p.name;
+    const title = name + ' — Meowji Official | Buy Online';
+    document.title = title;
+    const price = variant ? Number(variant.price ?? variant.price_regular ?? p.price) : Number(p.price);
+    const descText = ('Buy ' + name + ' online at Meowji Official.' +
+      (Number.isFinite(price) && price > 0 ? ' Price: \u20B9' + price + '.' : '') +
+      ' Instant delivery, secure payments.').slice(0, 160);
+    const setMeta = (attr, key, val) => {
+      let el = document.head.querySelector('meta[' + attr + '="' + key + '"]');
+      if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+      el.setAttribute('content', val);
+    };
+    setMeta('name', 'description', descText);
+    setMeta('property', 'og:type', 'product');
+    setMeta('property', 'og:site_name', 'Meowji Official');
+    setMeta('property', 'og:title', title);
+    setMeta('property', 'og:description', descText);
+    setMeta('property', 'og:url', location.href.split('?')[0] + '?slug=' + encodeURIComponent(p.slug));
+    if (p.image_url) setMeta('property', 'og:image', p.image_url);
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', title);
+    setMeta('name', 'twitter:description', descText);
+    let link = document.head.querySelector('link[rel="canonical"]');
+    if (!link) { link = document.createElement('link'); link.setAttribute('rel', 'canonical'); document.head.appendChild(link); }
+    link.setAttribute('href', location.href.split('?')[0] + '?slug=' + encodeURIComponent(p.slug));
+    // JSON-LD Product for rich snippets.
+    let ld = document.getElementById('ld-product');
+    if (!ld) { ld = document.createElement('script'); ld.id = 'ld-product'; ld.type = 'application/ld+json'; document.head.appendChild(ld); }
+    const offers = {
+      '@type': 'Offer',
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+      url: location.href.split('?')[0] + '?slug=' + encodeURIComponent(p.slug),
+    };
+    if (Number.isFinite(price) && price > 0) offers.price = String(price);
+    ld.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: name,
+      description: descText,
+      image: p.image_url || undefined,
+      brand: { '@type': 'Brand', name: 'Meowji Official' },
+      offers: offers,
+    });
+    // FAQ rich results — mirrors the visible "How to order" steps.
+    let faq = document.getElementById('ld-faq');
+    if (!faq) { faq = document.createElement('script'); faq.id = 'ld-faq'; faq.type = 'application/ld+json'; document.head.appendChild(faq); }
+    faq.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How do I order ' + p.name + '?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Choose your pack on the product page, enter your game ID or account details at checkout, and pay securely.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'How will I receive my ' + p.name + '?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Your top-up, gift card or subscription is delivered straight to your account after payment confirmation.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'What payment methods are accepted?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Pay online via UPI, manually through WhatsApp, or with USDT (BEP20) crypto.' },
+        },
+      ],
+    });
+  }
+
+  function render(p) {
+    product = p;
+    setSeoMeta(p, null);
+    const d = (function () {
+      const mrp = Number(p.price_mrp), price = Number(p.price);
+      return mrp && mrp > price ? Math.round((1 - price / mrp) * 100) : 0;
+    })();
+    // Blank stock_quantity (null) = unlimited, NOT out of stock. Only an explicit 0 counts.
+    const out = String(p.stock_status || '').toLowerCase().includes('out') || (p.stock_quantity !== null && p.stock_quantity !== undefined && Number(p.stock_quantity) === 0);
+    // Currency availability: product may be sold in INR only, USD only, or both.
+    const notForCurrency = !isAvailableInCurrency(p);
+    const otherCur = getCurrency() === 'USD' ? 'INR (₹)' : 'USD ($)';
+    const hasMrp = p.price_mrp && Number(p.price_mrp) > Number(p.price);
+    const sq = p.stock_quantity === null || p.stock_quantity === undefined ? null : Number(p.stock_quantity);
+    const lowStockBadge = (sq !== null && sq > 0 && sq <= 5)
+      ? `<span class="badge badge-amber">Only ${sq} left</span>` : '';
+    const isTopup = (p.category_slug || '').includes('top') || (p.category_name || '').toLowerCase().includes('top');
+    // Variants (options): e.g. gift-card denominations. Default to the first
+    // in-stock option; the buyer can switch and the price updates below.
+    const variants = Array.isArray(p.variants) ? p.variants : [];
+    const urlVariantId = new URLSearchParams(location.search).get('v');
+    const urlVariant = urlVariantId ? variants.find((v) => Number(v.id) === Number(urlVariantId) && !String(v.stock_status || '').toLowerCase().includes('out')) : null;
+    let selVariant = urlVariant || variants.find((v) => !String(v.stock_status || '').toLowerCase().includes('out')) || variants[0] || null;
+    window._selVariant = selVariant;
+
+    document.getElementById('product-wrap').innerHTML = `
+    <nav class="flex items-center gap-2 flex-wrap mb-6" aria-label="Breadcrumb">
+      <a class="mg-crumb" href="/"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>Home</a>
+      ${p.category_slug && p.category_name ? `<a class="mg-crumb" href="/?category=${encodeURIComponent(p.category_slug)}">${esc(p.category_name)}</a>` : ''}
+      <span class="mg-crumb current truncate max-w-[220px] sm:max-w-xs" title="${esc(p.name)}">${esc(p.name)}</span>
+    </nav>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      <div class="mg-panel p-4">
+        <div class="relative rounded-[14px] overflow-hidden aspect-square bg-[#151b2e]">
+          <div id="product-img-wrap" class="w-full h-full">${productImage(p, 'w-full h-full')}</div>
+          ${d ? `<span class="absolute top-3 left-3 mg-badge-gold">-${d}% OFF</span>` : (p.featured ? `<span class="absolute top-3 left-3 mg-badge-gold">POPULAR</span>` : '')}
+          ${stockBadge(p) ? `<span class="absolute top-3 right-3">${stockBadge(p)}</span>` : ''}
+        </div>
+        <div class="px-1 pt-3 pb-1">
+          <div class="text-xs font-extrabold">⚡ Fast digital fulfilment</div>
+          <div class="mt-1.5 flex items-center gap-1.5 text-xs text-gray-500">
+            <svg class="w-4 h-4 text-[#c2410c] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            Official digital product
+          </div>
+        </div>
+      </div>
+
+      <div class="mg-panel p-6 sm:p-8">
+        ${p.category_name ? `<span class="mg-cat-chip">${esc(p.category_name)}</span>` : ''}
+        <h1 id="product-title" class="text-3xl sm:text-4xl font-extrabold mt-3">${esc(p.name)}</h1>
+        <div id="variant-title" class="hidden text-lg font-bold text-[#f97316] mt-1"></div>
+        <div class="mt-3 flex items-center gap-2 flex-wrap">${(out || notForCurrency) ? '<span class="badge badge-red">Out of stock</span>' : (stockBadge(p) || lowStockBadge || '<span class="badge badge-green">In stock</span>')}</div>
+
+        <div class="mg-price-banner mt-5 p-5" id="price-banner"></div>
+
+        <div id="opt-pills-wrap"></div>
+
+        ${isTopup ? `<div class="mg-trust-pill mt-5">⚡ You'll enter your Player ID / game details at checkout</div>` : ''}
+
+        ${shouldShowIdChecker(p) ? `
+        <div class="mt-6 rounded-2xl border border-[#e2e8f0] bg-[#f6f7f9] p-5">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🔍</span>
+            <h3 class="font-extrabold">Verify your Game ID</h3>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Enter your User ID and Zone ID to see your in-game nickname before you buy.</p>
+          <div class="grid grid-cols-2 gap-3 mt-4">
+            <div>
+              <label class="text-xs font-bold text-gray-300" for="check-user-id">User ID</label>
+              <input id="check-user-id" inputmode="numeric" placeholder="e.g. 12345678" class="mt-1 w-full text-sm border border-[#26304a] rounded-xl px-4 py-2.5 bg-[#151b2e] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+            </div>
+            <div id="check-zone-wrap">
+              <label class="text-xs font-bold text-gray-300" for="check-zone-id">Zone ID</label>
+              <input id="check-zone-id" inputmode="numeric" placeholder="e.g. 1234" class="mt-1 w-full text-sm border border-[#26304a] rounded-xl px-4 py-2.5 bg-[#151b2e] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+            </div>
+          </div>
+          <button id="check-id-btn" class="mt-3 w-full py-3 rounded-xl bg-[#f97316] text-white text-sm font-bold hover:opacity-90 active:scale-[0.99] transition disabled:opacity-50">Check nickname</button>
+          <div id="check-id-result" class="mt-3 hidden"></div>
+        </div>` : ''}
+
+        ${notForCurrency ? `
+        <div class="mt-6 rounded-2xl border border-[#26304a] bg-[#0d1120] p-4 text-sm text-gray-300">
+          <span class="font-extrabold">Out of stock in ${getCurrency() === 'USD' ? 'USD ($)' : 'INR (₹)'}.</span>
+          This product is only sold in ${otherCur}.
+        </div>` : ''}
+        <div class="mt-6 flex items-center gap-3 flex-wrap">
+          <div class="mg-stepper">
+            <button id="qty-minus" aria-label="Decrease quantity">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/></svg>
+            </button>
+            <span id="qty-val" class="w-10 text-center font-bold">1</span>
+            <button id="qty-plus" aria-label="Increase quantity">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            </button>
+          </div>
+          <button id="btn-add" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-cream flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Add to cart'}</button>
+          <button id="btn-buy" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-gold flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Buy now'}</button>
+        </div>
+
+        <div class="mt-6 flex items-center gap-2 flex-wrap">
+          <span class="mg-trust-pill">⚡ Instant delivery</span>
+          <span class="mg-trust-pill">🛡 Secure payment</span>
+          <span class="mg-trust-pill">🎧 24/7 support</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mg-panel p-6 mt-10">
+      <div class="mg-eyebrow">QUICK AND SIMPLE</div>
+      <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">How your order works</h2>
+      <div class="grid sm:grid-cols-3 gap-5 mt-5">
+        <div class="flex gap-3.5 items-start">
+          <div class="mg-step-num">1</div>
+          <div><div class="font-extrabold">Choose</div><div class="text-sm text-gray-500 mt-0.5">Pick a package and add it to your cart.</div></div>
+        </div>
+        <div class="flex gap-3.5 items-start">
+          <div class="mg-step-num">2</div>
+          <div><div class="font-extrabold">Pay</div><div class="text-sm text-gray-500 mt-0.5">Check out with UPI or online payment.</div></div>
+        </div>
+        <div class="flex gap-3.5 items-start">
+          <div class="mg-step-num">3</div>
+          <div><div class="font-extrabold">Receive</div><div class="text-sm text-gray-500 mt-0.5">Your order is delivered to your email, fast.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mg-panel p-6 mt-6">
+      <div class="mg-eyebrow">DETAILS</div>
+      <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">Product information</h2>
+      ${p.description ? `<div class="mt-3 text-gray-300 leading-relaxed text-sm sm:text-base whitespace-pre-line">${renderDescription(p.description)}</div>` : `<p class="mt-3 text-sm text-gray-400">No additional details.</p>`}
+    </div>
+
+    <div class="mg-panel p-6 mt-6" id="howto-section">
+      <div class="mg-eyebrow">GUIDE</div>
+      <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">How to order</h2>
+      <div class="mt-4 grid sm:grid-cols-[1fr_220px] gap-6 items-center">
+        ${p.how_to_order_text
+          ? `<div class="text-gray-300 leading-relaxed text-sm sm:text-base whitespace-pre-line">${renderDescription(p.how_to_order_text)}</div>`
+          : `<ol class="space-y-4">
+          <li class="flex gap-3.5">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#f97316] text-white text-sm font-extrabold flex items-center justify-center">1</span>
+            <div><div class="font-bold text-sm sm:text-base">Choose your pack</div><div class="text-sm text-gray-500 mt-0.5">Pick an option above and enter your game ID / account details at checkout.</div></div>
+          </li>
+          <li class="flex gap-3.5">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#f97316] text-white text-sm font-extrabold flex items-center justify-center">2</span>
+            <div><div class="font-bold text-sm sm:text-base">Pay securely</div><div class="text-sm text-gray-500 mt-0.5">Pay online, via WhatsApp, or with crypto — your order is confirmed instantly.</div></div>
+          </li>
+          <li class="flex gap-3.5">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#f97316] text-white text-sm font-extrabold flex items-center justify-center">3</span>
+            <div><div class="font-bold text-sm sm:text-base">Get it delivered</div><div class="text-sm text-gray-500 mt-0.5">Your top-up, gift card or subscription is delivered straight to your account.</div></div>
+          </li>
+        </ol>`}
+        <img id="howto-img" src="${esc(p.how_to_order_image || '/images/how-to-order.webp')}" alt="How to order" loading="lazy" class="w-full max-w-[220px] mx-auto rounded-2xl object-cover">
+      </div>
+    </div>`;
+
+    fetch('/api/settings').then((r) => r.json()).then((s) => {
+      if (s && s.how_to_order_image && !p.how_to_order_image) {
+        const hi = document.getElementById('howto-img');
+        if (hi) hi.src = s.how_to_order_image;
+      }
+    }).catch(() => {});
+    const qm = document.getElementById('qty-minus'), qp = document.getElementById('qty-plus');
+    const ba = document.getElementById('btn-add'), bb = document.getElementById('btn-buy');
+    if (qm) qm.addEventListener('click', () => { qty = Math.max(1, qty - 1); renderQty(); });
+    if (qp) qp.addEventListener('click', () => { qty = Math.min(99, qty + 1); renderQty(); });
+    if (ba) ba.addEventListener('click', () => {
+      const cur = window._selVariant || null;
+      if (variants.length && !cur) { toast('Please choose an option first'); return; }
+      addToCart(p.id, qty, cur ? cur.id : null);
+      toast(`Added ${qty} × ${p.name}${cur ? ' (' + cur.name + ')' : ''} to cart`);
+    });
+    if (bb) bb.addEventListener('click', () => {
+      const cur = window._selVariant || null;
+      if (variants.length && !cur) { toast('Please choose an option first'); return; }
+      addToCart(p.id, qty, cur ? cur.id : null);
+      location.href = '/cart.html';
+    });
+    renderVariantUI();
+  }
+
+  // Variant selector: option pills + live price below (MooGold-style).
+  function renderVariantUI() {
+    const p = product;
+    if (!p) return;
+    const variants = Array.isArray(p.variants) ? p.variants : [];
+    const banner = document.getElementById('price-banner');
+    const wrap = document.getElementById('opt-pills-wrap');
+    if (!variants.length) {
+      // No options: classic single-price layout.
+      const d = p.price_mrp && Number(p.price_mrp) > Number(p.price)
+        ? Math.round((1 - Number(p.price) / Number(p.price_mrp)) * 100) : 0;
+      banner.className = 'mg-price-banner mt-5 p-5 flex justify-between items-center gap-4';
+      banner.innerHTML = `
+        <div>
+          <div class="text-[11px] font-extrabold tracking-widest text-[#f97316]">PRICE</div>
+          <div class="text-3xl font-extrabold">${fmtPrice(p)}</div>
+          ${p.price_mrp && Number(p.price_mrp) > Number(p.price) ? `<div class="mt-1.5 flex items-center gap-2 flex-wrap"><span class="text-sm text-white/50 line-through">${fmt(p.price_mrp)}</span>${d ? `<span class="mg-badge-gold">SAVE ${d}%</span>` : ''}</div>` : ''}
+        </div>`;
+      if (wrap) wrap.innerHTML = '';
+      return;
+    }
+    const sel = window._selVariant || null;
+    const vOut = (v) => String(v.stock_status || '').toLowerCase().includes('out');
+    // Show the selected variant's own name as the page title.
+    const titleEl = document.getElementById('product-title');
+    const vTitleEl = document.getElementById('variant-title');
+    if (titleEl && vTitleEl) {
+      if (sel) {
+        titleEl.textContent = p.name;
+        titleEl.className = 'text-sm font-semibold text-gray-400 mt-3';
+        vTitleEl.textContent = sel.name;
+        vTitleEl.classList.remove('hidden');
+        setSeoMeta(p, sel);
+      } else {
+        titleEl.textContent = p.name;
+        titleEl.className = 'text-3xl sm:text-4xl font-extrabold mt-3';
+        vTitleEl.classList.add('hidden');
+        setSeoMeta(p, null);
+      }
+    }
+    // Swap the main image to the selected option's image when it has one.
+    const imgWrap = document.getElementById('product-img-wrap');
+    if (imgWrap) {
+      const vImg = sel && sel.image_url ? sel.image_url : null;
+      imgWrap.innerHTML = vImg
+        ? `<img src="${esc(vImg)}" alt="${esc(sel.name)}" class="w-full h-full object-cover">`
+        : productImage(p, 'w-full h-full');
+    }
+    const vd = sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price)
+      ? Math.round((1 - Number(sel.price) / Number(sel.price_mrp)) * 100) : 0;
+    banner.className = 'mg-price-banner mt-5 p-5';
+    banner.innerHTML = `
+      <div class="text-[11px] font-extrabold tracking-widest text-[#f97316]">${sel ? esc(sel.name).toUpperCase() : 'SELECT AN OPTION'}</div>
+      <div class="text-3xl font-extrabold mt-1">${sel ? fmtPrice(sel) : '—'}</div>
+      ${sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price) ? `<div class="mt-1.5 flex items-center gap-2 flex-wrap"><span class="text-sm text-white/50 line-through">${fmt(sel.price_mrp)}</span>${vd ? `<span class="mg-badge-gold">SAVE ${vd}%</span>` : ''}</div>` : ''}
+      ${p.price_tier ? `<div class="mt-2 text-xs font-bold text-white/70">Silver reseller: ${fmtPrice(sel || p)}</div>` : ''}
+      <div class="text-[11px] text-white/50 mt-1">Inclusive of all taxes. Digital delivery.</div>`;
+    wrap.innerHTML = `
+      <div class="mt-6">
+        <div class="text-sm font-extrabold mb-3">Choose an option</div>
+        <div class="grid grid-cols-1 gap-2.5">
+          ${variants.map((v) => `
+            <button type="button" data-variant="${v.id}" ${vOut(v) ? 'disabled' : ''}
+              class="mg-opt-pill ${sel && sel.id === v.id ? 'active' : ''} ${vOut(v) ? 'opacity-40 cursor-not-allowed' : ''}">
+              ${esc(v.name)}${vOut(v) ? ' — out of stock' : ''}
+            </button>`).join('')}
+        </div>
+      </div>`;
+    wrap.querySelectorAll('[data-variant]').forEach((b) => b.addEventListener('click', () => {
+      const v = variants.find((x) => Number(x.id) === Number(b.dataset.variant));
+      if (!v || vOut(v)) return;
+      window._selVariant = v;
+      try {
+        const url = new URL(location.href);
+        url.searchParams.set('v', v.id);
+        history.replaceState(null, '', url.toString());
+      } catch (_) {}
+      renderVariantUI();
+    }));
+    // Toggle buy buttons with the selected option's stock (currency-unavailable stays out of stock).
+    const btnAdd = document.getElementById('btn-add'), btnBuy = document.getElementById('btn-buy');
+    const dis = (sel && vOut(sel)) || !isAvailableInCurrency(product);
+    if (btnAdd) { btnAdd.disabled = !!dis; btnAdd.textContent = dis ? 'Out of stock' : 'Add to cart'; }
+    if (btnBuy) { btnBuy.disabled = !!dis; btnBuy.textContent = dis ? 'Out of stock' : 'Buy now'; }
+  }
+
+  function reviewCard(rv) {
+    return `
+    <div class="mg-testi-card p-5">
+      <div class="flex items-center justify-between gap-3">
+        <div class="font-bold text-sm">${esc(rv.customer_name)}</div>
+        <div>${stars(rv.rating)}</div>
+      </div>
+      <p class="text-sm text-gray-300 mt-2 leading-relaxed">${esc(rv.text)}</p>
+      <div class="text-xs text-gray-400 mt-2">${fmtDate(rv.created_at)}</div>
+    </div>`;
+  }
+
+  async function loadReviewsSection(p) {
+    const wrap = document.getElementById('reviews-wrap');
+    let reviews = [];
+    try { reviews = await api('/api/reviews?product_id=' + p.id); }
+    catch (_) { reviews = []; }
+    const avg = p.rating_average != null ? Number(p.rating_average) : null;
+    const count = Number(p.review_count) || reviews.length;
+
+    let formHtml = '';
+    try {
+      const status = await api('/api/reviews/status?product_id=' + p.id);
+      if (status.can_review) {
+        formHtml = `
+        <div class="mt-8 mg-panel p-6">
+          <h3 class="font-bold text-lg">Write a review</h3>
+          <p class="text-sm text-gray-500 mt-1">Bought this? Share your experience.</p>
+          <div class="mt-4 grid gap-3 max-w-xl">
+            <div>
+              <label class="text-sm font-semibold">Rating</label>
+              <select id="rv-rating" class="mg-input mt-1.5 text-sm">
+                <option value="5">5 — Excellent</option>
+                <option value="4">4 — Good</option>
+                <option value="3">3 — Average</option>
+                <option value="2">2 — Poor</option>
+                <option value="1">1 — Terrible</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-semibold">Review</label>
+              <textarea id="rv-text" rows="4" maxlength="400" placeholder="At least 10 characters…" class="mg-input mt-1.5 text-sm resize-none"></textarea>
+            </div>
+            <div id="rv-error" class="hidden text-sm font-medium text-red-600 bg-red-50 rounded-xl px-4 py-3"></div>
+            <div><button id="rv-submit" class="mg-btn-gold text-sm">Submit review</button></div>
+          </div>
+        </div>`;
+      } else if (status.already_reviewed) {
+        formHtml = `<div class="mt-8 mg-trust-pill">You have already reviewed this product. Thanks!</div>`;
+      }
+    } catch (_) { /* not logged in — no form */ }
+
+    wrap.innerHTML = `
+      <div class="flex items-end justify-between mb-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-100">Customer reviews</h2>
+          ${avg != null ? `<div class="mt-2 flex items-center gap-2">${stars(avg)}<span class="text-sm font-bold">${avg.toFixed(1)}</span><span class="text-sm text-gray-400">(${count} review${count === 1 ? '' : 's'})</span></div>`
+            : `<p class="text-sm text-gray-400 mt-2">No reviews yet — be the first after your order is delivered.</p>`}
+        </div>
+      </div>
+      ${reviews.length ? `<div class="grid md:grid-cols-2 gap-4">${reviews.map(reviewCard).join('')}</div>` : ''}
+      <div id="product-testimonials" class="mt-6"></div>
+      ${formHtml}`;
+
+    // Product-specific testimonials from the admin (shown alongside reviews).
+    try {
+      const tm = await api('/api/testimonials?product_id=' + p.id);
+      const box = document.getElementById('product-testimonials');
+      if (box && Array.isArray(tm) && tm.length) {
+        box.innerHTML = `
+        <div class="mt-2 mb-4 flex items-center gap-2">
+          <span class="text-xs font-extrabold tracking-[0.18em] uppercase text-[#f97316]">What buyers say</span>
+          <span class="flex-1 h-px bg-[#1b2338]"></span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">${tm.map((t) => reviewCard({ customer_name: t.name, rating: t.rating, text: t.text, created_at: null })).join('')}</div>`;
+      }
+    } catch (_) { /* testimonials optional */ }
+
+    const submitBtn = document.getElementById('rv-submit');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', async () => {
+        const errEl = document.getElementById('rv-error');
+        errEl.classList.add('hidden');
+        const rating = Number(document.getElementById('rv-rating').value);
+        const text = document.getElementById('rv-text').value.trim();
+        if (text.length < 10) { errEl.textContent = 'Please write at least 10 characters.'; errEl.classList.remove('hidden'); return; }
+        submitBtn.disabled = true; submitBtn.textContent = 'Submitting…';
+        try {
+          await api('/api/reviews', { method: 'POST', body: JSON.stringify({ product_id: p.id, rating, text }) });
+          wrap.innerHTML = `<div class="bg-brand-50 border border-brand-200 rounded-2xl p-6 text-sm text-brand-800 font-medium">Thanks — your review is awaiting approval.</div>`;
+        } catch (e) {
+          errEl.textContent = (e && e.data && e.data.error) || 'Could not submit your review.';
+          errEl.classList.remove('hidden');
+          submitBtn.disabled = false; submitBtn.textContent = 'Submit review';
+        }
+      });
+    }
+  }
+
+  async function init() {
+    await boot();
+    const slug = new URLSearchParams(location.search).get('slug');
+    if (!slug) {
+      document.getElementById('product-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">Product not found. <a href="/" class="text-brand-600 font-semibold">Go home</a></div>`;
+      return;
+    }
+    try {
+      const p = await api('/api/products/' + encodeURIComponent(slug));
+      render(p);
+      initIdChecker(p);
+      loadReviewsSection(p);
+      // Related products
+      if (p.category_slug) {
+        try {
+          const related = (await api('/api/products?category=' + encodeURIComponent(p.category_slug) + '&limit=5'))
+            .filter((r) => r.id !== p.id).slice(0, 4);
+          if (related.length) {
+            document.getElementById('related-wrap').classList.remove('hidden');
+            document.getElementById('related-head').innerHTML = sectionHead('PAIRS WELL', 'You may also like', '');
+            document.getElementById('related-grid').innerHTML = related.map((r) => `<div class="reveal h-full">${relatedCard(r)}</div>`).join('');
+            initReveal();
+          }
+        } catch (_) {}
+      }
+    } catch (e) {
+      document.getElementById('product-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">This product could not be found. <a href="/" class="text-brand-600 font-semibold">Back to store</a></div>`;
+    }
+  }
+
+  /* ---------- Game ID nickname checker ---------- */
+  function detectGameSlug(p) {
+    const hay = ((p.name || '') + ' ' + (p.category_name || '') + ' ' + (p.category_slug || '')).toLowerCase();
+    if (hay.includes('mobile legends') || hay.includes('mlbb')) return 'mobile-legends';
+    if (hay.includes('free fire')) return 'free-fire';
+    if (hay.includes('honor of kings')) return 'honor-of-kings';
+    if (hay.includes('pubg')) return 'pubg-mobile';
+    if (hay.includes('magic chess')) return 'magic-chess';
+    if (hay.includes('genshin')) return 'genshin-impact';
+    if (hay.includes('top-up') || hay.includes('topup') || hay.includes('top up') || hay.includes('diamonds')) return 'mobile-legends';
+    return null;
+  }
+
+  // Product toggle wins, then category toggle, then auto-detect.
+  function shouldShowIdChecker(p) {
+    if (p.id_check_mode === 'show') return true;
+    if (p.id_check_mode === 'hide') return false;
+    if (p.category_id_check_mode === 'show') return true;
+    if (p.category_id_check_mode === 'hide') return false;
+    return !!detectGameSlug(p);
+  }
+
+  function initIdChecker(p) {
+    const btn = document.getElementById('check-id-btn');
+    if (!btn || !shouldShowIdChecker(p)) return;
+    const game = detectGameSlug(p);
+    if (!game) return;
+    const needsZone = game === 'mobile-legends' || game === 'magic-chess';
+    if (!needsZone) {
+      const zw = document.getElementById('check-zone-wrap');
+      if (zw) zw.style.display = 'none';
+    }
+    btn.addEventListener('click', async () => {
+      const userId = (document.getElementById('check-user-id').value || '').replace(/\D/g, '');
+      const zoneId = (document.getElementById('check-zone-id').value || '').replace(/\D/g, '');
+      const result = document.getElementById('check-id-result');
+      result.classList.remove('hidden');
+      if (!userId) {
+        result.innerHTML = `<div class="text-sm font-semibold text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">Please enter your User ID.</div>`;
+        return;
+      }
+      if (needsZone && !zoneId) {
+        result.innerHTML = `<div class="text-sm font-semibold text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">Please enter your Zone ID too.</div>`;
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+      result.innerHTML = `<div class="text-sm text-gray-500 px-1 py-2">Looking up your account…</div>`;
+      try {
+        // Link to Busan: send the selected variant's Busan product ID (fall back
+        // to the product-level one) so the check runs against Busan's own API.
+        const selV = window._selVariant || null;
+        const busanPid = (selV && selV.busan_product_id) || p.busan_product_id || '';
+        const r = await api('/api/games/check-id', {
+          method: 'POST',
+          body: JSON.stringify({ game, user_id: userId, zone_id: zoneId, busan_product_id: busanPid }),
+        });
+        result.innerHTML = `
+        <div class="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+          <span class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </span>
+          <div class="min-w-0">
+            <div class="text-xs font-bold text-emerald-700 uppercase tracking-wide">Account found</div>
+            <div class="font-extrabold text-gray-100 truncate">${esc(r.nickname)}</div>
+            ${r.region ? `<div class="text-xs text-gray-500">Region: ${esc(r.region)}</div>` : ''}
+          </div>
+        </div>`;
+      } catch (e) {
+        result.innerHTML = `<div class="text-sm font-semibold text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">${esc(apiErr(e) || 'Account not found. Double-check your IDs.')}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Check nickname';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){var h=function(){var l=document.getElementById('page-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},400)}};window.addEventListener('load',function(){setTimeout(h,300)});setTimeout(h,5000);})();
+</script>
+</body>
+</html>
