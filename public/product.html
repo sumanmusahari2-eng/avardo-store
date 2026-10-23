@@ -404,6 +404,9 @@
         <span class="text-2xl font-extrabold text-white">${sel ? fmtPrice(sel) : '—'}</span>
       </div>
       <div class="text-[11px] mt-1" style="color:#6b7280">Inclusive of all taxes. Digital delivery.</div>`;
+    const catOf = (v) => /double/i.test(v.name) ? 'double' : /(pass|weekly|twilight)/i.test(v.name) ? 'passes' : 'diamonds';
+    const emojiOf = (v) => catOf(v) === 'double' ? '✨' : catOf(v) === 'passes' ? '🎟️' : '💎';
+    const showFilters = variants.length > 8;
     wrap.innerHTML = `
       <div class="mt-7">
         <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">SELECT PACKAGE</div>
@@ -662,7 +665,7 @@
         result.innerHTML = `<div class="text-sm font-semibold text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">${esc(apiErr(e) || 'Account not found. Double-check your IDs.')}</div>`;
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Check nickname';
+        btn.textContent = 'Verify Username';
       }
     });
   }
