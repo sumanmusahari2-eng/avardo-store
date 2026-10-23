@@ -359,7 +359,7 @@ function renderNavbar() {
     </form>
     <button id="search-close" class="block mx-auto mt-8 rounded-full px-6 py-2 text-sm font-bold text-white" style="border:1.5px solid #e53935">Close Search</button>
   </div>
-  <a href="/cart.html" class="hidden md:flex fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-white shadow-2xl items-center justify-center" aria-label="Cart" style="color:#111114">
+  <a href="/cart.html" class="hidden md:flex fixed bottom-24 right-5 z-40 w-14 h-14 rounded-full bg-white shadow-2xl items-center justify-center" aria-label="Cart" style="color:#111114">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
     <span id="cart-count-float" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-white" style="background:#ff5c1e">0</span>
   </a>`;
@@ -688,7 +688,7 @@ function productCard(p) {
   else if (p.featured) tag = '<span class="dt-tag">POPULAR</span>';
   else if (hasVariants) {
     const cm = String(cheapest.name || '').match(/(\d+)\s*(UC)?/i);
-    if (cm) tag = `<span class="dt-tag">FROM ${cm[1]} ${cm[2] ? 'UC' : '💎'}</span>`;
+    tag = cm ? `<span class="dt-tag">FROM ${cm[1]} ${cm[2] ? 'UC' : '💎'}</span>` : '<span class="dt-tag">💎 TOP UP</span>';
   }
   const art = p.image_url
     ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" class="w-full aspect-square object-cover">`
@@ -725,9 +725,9 @@ function relatedCard(p) {
   const cta = soldOut
     ? `<span class="mt-2 text-[11px] font-bold text-red-600">Out of stock</span>`
     : `<span class="mt-2 inline-block text-[11px] font-extrabold text-white bg-[#f97316] rounded-lg px-4 py-1.5">${hasVariants ? 'Choose option' : 'View'}</span>`;
-  return `<a href="${href}" class="block h-full rounded-lg border border-[#1d263e] bg-[#16161a] p-3 shadow-sm hover:shadow-md hover:border-[#f97316]/30 transition ${soldOut ? 'opacity-70' : ''}">
+  return `<a href="${href}" class="block h-full rounded-lg border border-[#2e2e33] bg-[#16161a] p-3 shadow-sm hover:shadow-md hover:border-[#f97316]/30 transition ${soldOut ? 'opacity-70' : ''}">
     <div class="flex flex-col items-center text-center">
-      ${chip}
+      ${p.image_url ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" class="w-14 h-14 rounded-xl object-cover mb-1">` : chip}
       <div class="mt-2 font-bold text-white text-[13px] leading-snug line-clamp-2 min-h-[2.4em]">${esc(p.name)}</div>
       <div class="mt-1">${priceHtml}</div>
       ${cta}

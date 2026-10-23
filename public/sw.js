@@ -1,6 +1,7 @@
-// Minimal service worker: cache-first for static assets, network-first for pages/API.
-// Version bump this to force clients to pick up new assets.
-const CACHE = 'meowji-v1';
+// Service worker: network-first for pages (design updates show immediately),
+// stale-while-revalidate for static assets, never cache API/admin.
+// Bump CACHE to force clients onto fresh caches.
+const CACHE = 'avardo-v2';
 const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
@@ -27,6 +28,21 @@ self.addEventListener('fetch', (e) => {
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/admin')) {
     return;
   }
+  const isPage = e.request.mode === 'navigate' || url.pathname === '/' || url.pathname.endsWith('.html');
+  if (isPage) {
+    // Network-first: fresh HTML wins; cache is only an offline fallback.
+    e.respondWith(
+      fetch(e.request).then((res) => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+    return;
+  }
+  // Static assets (css/js/images): stale-while-revalidate.
   e.respondWith(
     caches.match(e.request).then((hit) => {
       const net = fetch(e.request).then((res) => {

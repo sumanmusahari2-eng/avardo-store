@@ -447,6 +447,11 @@
         wrap.querySelectorAll('[data-variant]').forEach((c) => {
           c.style.display = (f === 'all' || c.dataset.cat === f) ? '' : 'none';
         });
+        const cur = wrap.querySelector('.pack-card.active');
+        if (cur && cur.style.display === 'none') {
+          const vis = Array.from(wrap.querySelectorAll('[data-variant]')).find((c) => c.style.display !== 'none' && !c.disabled);
+          if (vis) vis.click();
+        }
       }));
     }
     // Toggle buy buttons with the selected option's stock (currency-unavailable stays out of stock).

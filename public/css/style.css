@@ -1067,3 +1067,8 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 }
 .pay-bar.active .pay-radio { background: #ff5c1e; }
 .pay-bar.active .pay-radio::after { content: '✓'; }
+
+/* Pastel step cards: flat dark (the light gradient starts made text invisible) */
+.mg-pastel-cream, .mg-pastel-lavender, .mg-pastel-blue, .mg-pastel-peach {
+  background: #16161a; border: 1px solid #2e2e33;
+}
