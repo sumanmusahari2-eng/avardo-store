@@ -17,7 +17,7 @@
 <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#FCE7F3', 100: '#FCE7F3', 200: '#FBCFE8', 500: '#EC4899', 600: '#DB2777', 700: '#BE185D', 800: '#9D174D', 900: '#831843' } } } } };</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-[#ffffff] text-gray-100 antialiased">
+<body class="bg-[#ffffff] text-[#3F1D2E] antialiased">
 <body class="antialiased">
 <!-- Loading screen -->
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
@@ -203,7 +203,7 @@
       ${shouldShowIdChecker(p) ? `
       <div class="mt-6 rounded-2xl border border-[#F3C6D3] bg-[#FFF5F7] p-5">
 <div class="flex items-center gap-2">
-          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-black text-white shrink-0" style="background:#e53935">?</span>
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-black text-white shrink-0" style="background:#BE185D">?</span>
           <h3 class="text-sm font-extrabold uppercase tracking-wide" style="color:#EC4899">Enter Your ID</h3>
         </div>
         <p class="text-xs text-gray-500 mt-1">Enter your User ID and Zone ID to see your in-game nickname before you buy.</p>
@@ -347,7 +347,7 @@
       banner.style.background = '#ffffff';
       banner.innerHTML = `
         <div class="text-[11px] font-extrabold tracking-widest" style="color:#EC4899">PACK DETAILS</div>
-        <div class="mt-3 rounded-lg p-4 space-y-2" style="background:#2e2e2e">
+        <div class="mt-3 rounded-lg p-4 space-y-2" style="background:#FCE7F3">
           <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Product</span><b class="text-[#3F1D2E] text-right">${esc(p.name)}</b></div>
           <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Price</span><b class="text-[#3F1D2E] text-right">${fmtPrice(p)}</b></div>
           ${p.price_mrp && Number(p.price_mrp) > Number(p.price) ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">You save</span><b style="color:#7cb342">${fmt(Number(p.price_mrp) - Number(p.price))} (${d}%)</b></div>` : ''}
@@ -392,7 +392,7 @@
     banner.style.background = '#ffffff';
     banner.innerHTML = `
       <div class="text-[11px] font-extrabold tracking-widest" style="color:#EC4899">PACK DETAILS</div>
-      <div class="mt-3 rounded-lg p-4 space-y-2" style="background:#2e2e2e">
+      <div class="mt-3 rounded-lg p-4 space-y-2" style="background:#FCE7F3">
         <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Product</span><b class="text-[#3F1D2E] text-right">${esc(p.name)}</b></div>
         <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Items</span><b class="text-[#3F1D2E] text-right">${sel ? esc(sel.name) : '—'}</b></div>
         <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Price</span><b class="text-[#3F1D2E] text-right">${sel ? fmtPrice(sel) : '—'}</b></div>
@@ -473,8 +473,8 @@
         <div class="font-bold text-sm">${esc(rv.customer_name)}</div>
         <div>${stars(rv.rating)}</div>
       </div>
-      <p class="text-sm text-gray-300 mt-2 leading-relaxed">${esc(rv.text)}</p>
-      <div class="text-xs text-gray-400 mt-2">${fmtDate(rv.created_at)}</div>
+      <p class="text-sm text-gray-600 mt-2 leading-relaxed">${esc(rv.text)}</p>
+      <div class="text-xs text-gray-500 mt-2">${fmtDate(rv.created_at)}</div>
     </div>`;
   }
 
@@ -521,9 +521,9 @@
     wrap.innerHTML = `
       <div class="flex items-end justify-between mb-6">
         <div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-100">Customer reviews</h2>
-          ${avg != null ? `<div class="mt-2 flex items-center gap-2">${stars(avg)}<span class="text-sm font-bold">${avg.toFixed(1)}</span><span class="text-sm text-gray-400">(${count} review${count === 1 ? '' : 's'})</span></div>`
-            : `<p class="text-sm text-gray-400 mt-2">No reviews yet — be the first after your order is delivered.</p>`}
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#3F1D2E]">Customer reviews</h2>
+          ${avg != null ? `<div class="mt-2 flex items-center gap-2">${stars(avg)}<span class="text-sm font-bold">${avg.toFixed(1)}</span><span class="text-sm text-gray-500">(${count} review${count === 1 ? '' : 's'})</span></div>`
+            : `<p class="text-sm text-gray-500 mt-2">No reviews yet — be the first after your order is delivered.</p>`}
         </div>
       </div>
       ${reviews.length ? `<div class="grid md:grid-cols-2 gap-4">${reviews.map(reviewCard).join('')}</div>` : ''}
@@ -659,7 +659,7 @@
           </span>
           <div class="min-w-0">
             <div class="text-xs font-bold text-emerald-700 uppercase tracking-wide">Account found</div>
-            <div class="font-extrabold text-gray-100 truncate">${esc(r.nickname)}</div>
+            <div class="font-extrabold text-[#3F1D2E] truncate">${esc(r.nickname)}</div>
             ${r.region ? `<div class="text-xs text-gray-500">Region: ${esc(r.region)}</div>` : ''}
           </div>
         </div>`;

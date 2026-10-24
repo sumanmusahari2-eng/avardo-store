@@ -498,7 +498,7 @@
         track.innerHTML = cards.map((t) => `
           <div class="reveal snap-start shrink-0 w-[82%] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] mg-testi-card p-6 flex flex-col gap-3">
             ${stars(t.rating)}
-            <p class="text-gray-300 text-sm leading-relaxed flex-1">"${esc(t.text)}"</p>
+            <p class="text-gray-600 text-sm leading-relaxed flex-1">"${esc(t.text)}"</p>
             <div class="flex items-center gap-3">
               <span class="w-10 h-10 rounded-full bg-[#EC4899] text-white font-bold flex items-center justify-center shrink-0">${esc((t.name || '?').trim().charAt(0).toUpperCase())}</span>
               <span class="font-semibold text-sm">${esc(t.name)}</span>

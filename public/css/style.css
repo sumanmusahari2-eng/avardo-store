@@ -815,7 +815,7 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 
 /* Product page: ID format note + pack grid */
 .fmt-note {
-  background: #2b1c0d; border: 1px solid #4a2f14; color: #FBCFE8;
+  background: #FCE7F3; border: 1px solid #F3C6D3; color: #BE185D;
   border-radius: 12px; padding: 10px 14px; font-size: 0.82rem; font-weight: 600;
 }
 .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -834,7 +834,7 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 .pack-card .pk-price { font-size: 1.02rem; font-weight: 800; color: var(--mg-gold); margin-top: 4px; }
 .pack-card .pk-mrp { font-size: 0.7rem; color: var(--mg-muted); text-decoration: line-through; }
 
-.mg-panel { border-color: rgba(255,255,255,0.08); }
+.mg-panel { border-color: #F3C6D3; }
 
 /* ============================================================
    digitaltopup.in fidelity pass (2026-10-23): near-black base,
@@ -842,43 +842,43 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
    ============================================================ */
 .wa-pill {
   display: flex; align-items: center; gap: 12px;
-  background: #2a1110; border: 1px solid #5c2620; border-radius: 12px;
-  padding: 10px 14px; color: #fff;
+  background: #FFF0F3; border: 1px solid #F3C6D3; border-radius: 12px;
+  padding: 10px 14px; color: #3F1D2E;
 }
 .wa-pill .wa-ic {
   width: 40px; height: 40px; border-radius: 10px; background: #14231a;
   display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
 }
 .wa-pill .wa-title { font-weight: 800; font-size: 0.92rem; line-height: 1.2; }
-.wa-pill .wa-sub { color: #c9a79b; font-size: 0.76rem; margin-top: 1px; }
+.wa-pill .wa-sub { color: #8A6B7A; font-size: 0.76rem; margin-top: 1px; }
 .wa-pill .wa-x {
   margin-left: auto; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
-  background: rgba(255,255,255,.06); color: #e8cfc8; font-size: 13px;
+  background: rgba(236,72,153,.08); color: #BE185D; font-size: 13px;
 }
 
 .av-navpill {
-  background: #1a1a1a; border: 1px solid #4a2c14; color: #fff;
+  background: #ffffff; border: 1px solid #F3C6D3; color: #3F1D2E;
   padding: 0.5rem 1.05rem; font-weight: 700;
 }
-.av-navpill:hover { background: #232323; border-color: #F472B6; color: #fff; }
-.av-navpill.active { background: #ff5c1e; border-color: #ff5c1e; color: #fff; }
+.av-navpill:hover { background: #FFF0F3; border-color: #F472B6; color: #3F1D2E; }
+.av-navpill.active { background: #EC4899; border-color: #EC4899; color: #fff; }
 
 .av-login-btn {
-  background: #2e1c10; border: 1px solid #F472B6; color: #fff !important;
+  background: linear-gradient(135deg, #EC4899, #BE185D); border: 1px solid #DB2777; color: #fff !important;
   text-transform: uppercase; letter-spacing: 0.07em;
   display: inline-flex; align-items: center; gap: 0.45rem;
 }
-.av-login-btn:hover { background: #3a2413; opacity: 1; }
-.av-login-btn svg { color: #ff5c1e; }
+.av-login-btn:hover { background: #DB2777; opacity: 1; }
+.av-login-btn svg { color: #fff; }
 
 .sec-title .bar { display: none; }
 .sec-title { margin-bottom: 20px; }
-.sec-title h2 { font-size: 1.75rem; font-weight: 800; color: #fff; }
+.sec-title h2 { font-size: 1.75rem; font-weight: 800; color: #3F1D2E; }
 @media (min-width: 640px) { .sec-title h2 { font-size: 2rem; } }
 
 .mg-hero { border-radius: 20px; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
-.mg-btn-gold { background: linear-gradient(90deg, #ff6b00, #e53935); }
-.mg-btn-gold:hover { background: linear-gradient(90deg, #ff7d22, #ef4444); box-shadow: 0 16px 32px rgba(229,57,53,.3); }
+.mg-btn-gold { background: linear-gradient(135deg, #EC4899, #BE185D); }
+.mg-btn-gold:hover { background: linear-gradient(135deg, #F472B6, #DB2777); box-shadow: 0 16px 32px rgba(236,72,153,.3); }
 
 .dt-tag {
   position: absolute; top: 8px; right: 8px; z-index: 2;
@@ -927,7 +927,7 @@ input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 .pay-bar:hover { border-color: #F472B6; }
 .pay-bar.active { border-color: #EC4899; box-shadow: 0 0 0 1px #EC4899, 0 0 16px rgba(236,72,153,.3); }
 .pay-radio {
-  width: 19px; height: 19px; border-radius: 9999px; border: 2px solid #ff5c1e;
+  width: 19px; height: 19px; border-radius: 9999px; border: 2px solid #EC4899;
   flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
   color: #fff; font-size: 11px; font-weight: 900;
 }
