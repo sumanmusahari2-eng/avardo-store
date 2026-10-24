@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")==="dark"?"light":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#FCE7F3', 100: '#FCE7F3', 200: '#FBCFE8', 500: '#EC4899', 600: '#DB2777', 700: '#BE185D', 800: '#9D174D', 900: '#831843' } } } } };</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="text-gray-100 antialiased">
@@ -26,7 +26,7 @@
       <div class="flex items-center gap-3">
         <div class="relative shrink-0">
           <span id="avatar" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl placeholder-gradient text-white text-lg sm:text-xl font-extrabold flex items-center justify-center overflow-hidden">?</span>
-          <button id="btn-avatar" title="Change profile photo" aria-label="Change profile photo" class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-[#f97316] text-white flex items-center justify-center shadow-md hover:bg-[#c2410c]">
+          <button id="btn-avatar" title="Change profile photo" aria-label="Change profile photo" class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-[#EC4899] text-white flex items-center justify-center shadow-md hover:bg-[#BE185D]">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
           </button>
           <input id="avatar-file" type="file" accept="image/*" class="hidden">
@@ -37,9 +37,9 @@
         </div>
         <span id="u-role" class="badge badge-green capitalize shrink-0">—</span>
       </div>
-      <div class="mt-3 pt-3 border-t border-[#1d263e] flex items-center justify-between text-sm">
+      <div class="mt-3 pt-3 border-t border-[#F3C6D3] flex items-center justify-between text-sm">
         <span class="text-gray-500">AV COINS</span>
-        <a href="/wallet.html" id="u-balance" class="font-bold text-[#c2410c] hover:text-[#0f4bc0]">—</a>
+        <a href="/wallet.html" id="u-balance" class="font-bold text-[#BE185D] hover:text-[#0f4bc0]">—</a>
       </div>
       <div class="flex gap-2.5 mt-3">
         <a href="/wallet.html" class="mg-btn-dark flex-1 !py-2 !text-sm text-center">Wallet & gift cards</a>
@@ -127,7 +127,7 @@
       </div>`;
       return;
     }
-    card.innerHTML = `<div class="rounded-2xl border border-[#1d263e] bg-[#151b2e] p-4">
+    card.innerHTML = `<div class="rounded-2xl border border-[#F3C6D3] bg-[#151b2e] p-4">
       <div class="font-extrabold text-sm mb-1">🥈 Silver reseller membership</div>
       <p class="text-xs text-gray-500 mb-3">Unlock reseller prices for ${ms.duration_days} days. Auto-disconnects after expiry — no renewal trap.</p>
       <div class="rounded-xl border-2 border-gray-800 p-4 text-center bg-[#0d1120]">
@@ -187,7 +187,7 @@
         wrap.innerHTML = `
           <div class="text-center py-10 text-gray-500">
             <p class="text-sm">You have no orders yet.</p>
-            <a href="/" class="inline-block mt-4 text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0]">Browse subscriptions</a>
+            <a href="/" class="inline-block mt-4 text-sm font-semibold text-[#BE185D] hover:text-[#0f4bc0]">Browse subscriptions</a>
           </div>`;
         return;
       }
@@ -195,7 +195,7 @@
         <div class="overflow-x-auto -mx-6 px-6">
           <table class="w-full text-sm min-w-[560px]">
             <thead>
-              <tr class="text-left text-xs uppercase tracking-wide text-gray-400 border-b border-[#1d263e]">
+              <tr class="text-left text-xs uppercase tracking-wide text-gray-400 border-b border-[#F3C6D3]">
                 <th class="py-2.5 pr-4 font-semibold">Order</th>
                 <th class="py-2.5 pr-4 font-semibold">Date</th>
                 <th class="py-2.5 pr-4 font-semibold">Items</th>
@@ -206,13 +206,13 @@
             </thead>
             <tbody>
               ${orders.map((o) => `
-              <tr class="border-b border-[#1d263e] hover:bg-[#0d1120]/60">
+              <tr class="border-b border-[#F3C6D3] hover:bg-[#0d1120]/60">
                 <td class="py-3 pr-4 font-bold">#${esc(o.id)}</td>
                 <td class="py-3 pr-4 text-gray-500 whitespace-nowrap">${fmtDate(o.created_at)}</td>
                 <td class="py-3 pr-4 text-gray-500">${esc(o.item_count)}</td>
                 <td class="py-3 pr-4 font-semibold">${fmt(o.total)}</td>
                 <td class="py-3 pr-4">${statusBadge(o.status)}${Number(o.paid_claimed) ? ' <span class="badge badge-blue">Paid claimed</span>' : ''}</td>
-                <td class="py-3 text-right whitespace-nowrap"><a href="/order.html?id=${encodeURIComponent(o.id)}" class="text-[#c2410c] font-semibold hover:text-[#0f4bc0]">View</a>${['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? ` <span class="text-gray-300">·</span> <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="text-[#c2410c] font-semibold hover:text-[#0f4bc0]">Invoice</a>` : ''}</td>
+                <td class="py-3 text-right whitespace-nowrap"><a href="/order.html?id=${encodeURIComponent(o.id)}" class="text-[#BE185D] font-semibold hover:text-[#0f4bc0]">View</a>${['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? ` <span class="text-gray-300">·</span> <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="text-[#BE185D] font-semibold hover:text-[#0f4bc0]">Invoice</a>` : ''}</td>
               </tr>`).join('')}
             </tbody>
           </table>

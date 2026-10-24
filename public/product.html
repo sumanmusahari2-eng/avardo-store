@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")==="dark"?"light":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,10 +14,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#FCE7F3', 100: '#FCE7F3', 200: '#FBCFE8', 500: '#EC4899', 600: '#DB2777', 700: '#BE185D', 800: '#9D174D', 900: '#831843' } } } } };</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-[#16161a] text-gray-100 antialiased">
+<body class="bg-[#ffffff] text-gray-100 antialiased">
 <body class="antialiased">
 <!-- Loading screen -->
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
@@ -26,8 +26,8 @@
 <main class="max-w-7xl mx-auto px-4 py-8">
   <div id="product-wrap">
     <div class="grid md:grid-cols-2 gap-8 animate-pulse">
-      <div class="aspect-square rounded-3xl bg-[#1e1e22]"></div>
-      <div class="space-y-4"><div class="h-8 bg-[#1e1e22] rounded w-3/4"></div><div class="h-6 bg-[#1e1e22] rounded w-1/3"></div><div class="h-24 bg-[#1e1e22] rounded"></div></div>
+      <div class="aspect-square rounded-3xl bg-[#FCE7F3]"></div>
+      <div class="space-y-4"><div class="h-8 bg-[#FCE7F3] rounded w-3/4"></div><div class="h-6 bg-[#FCE7F3] rounded w-1/3"></div><div class="h-24 bg-[#FCE7F3] rounded"></div></div>
     </div>
   </div>
   <div id="related-wrap" class="mt-16 hidden">
@@ -174,11 +174,11 @@
       <span class="mg-crumb current truncate max-w-[220px] sm:max-w-xs" title="${esc(p.name)}">${esc(p.name)}</span>
     </nav>
 
-    <div class="relative rounded-[20px] overflow-hidden border border-[#2e2e33]">
+    <div class="relative rounded-[20px] overflow-hidden border border-[#F3C6D3]">
       <div class="absolute inset-0">${productImage(p, 'w-full h-full object-cover')}</div>
       <div class="absolute inset-0" style="backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(9,9,13,.52)"></div>
       <div class="relative max-w-3xl mx-auto my-5 sm:my-7 rounded-2xl p-4 sm:p-5 flex items-center gap-4" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);width:calc(100% - 2rem)">
-        <div id="product-img-wrap" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shrink-0" style="box-shadow:0 0 0 2px #ff5c1e,0 0 24px rgba(255,92,30,.45)">${productImage(p, 'w-full h-full object-cover')}</div>
+        <div id="product-img-wrap" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shrink-0" style="box-shadow:0 0 0 2px #EC4899,0 0 24px rgba(255,92,30,.45)">${productImage(p, 'w-full h-full object-cover')}</div>
         <div class="min-w-0">
           ${p.category_name ? `<div class="text-[10px] font-extrabold tracking-[0.14em] uppercase" style="color:#ffb37a">${esc(p.category_name)}</div>` : ''}
           <h1 id="product-title" class="text-xl sm:text-[26px] font-extrabold uppercase tracking-wide leading-tight mt-0.5">${esc(p.name)}</h1>
@@ -193,7 +193,7 @@
         </div>
       </div>
     </div>
-    <a href="#howto-section" class="block mt-4 rounded-[10px] text-center text-white font-bold py-3 text-sm" style="background:linear-gradient(90deg,#ff6b00,#e53935)">ℹ️ How to Purchase</a>
+    <a href="#howto-section" class="block mt-4 rounded-[10px] text-center text-white font-bold py-3 text-sm" style="background:linear-gradient(90deg,#F472B6,#BE185D)">ℹ️ How to Purchase</a>
 
     <div class="mg-panel p-5 sm:p-7 mt-5">
       <div class="flex items-center gap-2 flex-wrap">${(out || notForCurrency) ? '<span class="badge badge-red">Out of stock</span>' : (stockBadge(p) || lowStockBadge || '<span class="badge badge-green">In stock</span>')}</div>
@@ -201,38 +201,38 @@
       ${fmtNoteHtml}
 
       ${shouldShowIdChecker(p) ? `
-      <div class="mt-6 rounded-2xl border border-[#2e2e33] bg-[#111114] p-5">
+      <div class="mt-6 rounded-2xl border border-[#F3C6D3] bg-[#FFF5F7] p-5">
 <div class="flex items-center gap-2">
           <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-black text-white shrink-0" style="background:#e53935">?</span>
-          <h3 class="text-sm font-extrabold uppercase tracking-wide" style="color:#ff5c1e">Enter Your ID</h3>
+          <h3 class="text-sm font-extrabold uppercase tracking-wide" style="color:#EC4899">Enter Your ID</h3>
         </div>
         <p class="text-xs text-gray-500 mt-1">Enter your User ID and Zone ID to see your in-game nickname before you buy.</p>
         <div class="grid grid-cols-1 gap-3 mt-4">
           <div>
             <label class="text-xs font-bold text-gray-300" for="check-user-id">User ID</label>
-            <input id="check-user-id" inputmode="numeric" placeholder="e.g. 12345678" class="mt-1 w-full text-sm border border-[#2e2e33] rounded-xl px-4 py-2.5 bg-[#16161a] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+            <input id="check-user-id" inputmode="numeric" placeholder="e.g. 12345678" class="mt-1 w-full text-sm border border-[#F3C6D3] rounded-xl px-4 py-2.5 bg-[#ffffff] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
           </div>
           <div id="check-zone-wrap">
             <label class="text-xs font-bold text-gray-300" for="check-zone-id">Zone ID</label>
-            <input id="check-zone-id" inputmode="numeric" placeholder="e.g. 1234" class="mt-1 w-full text-sm border border-[#2e2e33] rounded-xl px-4 py-2.5 bg-[#16161a] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+            <input id="check-zone-id" inputmode="numeric" placeholder="e.g. 1234" class="mt-1 w-full text-sm border border-[#F3C6D3] rounded-xl px-4 py-2.5 bg-[#ffffff] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
           </div>
         </div>
-        <button id="check-id-btn" class="mt-3 w-full py-3 rounded-[10px] text-white text-sm font-bold hover:opacity-90 active:scale-[0.99] transition disabled:opacity-50" style="background:linear-gradient(90deg,#ff6b00,#e53935)">Verify Username</button>
+        <button id="check-id-btn" class="mt-3 w-full py-3 rounded-[10px] text-white text-sm font-bold hover:opacity-90 active:scale-[0.99] transition disabled:opacity-50" style="background:linear-gradient(90deg,#F472B6,#BE185D)">Verify Username</button>
         <div id="check-id-result" class="mt-3 hidden"></div>
       </div>` : ''}
 
       ${notForCurrency ? `
-      <div class="mt-6 rounded-2xl border border-[#2e2e33] bg-[#111114] p-4 text-sm text-gray-300">
+      <div class="mt-6 rounded-2xl border border-[#F3C6D3] bg-[#FFF5F7] p-4 text-sm text-gray-300">
         <span class="font-extrabold">Out of stock in ${getCurrency() === 'USD' ? 'USD ($)' : 'INR (₹)'}.</span>
         This product is only sold in ${otherCur}.
       </div>` : ''}
 
       <div id="opt-pills-wrap"></div>
 
-      <div class="mt-6 p-5 rounded-2xl border border-[#2e2e33] bg-[#111114]" id="price-banner"></div>
+      <div class="mt-6 p-5 rounded-2xl border border-[#F3C6D3] bg-[#FFF5F7]" id="price-banner"></div>
 
       <div class="mt-6">
-        <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">CHOOSE PAYMENT</div>
+        <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#EC4899">CHOOSE PAYMENT</div>
         <div class="grid grid-cols-2 gap-3" id="pay-choice">
           <button type="button" class="pay-bar active" data-pay="wallet"><span>👛 Wallet</span><span class="pay-radio"></span></button>
           <button type="button" class="pay-bar" data-pay="upi"><span>📱 UPI Apps</span><span class="pay-radio"></span></button>
@@ -249,7 +249,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
           </button>
         </div>
-        <button id="btn-add" ${(out || notForCurrency) ? 'disabled' : ''} class="flex-1 rounded-full py-3.5 font-extrabold text-sm text-white transition active:scale-[0.99] disabled:opacity-50" style="background:#1e1e1e;border:1.5px solid #3a3a40">${(out || notForCurrency) ? 'Out of stock' : 'Add to cart'}</button>
+        <button id="btn-add" ${(out || notForCurrency) ? 'disabled' : ''} class="flex-1 rounded-full py-3.5 font-extrabold text-sm text-white transition active:scale-[0.99] disabled:opacity-50" style="background:linear-gradient(135deg,#EC4899,#BE185D);border:1.5px solid #DB2777">${(out || notForCurrency) ? 'Out of stock' : 'Add to cart'}</button>
         <button id="btn-buy" ${(out || notForCurrency) ? 'disabled' : ''} class="mg-btn-gold flex-1">${(out || notForCurrency) ? 'Out of stock' : 'Buy now'}</button>
       </div>
       <p class="text-[11px] text-gray-500 mt-3">You'll enter your game ID details at checkout. Pay via UPI, wallet or WhatsApp.</p>
@@ -288,15 +288,15 @@
           ? `<div class="text-gray-300 leading-relaxed text-sm sm:text-base whitespace-pre-line">${renderDescription(p.how_to_order_text)}</div>`
           : `<ol class="space-y-4">
           <li class="flex gap-3.5">
-            <span class="shrink-0 w-8 h-8 rounded-full bg-[#f97316] text-white text-sm font-extrabold flex items-center justify-center">1</span>
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#EC4899] text-white text-sm font-extrabold flex items-center justify-center">1</span>
             <div><div class="font-bold text-sm sm:text-base">Choose your pack</div><div class="text-sm text-gray-500 mt-0.5">Pick an option above and enter your game ID / account details at checkout.</div></div>
           </li>
           <li class="flex gap-3.5">
-            <span class="shrink-0 w-8 h-8 rounded-full bg-[#f97316] text-white text-sm font-extrabold flex items-center justify-center">2</span>
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#EC4899] text-white text-sm font-extrabold flex items-center justify-center">2</span>
             <div><div class="font-bold text-sm sm:text-base">Pay securely</div><div class="text-sm text-gray-500 mt-0.5">Pay online, via WhatsApp, or with crypto — your order is confirmed instantly.</div></div>
           </li>
           <li class="flex gap-3.5">
-            <span class="shrink-0 w-8 h-8 rounded-full bg-[#f97316] text-white text-sm font-extrabold flex items-center justify-center">3</span>
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#EC4899] text-white text-sm font-extrabold flex items-center justify-center">3</span>
             <div><div class="font-bold text-sm sm:text-base">Get it delivered</div><div class="text-sm text-gray-500 mt-0.5">Your top-up, gift card or subscription is delivered straight to your account.</div></div>
           </li>
         </ol>`}
@@ -343,18 +343,18 @@
       // No options: classic single-price layout.
       const d = p.price_mrp && Number(p.price_mrp) > Number(p.price)
         ? Math.round((1 - Number(p.price) / Number(p.price_mrp)) * 100) : 0;
-      banner.className = 'mt-6 p-5 rounded-2xl border border-[#2e2e33]';
-      banner.style.background = '#151515';
+      banner.className = 'mt-6 p-5 rounded-2xl border border-[#F3C6D3]';
+      banner.style.background = '#ffffff';
       banner.innerHTML = `
-        <div class="text-[11px] font-extrabold tracking-widest" style="color:#ff5c1e">PACK DETAILS</div>
+        <div class="text-[11px] font-extrabold tracking-widest" style="color:#EC4899">PACK DETAILS</div>
         <div class="mt-3 rounded-lg p-4 space-y-2" style="background:#2e2e2e">
-          <div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">Product</span><b class="text-white text-right">${esc(p.name)}</b></div>
-          <div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">Price</span><b class="text-white text-right">${fmtPrice(p)}</b></div>
-          ${p.price_mrp && Number(p.price_mrp) > Number(p.price) ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">You save</span><b style="color:#7cb342">${fmt(Number(p.price_mrp) - Number(p.price))} (${d}%)</b></div>` : ''}
+          <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Product</span><b class="text-[#3F1D2E] text-right">${esc(p.name)}</b></div>
+          <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Price</span><b class="text-[#3F1D2E] text-right">${fmtPrice(p)}</b></div>
+          ${p.price_mrp && Number(p.price_mrp) > Number(p.price) ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">You save</span><b style="color:#7cb342">${fmt(Number(p.price_mrp) - Number(p.price))} (${d}%)</b></div>` : ''}
         </div>
         <div class="mt-4 flex items-end justify-between gap-4">
-          <span class="text-xs font-bold" style="color:#9ca3af">Amount Payable</span>
-          <span class="text-2xl font-extrabold text-white">${fmtPrice(p)}</span>
+          <span class="text-xs font-bold" style="color:#8A6B7A">Amount Payable</span>
+          <span class="text-2xl font-extrabold text-[#BE185D]">${fmtPrice(p)}</span>
         </div>`;
       if (wrap) wrap.innerHTML = '';
       return;
@@ -388,20 +388,20 @@
     }
     const vd = sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price)
       ? Math.round((1 - Number(sel.price) / Number(sel.price_mrp)) * 100) : 0;
-    banner.className = 'mt-6 p-5 rounded-2xl border border-[#2e2e33]';
-    banner.style.background = '#151515';
+    banner.className = 'mt-6 p-5 rounded-2xl border border-[#F3C6D3]';
+    banner.style.background = '#ffffff';
     banner.innerHTML = `
-      <div class="text-[11px] font-extrabold tracking-widest" style="color:#ff5c1e">PACK DETAILS</div>
+      <div class="text-[11px] font-extrabold tracking-widest" style="color:#EC4899">PACK DETAILS</div>
       <div class="mt-3 rounded-lg p-4 space-y-2" style="background:#2e2e2e">
-        <div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">Product</span><b class="text-white text-right">${esc(p.name)}</b></div>
-        <div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">Items</span><b class="text-white text-right">${sel ? esc(sel.name) : '—'}</b></div>
-        <div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">Price</span><b class="text-white text-right">${sel ? fmtPrice(sel) : '—'}</b></div>
-        ${sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price) ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">You save</span><b style="color:#7cb342">${fmt(Number(sel.price_mrp) - Number(sel.price))} (${vd}%)</b></div>` : ''}
-        ${p.price_tier ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#9ca3af">Silver reseller</span><b class="text-white text-right">${fmtPrice(sel || p)}</b></div>` : ''}
+        <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Product</span><b class="text-[#3F1D2E] text-right">${esc(p.name)}</b></div>
+        <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Items</span><b class="text-[#3F1D2E] text-right">${sel ? esc(sel.name) : '—'}</b></div>
+        <div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Price</span><b class="text-[#3F1D2E] text-right">${sel ? fmtPrice(sel) : '—'}</b></div>
+        ${sel && sel.price_mrp && Number(sel.price_mrp) > Number(sel.price) ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">You save</span><b style="color:#7cb342">${fmt(Number(sel.price_mrp) - Number(sel.price))} (${vd}%)</b></div>` : ''}
+        ${p.price_tier ? `<div class="flex justify-between gap-4 text-sm"><span style="color:#8A6B7A">Silver reseller</span><b class="text-[#3F1D2E] text-right">${fmtPrice(sel || p)}</b></div>` : ''}
       </div>
       <div class="mt-4 flex items-end justify-between gap-4">
-        <span class="text-xs font-bold" style="color:#9ca3af">Amount Payable</span>
-        <span class="text-2xl font-extrabold text-white">${sel ? fmtPrice(sel) : '—'}</span>
+        <span class="text-xs font-bold" style="color:#8A6B7A">Amount Payable</span>
+        <span class="text-2xl font-extrabold text-[#BE185D]">${sel ? fmtPrice(sel) : '—'}</span>
       </div>
       <div class="text-[11px] mt-1" style="color:#6b7280">Inclusive of all taxes. Digital delivery.</div>`;
     const catOf = (v) => /double/i.test(v.name) ? 'double' : /(pass|weekly|twilight)/i.test(v.name) ? 'passes' : 'diamonds';
@@ -411,7 +411,7 @@
     wrap.innerHTML = `
       <div class="mt-7">
         ${showFilters ? `<div class="mb-5">
-          <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">CHOOSE CATEGORY</div>
+          <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#EC4899">CHOOSE CATEGORY</div>
           <div class="flex gap-2.5 flex-wrap" id="pack-filters">
             <button type="button" data-filter="all" class="cat-card pack-filter ${curFilter === 'all' ? 'active' : ''}">🎮 All Packs</button>
             <button type="button" data-filter="diamonds" class="cat-card pack-filter ${curFilter === 'diamonds' ? 'active' : ''}">💎 Top Up Diamonds</button>
@@ -419,7 +419,7 @@
             <button type="button" data-filter="passes" class="cat-card pack-filter ${curFilter === 'passes' ? 'active' : ''}">🎟️ Weekly &amp; Passes</button>
           </div>
         </div>` : ''}
-        <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#ff5c1e">SELECT PACKAGE</div>
+        <div class="text-[11px] font-extrabold tracking-widest mb-3" style="color:#EC4899">SELECT PACKAGE</div>
         <div class="pack-grid">
           ${variants.map((v) => `
             <button type="button" data-variant="${v.id}" data-cat="${catOf(v)}" ${vOut(v) ? 'disabled' : ''}
@@ -537,8 +537,8 @@
       if (box && Array.isArray(tm) && tm.length) {
         box.innerHTML = `
         <div class="mt-2 mb-4 flex items-center gap-2">
-          <span class="text-xs font-extrabold tracking-[0.18em] uppercase text-[#f97316]">What buyers say</span>
-          <span class="flex-1 h-px bg-[#1e1e22]"></span>
+          <span class="text-xs font-extrabold tracking-[0.18em] uppercase text-[#EC4899]">What buyers say</span>
+          <span class="flex-1 h-px bg-[#FCE7F3]"></span>
         </div>
         <div class="grid md:grid-cols-2 gap-4">${tm.map((t) => reviewCard({ customer_name: t.name, rating: t.rating, text: t.text, created_at: null })).join('')}</div>`;
       }

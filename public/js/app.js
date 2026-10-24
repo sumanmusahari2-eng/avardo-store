@@ -221,7 +221,7 @@ function logoHtml(settings) {
     return `<img src="${esc(custom)}" alt="${esc(siteName)}" class="h-12 w-auto max-w-[240px] object-contain">`;
   }
   if (customText) {
-    return `<span class="font-black text-2xl tracking-tight bg-gradient-to-r from-[#f97316] to-[#0a3fb8] bg-clip-text text-transparent">${esc(customText)}</span>`;
+    return `<span class="font-black text-2xl tracking-tight bg-gradient-to-r from-[#EC4899] to-[#0a3fb8] bg-clip-text text-transparent">${esc(customText)}</span>`;
   }
   return `<span class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-md shadow-brand-500/30">${ICON.logo}</span>
           <span class="font-extrabold text-xl tracking-tight text-gray-100">${esc(siteName)}</span>`;
@@ -255,7 +255,7 @@ function renderNavbar() {
     const kids = (Array.isArray(c.children) ? c.children : []).filter(inMenu);
     if (kids.length) {
       return `<div class="mg-navdrop">
-        <a href="/?category=${esc(c.slug)}" class="px-3 py-2 text-sm font-bold text-gray-200 hover:text-[#c2410c] rounded-lg transition inline-flex items-center gap-1">${esc(c.name)}${chevDown}</a>
+        <a href="/?category=${esc(c.slug)}" class="px-3 py-2 text-sm font-bold text-gray-200 hover:text-[#BE185D] rounded-lg transition inline-flex items-center gap-1">${esc(c.name)}${chevDown}</a>
         <div class="mg-navdrop-menu">${kids.map((k) => `<a href="/?category=${esc(k.slug)}">${esc(k.name)}</a>`).join('')}</div>
       </div>`;
     }
@@ -281,10 +281,10 @@ function renderNavbar() {
 
   host.innerHTML = `
   ${waSupportLink ? `<div class="max-w-7xl mx-auto px-4 pt-3"><div class="wa-pill" id="wa-pill"><span class="wa-ic">\u{1F4AC}</span><div class="min-w-0"><div class="wa-title">Join our WhatsApp channel!</div><div class="wa-sub">Click here to join WhatsApp channel for latest updates!</div></div><a href="${waSupportLink}" target="_blank" rel="noopener" class="ml-1 shrink-0 text-xs font-extrabold px-3.5 py-2 rounded-full text-white" style="background:#128c4b">Join</a><button class="wa-x" id="wa-pill-x" aria-label="Dismiss">\u2715</button></div></div>` : ''}
-  <header class="sticky top-0 z-40 bg-[#16161a]/90 backdrop-blur-md border-b border-[#e2e8f0]">
+  <header class="sticky top-0 z-40 bg-[#ffffff]/95 backdrop-blur-md border-b border-[#e2e8f0]">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center gap-2 h-16">
-        <button id="nav-toggle" class="md:hidden p-2 -ml-2 text-gray-300 hover:text-[#c2410c] rounded-lg" aria-label="Menu">${ICON.menu}</button>
+        <button id="nav-toggle" class="md:hidden p-2 -ml-2 text-gray-300 hover:text-[#BE185D] rounded-lg" aria-label="Menu">${ICON.menu}</button>
         <a href="/" class="flex items-center gap-2 shrink-0">
           ${logoHtml(settings)}
         </a>
@@ -298,9 +298,9 @@ function renderNavbar() {
           <label class="mg-cur-pill hidden sm:inline-flex" aria-label="Country / currency">${globeSm}<select id="currency-select" style="background:transparent;border:none;outline:none;font:inherit;cursor:pointer">${curOptions}</select></label>
           <a href="${acctHref}" class="av-login-btn hidden sm:inline-flex items-center gap-1.5"><span class="text-gray-500">${ICON.user}</span><span class="max-w-28 truncate">${esc(acctLabel)}</span></a>
           ${roleLink}
-          <a href="/cart.html" class="relative p-2 text-gray-300 hover:text-[#c2410c] rounded-lg transition" aria-label="Cart">${ICON.cart}<span id="cart-count" class="hidden absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full bg-[#f97316] text-[#ffffff] text-[11px] font-bold flex items-center justify-center">0</span></a>
-          <button id="search-open" class="p-2 text-gray-300 hover:text-[#ff5c1e] rounded-lg transition" aria-label="Search"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg></button>
-          <button id="theme-toggle" class="p-2 text-gray-300 hover:text-[#c2410c] rounded-lg transition" aria-label="Toggle dark mode">
+          <a href="/cart.html" class="relative p-2 text-gray-300 hover:text-[#BE185D] rounded-lg transition" aria-label="Cart">${ICON.cart}<span id="cart-count" class="hidden absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full bg-[#EC4899] text-[#ffffff] text-[11px] font-bold flex items-center justify-center">0</span></a>
+          <button id="search-open" class="p-2 text-gray-300 hover:text-[#EC4899] rounded-lg transition" aria-label="Search"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg></button>
+          <button id="theme-toggle" class="p-2 text-gray-300 hover:text-[#BE185D] rounded-lg transition" aria-label="Toggle dark mode">
             <svg id="theme-icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0012 21.75a9.753 9.753 0 009.752-6.748z"/></svg>
             <svg id="theme-icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
           </button>
@@ -311,57 +311,57 @@ function renderNavbar() {
     <div class="max-w-7xl mx-auto px-4">
       <div id="menu-backdrop" class="hidden"></div>
       <div id="mobile-menu" class="hidden md:hidden av-drawer">
-        <div class="flex items-center gap-2 pb-3 mb-1 border-b border-[#2e2e33]"><span class="text-xl">💎</span><span class="font-extrabold text-lg">${esc(siteName)}</span><button id="nav-close" class="ml-auto w-9 h-9 rounded-lg bg-[#1e1e22] text-gray-200" aria-label="Close menu">✕</button></div>
+        <div class="flex items-center gap-2 pb-3 mb-1 border-b border-[#F3C6D3]"><span class="text-xl">💎</span><span class="font-extrabold text-lg">${esc(siteName)}</span><button id="nav-close" class="ml-auto w-9 h-9 rounded-lg bg-[#FCE7F3] text-gray-200" aria-label="Close menu">✕</button></div>
         <form data-search class="flex items-center relative mt-3 sm:hidden">
-          <input type="text" name="q" placeholder="Find games, gift cards or top-ups" class="field w-full text-sm border border-[#e2e8f0] rounded-full pl-9 pr-3 py-2.5 bg-[#1e1e22]">
+          <input type="text" name="q" placeholder="Find games, gift cards or top-ups" class="field w-full text-sm border border-[#e2e8f0] rounded-full pl-9 pr-3 py-2.5 bg-[#FCE7F3]">
           <span class="absolute left-3 text-gray-400">${ICON.search}</span>
         </form>
-        <div class="mt-3 bg-[#2b1c0d] rounded-2xl px-5 py-3.5 flex items-center justify-between">
-          <span class="flex items-center gap-2 text-[15px] font-extrabold text-gray-100"><span class="text-[#f97316]">${globeSm}</span>Currency</span>
+        <div class="mt-3 bg-[#FCE7F3] rounded-2xl px-5 py-3.5 flex items-center justify-between">
+          <span class="flex items-center gap-2 text-[15px] font-extrabold text-[#3F1D2E]"><span class="text-[#EC4899]">${globeSm}</span>Currency</span>
           <span class="relative inline-flex items-center">
-            <select id="currency-select-mobile" aria-label="Currency" class="appearance-none bg-[#16161a] rounded-full pl-4 pr-9 py-2 text-sm font-extrabold text-gray-100 shadow-sm cursor-pointer outline-none max-w-[190px] truncate">${curOptions}</select>
+            <select id="currency-select-mobile" aria-label="Currency" class="appearance-none bg-[#ffffff] rounded-full pl-4 pr-9 py-2 text-sm font-extrabold text-[#3F1D2E] shadow-sm cursor-pointer outline-none max-w-[190px] truncate">${curOptions}</select>
             <span class="pointer-events-none absolute right-3 text-gray-400">${chevDown}</span>
           </span>
         </div>
         <nav class="flex flex-col gap-2.5 mt-3">
-          <a href="/" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">Home</a>
+          <a href="/" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">Home</a>
           ${menuCats.map((c) => {
             const kids = (Array.isArray(c.children) ? c.children : []).filter(inMenu);
-            if (!kids.length) return `<a href="/?category=${esc(c.slug)}" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">${esc(c.name)}</a>`;
-            return `<div class="bg-[#1e1e22] rounded-2xl overflow-hidden">
+            if (!kids.length) return `<a href="/?category=${esc(c.slug)}" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">${esc(c.name)}</a>`;
+            return `<div class="bg-[#FCE7F3] rounded-2xl overflow-hidden">
               <div class="flex items-center">
-                <a href="/?category=${esc(c.slug)}" class="flex-1 px-5 py-4 text-[15px] font-extrabold text-gray-100">${esc(c.name)}</a>
+                <a href="/?category=${esc(c.slug)}" class="flex-1 px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">${esc(c.name)}</a>
                 <button type="button" class="mm-sub-toggle p-4 mr-1 text-gray-400 transition-transform" aria-label="Show sub-categories">${chevDown}</button>
               </div>
               <div class="mm-sub hidden px-3 pb-3 flex flex-col gap-1.5">
-                ${kids.map((k) => `<a href="/?category=${esc(k.slug)}" class="block bg-[#16161a] rounded-xl px-4 py-3 text-sm font-bold text-gray-300">${esc(k.name)}</a>`).join('')}
+                ${kids.map((k) => `<a href="/?category=${esc(k.slug)}" class="block bg-[#ffffff] rounded-xl px-4 py-3 text-sm font-bold text-gray-700">${esc(k.name)}</a>`).join('')}
               </div>
             </div>`;
           }).join('')}
-          <a href="/" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">All Products</a>
-          <a href="/blog.html" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">Blog</a>
-          ${waSupportLink ? `<a href="${waSupportLink}" target="_blank" rel="noopener" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">24/7 Support</a>` : ''}
-          <a href="${acctHref}" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-gray-100">${user ? 'My Account' : 'Sign in'}</a>
-          ${user && user.role === 'admin' ? '<a href="/admin.html" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#c2410c]">Admin</a>' : ''}
-          ${user && user.role === 'reseller' ? '<a href="/reseller.html" class="block bg-[#1e1e22] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#c2410c]">Reseller dashboard</a>' : ''}
+          <a href="/" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">All Products</a>
+          <a href="/blog.html" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">Blog</a>
+          ${waSupportLink ? `<a href="${waSupportLink}" target="_blank" rel="noopener" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">24/7 Support</a>` : ''}
+          <a href="${acctHref}" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#3F1D2E]">${user ? 'My Account' : 'Sign in'}</a>
+          ${user && user.role === 'admin' ? '<a href="/admin.html" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#BE185D]">Admin</a>' : ''}
+          ${user && user.role === 'reseller' ? '<a href="/reseller.html" class="block bg-[#FCE7F3] rounded-2xl px-5 py-4 text-[15px] font-extrabold text-[#BE185D]">Reseller dashboard</a>' : ''}
         </nav>
       </div>
     </div>
   </header>
-  <div id="search-overlay" class="hidden fixed inset-0 z-[70] p-6" style="background:rgba(5,5,8,.96)">
+  <div id="search-overlay" class="hidden fixed inset-0 z-[70] p-6" style="background:rgba(255,240,243,.96)">
     <form data-search class="max-w-xl mx-auto mt-24">
-      <div class="flex items-center gap-3 rounded-full px-5 h-14" style="background:#1e1e1e;border:1px solid #2e2e33">
+      <div class="flex items-center gap-3 rounded-full px-5 h-14" style="background:#FCE7F3;border:1px solid #F3C6D3">
         <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg>
-        <input name="q" placeholder="Search" class="bg-transparent flex-1 outline-none text-white text-base min-w-0">
+        <input name="q" placeholder="Search" class="bg-transparent flex-1 outline-none text-[#3F1D2E] text-base min-w-0">
         <button type="button" id="search-x" class="text-gray-400 shrink-0" aria-label="Close search">\u2715</button>
       </div>
       <button type="submit" class="mg-btn-gold w-full mt-4 py-3.5">Search</button>
     </form>
-    <button id="search-close" class="block mx-auto mt-8 rounded-full px-6 py-2 text-sm font-bold text-white" style="border:1.5px solid #e53935">Close Search</button>
+    <button id="search-close" class="block mx-auto mt-8 rounded-full px-6 py-2 text-sm font-bold text-[#BE185D]" style="border:1.5px solid #e53935">Close Search</button>
   </div>
-  <a href="/cart.html" class="hidden md:flex fixed bottom-24 right-5 z-40 w-14 h-14 rounded-full bg-white shadow-2xl items-center justify-center" aria-label="Cart" style="color:#111114">
+  <a href="/cart.html" class="hidden md:flex fixed bottom-24 right-5 z-40 w-14 h-14 rounded-full bg-white shadow-2xl items-center justify-center" aria-label="Cart" style="color:#FFF5F7">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
-    <span id="cart-count-float" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-white" style="background:#ff5c1e">0</span>
+    <span id="cart-count-float" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-white" style="background:#EC4899">0</span>
   </a>`;
 
   const toggle = document.getElementById('nav-toggle');
@@ -564,7 +564,7 @@ function renderFooter() {
 
   const accordion = (name, body) => `
     <details class="border-b border-[#e2e8f0]">
-      <summary class="py-3.5 text-sm font-extrabold text-gray-100 cursor-pointer list-none flex items-center justify-between">${name}<span class="text-gray-400">${ICON.chevR}</span></summary>
+      <summary class="py-3.5 text-sm font-extrabold text-[#3F1D2E] cursor-pointer list-none flex items-center justify-between">${name}<span class="text-gray-400">${ICON.chevR}</span></summary>
       <div class="pb-5">${body}</div>
     </details>`;
 
@@ -662,7 +662,7 @@ function productCard(p) {
   const mrpStr = sale && !hasVariants && !curOut ? `<span class="text-[12px] font-bold text-[#8b93b0] line-through ml-2">${fmt(p.price_mrp)}</span>` : '';
   const resellerLine = p.price_reseller != null && !curOut
     ? `<div class="text-[#8b93b0] text-[11px] mt-1">Reseller: ${fmtPrice(cheapest)}</div>` : '';
-  const curTag = curOut ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#16161a]/10 text-white/70">${esc(getCurrency() === 'USD' ? 'INR only' : 'USD only')}</span>` : '';
+  const curTag = curOut ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#FCE7F3] text-[#BE185D]">${esc(getCurrency() === 'USD' ? 'INR only' : 'USD only')}</span>` : '';
   const badges = `
     ${sale ? '<span class="bg-[#e11d48] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-md leading-none tracking-wide">SALE</span>' : ''}
     ${low ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-brand-400/15 text-brand-300 border border-brand-400/30">Low stock</span>' : ''}
@@ -672,14 +672,14 @@ function productCard(p) {
   if (soldOut) {
     actions = `<span class="text-xs font-bold text-red-400">Out of stock</span>`;
   } else if (hasVariants) {
-    actions = `<a href="${href}" class="flex-1 text-center text-xs font-extrabold text-white bg-[#f97316] rounded-full px-4 py-3.5 hover:opacity-90 active:scale-[0.98] transition">Top Up →</a>`;
+    actions = `<a href="${href}" class="flex-1 text-center text-xs font-extrabold text-white bg-[#EC4899] rounded-full px-4 py-3.5 hover:opacity-90 active:scale-[0.98] transition">Top Up →</a>`;
   } else {
     actions = `
-      <button onclick="mdsQuickAdd(event, ${Number(p.id)})" class="flex-1 text-xs font-extrabold text-[#101828] bg-[#16161a] rounded-full px-3 py-3.5 hover:bg-[#1e1e22] active:scale-[0.98] transition">Add to cart</button>
-      <button onclick="mdsQuickBuy(event, ${Number(p.id)})" class="flex-1 text-xs font-extrabold text-white bg-[#f97316] rounded-full px-3 py-3.5 hover:opacity-90 active:scale-[0.98] transition">Buy now</button>`;
+      <button onclick="mdsQuickAdd(event, ${Number(p.id)})" class="flex-1 text-xs font-extrabold text-[#101828] bg-[#ffffff] rounded-full px-3 py-3.5 hover:bg-[#FCE7F3] active:scale-[0.98] transition">Add to cart</button>
+      <button onclick="mdsQuickBuy(event, ${Number(p.id)})" class="flex-1 text-xs font-extrabold text-white bg-[#EC4899] rounded-full px-3 py-3.5 hover:opacity-90 active:scale-[0.98] transition">Buy now</button>`;
   }
   const cardImg = p.image_url
-    ? `<a href="${href}" class="block mt-2 rounded-xl overflow-hidden bg-[#16161a]/5"><img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" class="w-full aspect-square object-cover"></a>`
+    ? `<a href="${href}" class="block mt-2 rounded-xl overflow-hidden bg-[#ffffff]/5"><img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" class="w-full aspect-square object-cover"></a>`
     : '';
   // digitaltopup-style tag: one lime pill pinned top-right of the artwork.
   let tag = '';
@@ -693,11 +693,11 @@ function productCard(p) {
   const art = p.image_url
     ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" class="w-full aspect-square object-cover">`
     : `<div class="w-full aspect-square placeholder-gradient flex items-center justify-center"><span class="text-white text-5xl font-extrabold opacity-90">${esc((p.name || '?').trim().charAt(0).toUpperCase())}</span></div>`;
-  return `<a href="${href}" class="block h-full rounded-2xl overflow-hidden transition hover:-translate-y-0.5 ${soldOut ? 'opacity-70' : ''}" style="background:#16161a;border:1px solid #232329">
+  return `<a href="${href}" class="block h-full rounded-2xl overflow-hidden transition hover:-translate-y-0.5 ${soldOut ? 'opacity-70' : ''}" style="background:#ffffff;border:1px solid #F3C6D3">
     <div class="relative">${art}${tag}</div>
     <div class="px-2.5 py-3 text-center">
-      <div class="text-white text-[13px] font-extrabold uppercase leading-snug line-clamp-2">${esc(p.name)}</div>
-      <div class="text-[11px] mt-1" style="color:#98a2b8">From ${priceStr}</div>
+      <div class="text-[#3F1D2E] text-[13px] font-extrabold uppercase leading-snug line-clamp-2">${esc(p.name)}</div>
+      <div class="text-[11px] mt-1" style="color:#8A6B7A">From ${priceStr}</div>
     </div>
   </a>`;
 }
@@ -724,11 +724,11 @@ function relatedCard(p) {
       : `<span class="mds-chip mds-chip-gold">₹</span>`;
   const cta = soldOut
     ? `<span class="mt-2 text-[11px] font-bold text-red-600">Out of stock</span>`
-    : `<span class="mt-2 inline-block text-[11px] font-extrabold text-white bg-[#f97316] rounded-lg px-4 py-1.5">${hasVariants ? 'Choose option' : 'View'}</span>`;
-  return `<a href="${href}" class="block h-full rounded-lg border border-[#2e2e33] bg-[#16161a] p-3 shadow-sm hover:shadow-md hover:border-[#f97316]/30 transition ${soldOut ? 'opacity-70' : ''}">
+    : `<span class="mt-2 inline-block text-[11px] font-extrabold text-white bg-[#EC4899] rounded-lg px-4 py-1.5">${hasVariants ? 'Choose option' : 'View'}</span>`;
+  return `<a href="${href}" class="block h-full rounded-lg border border-[#F3C6D3] bg-[#ffffff] p-3 shadow-sm hover:shadow-md hover:border-[#EC4899]/30 transition ${soldOut ? 'opacity-70' : ''}">
     <div class="flex flex-col items-center text-center">
       ${p.image_url ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy" class="w-14 h-14 rounded-xl object-cover mb-1">` : chip}
-      <div class="mt-2 font-bold text-white text-[13px] leading-snug line-clamp-2 min-h-[2.4em]">${esc(p.name)}</div>
+      <div class="mt-2 font-bold text-[#3F1D2E] text-[13px] leading-snug line-clamp-2 min-h-[2.4em]">${esc(p.name)}</div>
       <div class="mt-1">${priceHtml}</div>
       ${cta}
     </div>
@@ -758,7 +758,7 @@ function statusBadge(status) {
     delivered: 'bg-brand-100 text-brand-700',
     cancelled: 'bg-red-100 text-red-800',
   };
-  return `<span class="text-xs font-bold px-2.5 py-1 rounded-full capitalize ${map[status] || 'bg-[#1e1e22] text-gray-300'}">${esc(status || 'unknown')}</span>`;
+  return `<span class="text-xs font-bold px-2.5 py-1 rounded-full capitalize ${map[status] || 'bg-[#FCE7F3] text-gray-300'}">${esc(status || 'unknown')}</span>`;
 }
 
 function stars(rating) {
@@ -777,8 +777,8 @@ function sectionHead(a, b, c) {
   else { title = b; sub = c; }
   return `
   <div class="flex items-end justify-between gap-4 mb-5 reveal">
-    <h2 class="text-[28px] sm:text-[32px] font-extrabold text-white leading-none">${esc(title)}</h2>
-    ${sub ? `<span class="text-sm shrink-0 hidden sm:block" style="color:#98a2b8">${esc(sub)}</span>` : ''}
+    <h2 class="text-[28px] sm:text-[32px] font-extrabold text-[#3F1D2E] leading-none">${esc(title)}</h2>
+    ${sub ? `<span class="text-sm shrink-0 hidden sm:block" style="color:#8A6B7A">${esc(sub)}</span>` : ''}
   </div>`;
 }
 
@@ -977,8 +977,8 @@ function supportMsgHtml(m) {
   return `
   <div class="flex ${mine ? 'justify-end' : 'justify-start'} mb-2.5">
     <div class="max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-      mine ? 'text-white rounded-br-md' : 'bg-[#1e1e22] text-gray-200 rounded-bl-md'
-    }" ${mine ? 'style="background:#f97316"' : ''}>${txt}${img}</div>
+      mine ? 'text-white rounded-br-md' : 'bg-[#FCE7F3] text-gray-700 rounded-bl-md'
+    }" ${mine ? 'style="background:#EC4899"' : ''}>${txt}${img}</div>
   </div>`;
 }
 
@@ -1146,7 +1146,7 @@ function renderChannelChooser() {
   const rows = channels.map((ch) => {
     if (ch.id === 'wechat') {
       return `
-      <div class="flex items-center gap-3 w-full px-4 py-3 rounded-xl border border-[#1d263e] bg-[#111114]">
+      <div class="flex items-center gap-3 w-full px-4 py-3 rounded-xl border border-[#F3C6D3] bg-[#FFF5F7]">
         <span class="w-9 h-9 rounded-full text-white flex items-center justify-center shrink-0" style="background:${ch.color}">${ch.icon}</span>
         <span class="flex-1 min-w-0 text-left">
           <span class="block text-sm font-bold text-gray-100">${esc(ch.label)}</span>
@@ -1156,7 +1156,7 @@ function renderChannelChooser() {
       </div>`;
     }
     return `
-    <a href="${esc(ch.url)}" target="_blank" rel="noopener" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl border border-[#1d263e] bg-[#111114] hover:bg-[#1e1e22] transition">
+    <a href="${esc(ch.url)}" target="_blank" rel="noopener" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl border border-[#F3C6D3] bg-[#FFF5F7] hover:bg-[#FCE7F3] transition">
       <span class="w-9 h-9 rounded-full text-white flex items-center justify-center shrink-0" style="background:${ch.color}">${ch.icon}</span>
       <span class="flex-1 text-left text-sm font-bold text-gray-100">${esc(ch.label)}</span>
       <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
@@ -1164,19 +1164,19 @@ function renderChannelChooser() {
   }).join('');
   const wrap = document.createElement('div');
   wrap.innerHTML = `
-  <div id="support-channels" class="hidden fixed z-50 bottom-40 md:bottom-24 right-5 w-[calc(100vw-2.5rem)] max-w-[320px] bg-[#16161a] rounded-2xl shadow-2xl border border-[#1d263e] overflow-hidden">
-    <div class="px-5 py-4 border-b border-[#1d263e] flex items-center justify-between">
+  <div id="support-channels" class="hidden fixed z-50 bottom-40 md:bottom-24 right-5 w-[calc(100vw-2.5rem)] max-w-[320px] bg-[#ffffff] rounded-2xl shadow-2xl border border-[#F3C6D3] overflow-hidden">
+    <div class="px-5 py-4 border-b border-[#F3C6D3] flex items-center justify-between">
       <div>
         <div class="font-bold text-sm">How would you like to chat?</div>
         <div class="text-xs text-gray-400 mt-0.5">Pick a channel below</div>
       </div>
-      <button onclick="toggleChannelChooser(false)" class="p-1.5 hover:bg-[#1e1e22] rounded-lg text-gray-400" aria-label="Close">
+      <button onclick="toggleChannelChooser(false)" class="p-1.5 hover:bg-[#FCE7F3] rounded-lg text-gray-400" aria-label="Close">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     <div class="p-3 space-y-2">
-      <button onclick="openWebsiteChat()" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white font-bold text-sm hover:opacity-90 active:scale-[0.99] transition" style="background:#f97316">
-        <span class="w-9 h-9 rounded-full bg-[#16161a]/20 flex items-center justify-center shrink-0">
+      <button onclick="openWebsiteChat()" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white font-bold text-sm hover:opacity-90 active:scale-[0.99] transition" style="background:#EC4899">
+        <span class="w-9 h-9 rounded-full bg-[#ffffff]/20 flex items-center justify-center shrink-0">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
         </span>
         <span class="flex-1 text-left">Chat on website</span>
@@ -1223,38 +1223,38 @@ function initSupportWidget() {
   wrap.innerHTML = `
   <button id="support-btn" aria-label="Chat with support"
     class="fixed bottom-24 md:bottom-5 right-5 z-50 w-14 h-14 rounded-full text-white shadow-xl hover:scale-105 active:scale-95 transition flex items-center justify-center"
-    style="background:#f97316;box-shadow:0 10px 25px #f9731655">
+    style="background:#EC4899;box-shadow:0 10px 25px #EC489955">
     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
   </button>
-  <div id="support-panel" class="hidden fixed z-50 bottom-24 md:bottom-5 right-5 w-[calc(100vw-2.5rem)] max-w-[380px] h-[520px] max-h-[calc(100vh-7rem)] bg-[#16161a] rounded-3xl shadow-2xl border border-[#1d263e] flex flex-col overflow-hidden">
-    <div class="text-white px-5 py-4 flex items-center justify-between shrink-0" style="background:#0b0b0e">
+  <div id="support-panel" class="hidden fixed z-50 bottom-24 md:bottom-5 right-5 w-[calc(100vw-2.5rem)] max-w-[380px] h-[520px] max-h-[calc(100vh-7rem)] bg-[#ffffff] rounded-3xl shadow-2xl border border-[#F3C6D3] flex flex-col overflow-hidden">
+    <div class="text-white px-5 py-4 flex items-center justify-between shrink-0" style="background:linear-gradient(135deg,#EC4899,#BE185D)">
       <div>
         <div class="font-bold">Support chat</div>
         <div id="support-status"><span class="text-xs text-gray-400">Typically replies within a few hours</span></div>
       </div>
-      <button onclick="toggleSupport(false)" class="p-2 hover:bg-[#16161a]/10 rounded-lg" aria-label="Close chat">
+      <button onclick="toggleSupport(false)" class="p-2 hover:bg-[#ffffff]/10 rounded-lg" aria-label="Close chat">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     <div id="support-messages" class="flex-1 overflow-y-auto px-4 py-4">
       <div data-empty class="text-center text-sm text-gray-400 py-8">Loading…</div>
     </div>
-    <div class="p-3 border-t border-[#1d263e] shrink-0">
+    <div class="p-3 border-t border-[#F3C6D3] shrink-0">
       <div id="support-preview" class="hidden mb-2 relative inline-block">
-        <img id="support-preview-img" class="w-20 h-20 rounded-xl object-cover border border-[#2e2e33]" alt="Attachment preview">
+        <img id="support-preview-img" class="w-20 h-20 rounded-xl object-cover border border-[#F3C6D3]" alt="Attachment preview">
         <button id="support-preview-x" aria-label="Remove attachment"
           class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gray-800 text-white text-xs flex items-center justify-center">✕</button>
       </div>
       <div class="flex gap-2">
         <button id="support-attach" aria-label="Attach image"
-          class="w-12 h-12 rounded-xl border border-[#2e2e33] text-gray-500 hover:bg-[#111114] active:scale-95 transition flex items-center justify-center shrink-0">
+          class="w-12 h-12 rounded-xl border border-[#F3C6D3] text-gray-500 hover:bg-[#FFF5F7] active:scale-95 transition flex items-center justify-center shrink-0">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20 12.5"/></svg>
         </button>
         <input id="support-file" type="file" accept="image/*" class="hidden">
         <input id="support-input" maxlength="2000" placeholder="Type your message…" autocomplete="off"
-          class="flex-1 text-sm border border-[#2e2e33] rounded-xl px-4 py-3 bg-[#111114] focus:bg-[#16161a] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+          class="flex-1 text-sm border border-[#F3C6D3] rounded-xl px-4 py-3 bg-[#ffffff] focus:bg-[#FFF5F7] focus:outline-none focus:ring-2 focus:ring-brand-500/40">
         <button id="support-send" aria-label="Send"
-          class="w-12 h-12 rounded-xl text-white hover:opacity-90 active:scale-95 transition flex items-center justify-center shrink-0" style="background:#f97316">
+          class="w-12 h-12 rounded-xl text-white hover:opacity-90 active:scale-95 transition flex items-center justify-center shrink-0" style="background:#EC4899">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
         </button>
       </div>

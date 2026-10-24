@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")==="dark"?"light":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#FCE7F3', 100: '#FCE7F3', 200: '#FBCFE8', 500: '#EC4899', 600: '#DB2777', 700: '#BE185D', 800: '#9D174D', 900: '#831843' } } } } };</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="text-gray-100 antialiased">
@@ -22,8 +22,8 @@
 <main class="max-w-5xl mx-auto px-4 py-10">
   <h1 class="text-3xl font-extrabold tracking-tight">Checkout</h1>
   <nav class="flex flex-wrap items-center gap-2 mt-5" aria-label="Checkout steps">
-    <a href="/cart.html" class="mg-crumb"><span class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#c2410c] text-xs font-extrabold flex items-center justify-center shrink-0">1</span>Cart</a>
-    <span class="mg-crumb bg-[#e8f0fe] !border-[#f97316]"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-extrabold flex items-center justify-center shrink-0">2</span>Details</span>
+    <a href="/cart.html" class="mg-crumb"><span class="w-6 h-6 rounded-full bg-[#e8f0fe] text-[#BE185D] text-xs font-extrabold flex items-center justify-center shrink-0">1</span>Cart</a>
+    <span class="mg-crumb bg-[#e8f0fe] !border-[#EC4899]"><span class="w-6 h-6 rounded-full bg-[#EC4899] text-[#ffffff] text-xs font-extrabold flex items-center justify-center shrink-0">2</span>Details</span>
     <span class="mg-crumb current"><span class="w-6 h-6 rounded-full bg-[#1b2338] text-gray-500 text-xs font-extrabold flex items-center justify-center shrink-0">3</span>Pay</span>
   </nav>
   <div id="checkout-wrap" class="mt-8">
@@ -104,15 +104,15 @@
         </div>
         ${appliedCoupon ? `
         <div class="flex justify-between gap-4 text-sm mt-1">
-          <span class="text-[#c2410c] font-semibold">Discount (${esc(appliedCoupon.code)})</span>
-          <span class="font-semibold text-[#c2410c] shrink-0">−${fmtCur(discount)}</span>
+          <span class="text-[#BE185D] font-semibold">Discount (${esc(appliedCoupon.code)})</span>
+          <span class="font-semibold text-[#BE185D] shrink-0">−${fmtCur(discount)}</span>
         </div>` : ''}
         ${wapp > 0 ? `
         <div class="flex justify-between gap-4 text-sm mt-1">
-          <span class="text-[#c2410c] font-semibold">Wallet balance applied</span>
-          <span class="font-semibold text-[#c2410c] shrink-0">−${fmtCur(wapp)}</span>
+          <span class="text-[#BE185D] font-semibold">Wallet balance applied</span>
+          <span class="font-semibold text-[#BE185D] shrink-0">−${fmtCur(wapp)}</span>
         </div>` : ''}
-        <div class="flex justify-between mt-4 pt-4 border-t border-[#1d263e]">
+        <div class="flex justify-between mt-4 pt-4 border-t border-[#F3C6D3]">
           <span class="font-bold">${wapp > 0 ? 'Remaining to pay' : 'Total'}</span>
           <span class="font-extrabold text-2xl">${fmtCur(remaining)}</span>
         </div>`;
@@ -195,7 +195,7 @@
         idCheckRow = `
           <div class="mt-1.5 flex items-center gap-2">
             <button type="button" onclick="checkGameId(this)" data-product="${p.product_id}" data-variant="${p.variant_id || ''}" data-attr="${a.id}" data-zone-attr="${zoneAttr ? zoneAttr.id : ''}"
-              class="text-xs font-bold text-[#f97316] border border-[#f97316] rounded-lg px-3 py-1.5 hover:bg-[#2b1c0d] disabled:opacity-50">Check ID</button>
+              class="text-xs font-bold text-[#EC4899] border border-[#EC4899] rounded-lg px-3 py-1.5 hover:bg-[#FCE7F3] disabled:opacity-50">Check ID</button>
             <span class="idcheck-msg text-xs text-gray-500"></span>
           </div>`;
       }
@@ -216,7 +216,7 @@
               ${items.map((it) => `
                 <div>
                   <div class="flex justify-between gap-4 text-sm">
-                    <span class="text-gray-300">${esc(it.name)}${it.variant_name ? ` <span class="font-bold text-[#c2410c]">(${esc(it.variant_name)})</span>` : ''} <span class="text-gray-400">× ${it.qty}</span></span>
+                    <span class="text-gray-300">${esc(it.name)}${it.variant_name ? ` <span class="font-bold text-[#BE185D]">(${esc(it.variant_name)})</span>` : ''} <span class="text-gray-400">× ${it.qty}</span></span>
                     <span class="font-semibold shrink-0">${fmtCur(it.line)}</span>
                   </div>
                   ${(it.attrs || []).map((a) => attrFieldHtml(it, a)).join('')}
@@ -230,8 +230,8 @@
               <div id="coupon-msg" class="hidden mt-2 text-sm font-medium"></div>
             </div>
             <div id="wallet-row" class="mt-4 ${(getCurrency() === 'USD' ? walletBalanceUsd : walletBalance) > 0 ? '' : 'hidden'}">
-              <label class="flex items-start gap-3 cursor-pointer bg-[#2b1c0d] border border-[#dbe7ff] rounded-xl px-4 py-3">
-                <input id="wallet-toggle" type="checkbox" class="w-5 h-5 mt-0.5 accent-[#f97316]">
+              <label class="flex items-start gap-3 cursor-pointer bg-[#FCE7F3] border border-[#dbe7ff] rounded-xl px-4 py-3">
+                <input id="wallet-toggle" type="checkbox" class="w-5 h-5 mt-0.5 accent-[#EC4899]">
                 <span>
                   <span class="text-sm font-bold">Use AV COINS</span>
                   <span class="block text-xs text-gray-500 mt-0.5">${getCurrency() === 'USD' ? fmtCur(walletBalanceUsd) : fmtCoins(walletBalance)} available · <a href="/wallet.html" class="underline">manage wallet</a></span>
@@ -324,8 +324,8 @@
                   class="field mt-1.5 w-full text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
               </div>
               <label class="flex items-start gap-3 cursor-pointer bg-[#0d1120] border border-[#26304a] rounded-xl px-4 py-3">
-                <input id="buyer-agree" type="checkbox" class="w-5 h-5 mt-0.5 accent-[#f97316] shrink-0">
-                <span class="text-sm text-gray-300">I confirm that the details above are correct and I agree to proceed with this purchase under the store's <a href="/terms.html" class="underline text-[#c2410c]">terms</a> and <a href="/refunds.html" class="underline text-[#c2410c]">refund policy</a>. <span class="text-red-500">*</span></span>
+                <input id="buyer-agree" type="checkbox" class="w-5 h-5 mt-0.5 accent-[#EC4899] shrink-0">
+                <span class="text-sm text-gray-300">I confirm that the details above are correct and I agree to proceed with this purchase under the store's <a href="/terms.html" class="underline text-[#BE185D]">terms</a> and <a href="/refunds.html" class="underline text-[#BE185D]">refund policy</a>. <span class="text-red-500">*</span></span>
               </label>
             </div>
           </div>
@@ -343,9 +343,9 @@
         <div class="bg-brand-50 border border-brand-100 rounded-[18px] p-6 lg:sticky lg:top-24">
           <h3 class="font-bold text-brand-800">How it works</h3>
           <ol class="mt-3 space-y-3 text-sm text-brand-800/80">
-            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">1</span>Place your order — no payment needed yet.</li>
-            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">2</span>Pay via UPI using the instructions shown next.</li>
-            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#f97316] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">3</span>Tap "I've paid" and get your subscription delivered.</li>
+            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#EC4899] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">1</span>Place your order — no payment needed yet.</li>
+            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#EC4899] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">2</span>Pay via UPI using the instructions shown next.</li>
+            <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-[#EC4899] text-[#ffffff] text-xs font-bold flex items-center justify-center shrink-0">3</span>Tap "I've paid" and get your subscription delivered.</li>
           </ol>
         </div>
       </div>`;
@@ -372,7 +372,7 @@
         });
         appliedCoupon = { code: r.code, discount: r.discount };
         msg.textContent = `Coupon ${r.code} applied — you save ${fmtCur(r.discount)}.`;
-        msg.className = 'mt-2 text-sm font-medium text-[#c2410c]';
+        msg.className = 'mt-2 text-sm font-medium text-[#BE185D]';
         refreshTotals();
       } catch (e) {
         appliedCoupon = null;

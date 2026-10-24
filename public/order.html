@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")==="dark"?"light":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#FCE7F3', 100: '#FCE7F3', 200: '#FBCFE8', 500: '#EC4899', 600: '#DB2777', 700: '#BE185D', 800: '#9D174D', 900: '#831843' } } } } };</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="text-gray-100 antialiased">
@@ -45,7 +45,7 @@
 
     document.getElementById('order-wrap').innerHTML = `
       <div class="text-center">
-        <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f0fe] text-[#c2410c] flex items-center justify-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f0fe] text-[#BE185D] flex items-center justify-center">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
         </div>
         <h1 class="text-3xl font-extrabold tracking-tight mt-4">Order placed</h1>
@@ -57,7 +57,7 @@
         </div>
         ${['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? `
         <div class="mt-4">
-          <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-[#26304a] text-sm font-bold text-gray-300 hover:border-[#f97316] hover:text-[#f97316] transition">
+          <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-[#26304a] text-sm font-bold text-gray-300 hover:border-[#EC4899] hover:text-[#EC4899] transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
             Download invoice
           </a>
@@ -79,20 +79,20 @@
               </div>` : ''}
             </div>`).join('')}
         </div>
-        <div class="mt-4 pt-4 border-t border-[#1d263e] space-y-1.5">
+        <div class="mt-4 pt-4 border-t border-[#F3C6D3] space-y-1.5">
           ${o.subtotal != null && Number(o.discount) > 0 ? `
           <div class="flex justify-between text-sm">
             <span class="text-gray-500">Subtotal</span>
             <span class="font-semibold">${ofmt(o.subtotal)}</span>
           </div>
           <div class="flex justify-between text-sm">
-            <span class="text-[#c2410c] font-semibold">Discount${o.coupon_code ? ` (${esc(o.coupon_code)})` : ''}</span>
-            <span class="font-semibold text-[#c2410c]">−${ofmt(o.discount)}</span>
+            <span class="text-[#BE185D] font-semibold">Discount${o.coupon_code ? ` (${esc(o.coupon_code)})` : ''}</span>
+            <span class="font-semibold text-[#BE185D]">−${ofmt(o.discount)}</span>
           </div>` : ''}
           ${Number(o.wallet_applied) > 0 ? `
           <div class="flex justify-between text-sm">
-            <span class="text-[#c2410c] font-semibold">Paid from wallet</span>
-            <span class="font-semibold text-[#c2410c]">−${ofmt(o.wallet_applied)}</span>
+            <span class="text-[#BE185D] font-semibold">Paid from wallet</span>
+            <span class="font-semibold text-[#BE185D]">−${ofmt(o.wallet_applied)}</span>
           </div>` : ''}
           <div class="flex justify-between">
             <span class="font-bold">Total payable</span>
@@ -103,9 +103,9 @@
       </div>
 
       ${(o.voucher_codes || []).length && ['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? `
-      <div class="mt-6 rounded-[18px] p-6 border-2 border-dashed border-[#f97316] bg-[#2b1c0d]">
+      <div class="mt-6 rounded-[18px] p-6 border-2 border-dashed border-[#EC4899] bg-[#FCE7F3]">
         <h2 class="font-bold text-lg text-[#0a1f44]">🎁 Your gift card code${o.voucher_codes.length > 1 ? 's' : ''}</h2>
-        <p class="text-sm text-gray-300 mt-1">Redeem ${o.voucher_codes.length > 1 ? 'each code' : 'this code'} once in your <a href="/wallet.html" class="font-semibold text-[#c2410c] underline">wallet</a> to add the amount to your balance.</p>
+        <p class="text-sm text-gray-300 mt-1">Redeem ${o.voucher_codes.length > 1 ? 'each code' : 'this code'} once in your <a href="/wallet.html" class="font-semibold text-[#BE185D] underline">wallet</a> to add the amount to your balance.</p>
         <div class="mt-4 space-y-3">
           ${o.voucher_codes.map((vc, i) => `
           <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-xl px-4 py-3 border border-[#dbe7ff]">
@@ -113,7 +113,7 @@
               <div class="font-mono font-extrabold text-lg tracking-wider text-[#0a1f44]">${esc(vc.code)}</div>
               <div class="text-xs text-gray-500">${vc.currency === 'USD' ? '$' + esc(String(vc.amount)) : '₹' + esc(String(vc.amount))} gift card — value never changes with currency</div>
             </div>
-            <button data-copy-code="${esc(vc.code)}" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg shrink-0">Copy</button>
+            <button data-copy-code="${esc(vc.code)}" class="text-sm font-semibold text-[#BE185D] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg shrink-0">Copy</button>
           </div>`).join('')}
         </div>
       </div>` : ''}
@@ -125,7 +125,7 @@
           ${o.updates.map((u, i) => `
           <div class="flex gap-4">
             <div class="flex flex-col items-center">
-              <div class="w-3 h-3 rounded-full ${i === o.updates.length - 1 ? 'bg-[#f97316]' : 'bg-[#2b3554]'} mt-1.5 shrink-0"></div>
+              <div class="w-3 h-3 rounded-full ${i === o.updates.length - 1 ? 'bg-[#EC4899]' : 'bg-[#2b3554]'} mt-1.5 shrink-0"></div>
               ${i < o.updates.length - 1 ? '<div class="w-0.5 flex-1 bg-[#232c47]"></div>' : ''}
             </div>
             <div class="pb-6">
@@ -150,34 +150,34 @@
       <div class="mt-6 mg-panel p-6">
         <h2 class="font-bold text-lg">Complete your payment</h2>
         ${Number(o.wallet_applied) > 0 ? `
-        <div class="mt-3 text-sm bg-[#2b1c0d] border border-[#dbe7ff] rounded-xl px-4 py-3">
-          <span class="font-bold text-[#c2410c]">${ofmt(o.wallet_applied)}</span>
+        <div class="mt-3 text-sm bg-[#FCE7F3] border border-[#dbe7ff] rounded-xl px-4 py-3">
+          <span class="font-bold text-[#BE185D]">${ofmt(o.wallet_applied)}</span>
           <span class="text-gray-300"> already paid from your wallet.</span>
         </div>` : ''}
         <div class="mt-4 text-sm font-extrabold text-gray-300">Choose how to pay</div>
         <div class="mt-2 grid sm:grid-cols-2 gap-3" id="pay-methods">
           ${pay.xtra_enabled && canClaim && ocur === 'INR' ? `
-          <button type="button" data-paymethod="online" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+          <button type="button" data-paymethod="online" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">⚡ Pay Online</div>
             <p class="text-xs text-gray-500 mt-1">UPI, cards &amp; netbanking via xtragateway.site — instant confirmation.</p>
           </button>` : ''}
-          <button type="button" data-paymethod="manual" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+          <button type="button" data-paymethod="manual" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">💬 Manual via WhatsApp</div>
             <p class="text-xs text-gray-500 mt-1">Pay to our UPI ID yourself, then confirm with us on WhatsApp.</p>
           </button>
           ${pay.crypto_enabled && canClaim ? `
-          <button type="button" data-paymethod="crypto" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+          <button type="button" data-paymethod="crypto" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">₮ Pay with Crypto</div>
             <p class="text-xs text-gray-500 mt-1">USDT — works worldwide, redirected to secure checkout.</p>
           </button>` : ''}
           ${pay.divinex_enabled && canClaim ? `
-          <button type="button" data-paymethod="divinex" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#1d263e] hover:border-[#f97316]/40 transition">
+          <button type="button" data-paymethod="divinex" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">₮ Pay with USDT <span class="text-[10px] font-bold bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">BEP20</span></div>
             <p class="text-xs text-gray-500 mt-1">Send USDT on BNB Chain directly to our wallet — no signup needed.</p>
           </button>` : ''}
         </div>
 
-        <div id="paydetail-online" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#1d263e]">
+        <div id="paydetail-online" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
           <div class="font-bold text-sm">Pay Online — xtragateway.site</div>
           <p class="text-xs text-gray-500 mt-1">Available for India (INR) only. You'll be redirected to complete the payment securely.</p>
           <div class="flex flex-col sm:flex-row gap-2 mt-3">
@@ -191,9 +191,9 @@
         <div id="paydetail-manual" class="paydetail hidden mt-4">
           <div class="space-y-4 text-sm">
             ${pay.upi_id ? `
-            <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-[18px] px-4 py-3 border border-[#1d263e]">
+            <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-[18px] px-4 py-3 border border-[#F3C6D3]">
               <div><div class="text-xs text-gray-500">Pay to UPI ID</div><div class="font-bold text-base">${esc(pay.upi_id)}</div></div>
-              <button id="btn-copy-upi" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
+              <button id="btn-copy-upi" class="text-sm font-semibold text-[#BE185D] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
             </div>` : ''}
             ${pay.instructions ? `<div class="text-gray-300 whitespace-pre-line leading-relaxed">${esc(pay.instructions)}</div>`
               : `<div class="text-gray-300">Pay <span class="font-bold text-gray-100">${ofmt(Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)))}</span>${ocur === 'USD' ? ' (or the INR equivalent)' : ''} via UPI, then confirm with us on WhatsApp so we can verify and deliver your order.</div>`}
@@ -204,14 +204,14 @@
           </div>
         </div>
 
-        <div id="paydetail-crypto" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#1d263e]">
+        <div id="paydetail-crypto" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
           <div class="font-bold text-sm">Pay with Crypto — USDT</div>
           <p class="text-xs text-gray-500 mt-1">You'll be redirected to a secure checkout to complete the payment.</p>
           <button id="btn-crypto-pay" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap mt-3">Pay $${(ocur === 'USD' ? Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)) : Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)) / Number(pay.crypto_usd_rate || 88)).toFixed(2)} USDT</button>
           <div id="crypto-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
         </div>
 
-        <div id="paydetail-divinex" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#1d263e]">
+        <div id="paydetail-divinex" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
           <div class="font-bold text-sm">Pay with USDT <span class="text-[10px] font-bold bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">BEP20 · BNB Chain</span></div>
           <p class="text-xs text-gray-500 mt-1">Send <b>exactly</b> the amount below in USDT on <b>BNB Chain (BEP20)</b> to our wallet. Other networks will not be detected.</p>
           <div id="divinex-setup">
@@ -221,15 +221,15 @@
           <div id="divinex-details" class="hidden mt-3 space-y-3">
             <div class="flex items-center justify-between gap-3 bg-[#0d1120] rounded-xl px-4 py-3">
               <div class="min-w-0"><div class="text-xs text-gray-500">Send exactly</div><div id="divinex-amount" class="font-extrabold text-lg break-all"></div></div>
-              <button id="btn-copy-divinex-amount" class="shrink-0 text-sm font-semibold text-[#c2410c] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
+              <button id="btn-copy-divinex-amount" class="shrink-0 text-sm font-semibold text-[#BE185D] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
             </div>
             <div class="flex items-center justify-between gap-3 bg-[#0d1120] rounded-xl px-4 py-3">
               <div class="min-w-0"><div class="text-xs text-gray-500">To wallet (BEP20)</div><div id="divinex-wallet" class="font-mono text-sm break-all"></div></div>
-              <button id="btn-copy-divinex-wallet" class="shrink-0 text-sm font-semibold text-[#c2410c] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
+              <button id="btn-copy-divinex-wallet" class="shrink-0 text-sm font-semibold text-[#BE185D] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
             </div>
             <div class="flex items-center justify-between text-xs">
               <span id="divinex-expiry" class="text-gray-500"></span>
-              <button id="btn-divinex-check" class="font-bold text-[#c2410c] hover:text-[#0f4bc0]">Check payment status</button>
+              <button id="btn-divinex-check" class="font-bold text-[#BE185D] hover:text-[#0f4bc0]">Check payment status</button>
             </div>
             <div id="divinex-status" class="text-sm font-medium text-gray-300">Waiting for your transfer…</div>
           </div>
@@ -239,7 +239,7 @@
       </div>` : ''}
 
       <div class="mt-8 text-center">
-        <a href="/account.html" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0]">View all my orders</a>
+        <a href="/account.html" class="text-sm font-semibold text-[#BE185D] hover:text-[#0f4bc0]">View all my orders</a>
       </div>`;
     document.title = 'Order #' + o.id + ' — Avardo Official';
 
@@ -248,9 +248,9 @@
     const selectPayMethod = (m) => {
       methodCards.forEach((c) => {
         const active = c.dataset.paymethod === m;
-        c.classList.toggle('!border-[#f97316]', active);
+        c.classList.toggle('!border-[#EC4899]', active);
         c.classList.toggle('ring-2', active);
-        c.classList.toggle('ring-[#f97316]/20', active);
+        c.classList.toggle('ring-[#EC4899]/20', active);
       });
       document.querySelectorAll('.paydetail').forEach((d) => d.classList.add('hidden'));
       const panel = document.getElementById('paydetail-' + m);
@@ -421,14 +421,14 @@
     if (!requireLogin()) return;
     const id = new URLSearchParams(location.search).get('id');
     if (!id) {
-      document.getElementById('order-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">Order not found. <a href="/account.html" class="text-[#c2410c] font-semibold">My orders</a></div>`;
+      document.getElementById('order-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">Order not found. <a href="/account.html" class="text-[#BE185D] font-semibold">My orders</a></div>`;
       return;
     }
     try {
       const o = await api('/api/orders/' + encodeURIComponent(id));
       render(o, (window.MDS && window.MDS.settings) || {});
     } catch (e) {
-      document.getElementById('order-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">${esc((e && e.data && e.data.error) || 'Could not load this order.')} <a href="/account.html" class="text-[#c2410c] font-semibold">My orders</a></div>`;
+      document.getElementById('order-wrap').innerHTML = `<div class="text-center py-20 text-gray-500">${esc((e && e.data && e.data.error) || 'Could not load this order.')} <a href="/account.html" class="text-[#BE185D] font-semibold">My orders</a></div>`;
     }
   }
 

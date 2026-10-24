@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("mds_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem("mds_theme")==="dark"?"light":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#2b1c0d', 100: '#3a2410', 200: '#4a2f14', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } };</script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Manrope','ui-sans-serif','system-ui','sans-serif'] }, colors: { brand: { 50: '#FCE7F3', 100: '#FCE7F3', 200: '#FBCFE8', 500: '#EC4899', 600: '#DB2777', 700: '#BE185D', 800: '#9D174D', 900: '#831843' } } } } };</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="text-gray-100 antialiased">
@@ -50,9 +50,9 @@
       <div class="relative aspect-[16/9] overflow-hidden bg-[#0d1120]">${img}</div>
       <div class="p-5 flex flex-col flex-1">
         <div class="text-xs text-gray-400 font-medium mb-2">${esc(fmtDate(p.created_at))}</div>
-        <h2 class="font-bold text-lg leading-snug group-hover:text-[#c2410c] transition">${esc(p.title)}</h2>
+        <h2 class="font-bold text-lg leading-snug group-hover:text-[#BE185D] transition">${esc(p.title)}</h2>
         ${p.excerpt ? `<p class="text-sm text-gray-500 mt-2 line-clamp-2">${esc(p.excerpt)}</p>` : ''}
-        <span class="mt-4 text-sm font-semibold text-[#c2410c]">Read →</span>
+        <span class="mt-4 text-sm font-semibold text-[#BE185D]">Read →</span>
       </div>
     </a>`;
   }
