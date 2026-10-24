@@ -604,7 +604,7 @@ function renderFooter() {
       <div class="hidden md:block"><h4>We accept</h4><div class="flex flex-wrap gap-2">${payBadges}</div></div>
     </div>
     <div class="border-t border-[#e2e8f0]">
-      <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row gap-1.5 items-center justify-between text-xs text-gray-400">
+      <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row gap-1.5 items-center justify-between text-xs text-gray-500">
         <span>© ${year} ${esc(siteName)}</span>
         <span>Digital goods delivered electronically.</span>
       </div>
