@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 // Works against both backends (SQLite and Postgres) via the shared statement API.
 async function seed(db) {
   const settingDefaults = {
-    site_name: process.env.BRAND_NAME || 'Meowji Official',
+    site_name: process.env.BRAND_NAME || 'Avardo Official',
     whatsapp_number: '+91 93952 49459',
     upi_id: '',
     payment_instructions:

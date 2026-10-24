@@ -417,7 +417,7 @@ module.exports = function (db) {
     // Telegram ping so the admin knows to verify this manual payment.
     if (firstClaim) {
       notifyManualPaidClaimed({
-        storeName: 'Meowji Official',
+        storeName: 'Avardo Official',
         adminUrl: 'https://www.mlbbstore.in/admin',
         order,
       });

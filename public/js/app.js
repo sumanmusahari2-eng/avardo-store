@@ -1,5 +1,5 @@
 /* ============================================================
-   Meowji Official — shared frontend helpers (public/js/app.js)
+   Avardo Official — shared frontend helpers (public/js/app.js)
    ============================================================ */
 'use strict';
 
@@ -214,7 +214,7 @@ function toast(msg) {
    otherwise the default bolt mark + site name. */
 function logoHtml(settings) {
   const s = settings || {};
-  const siteName = s.site_name || 'Meowji Official';
+  const siteName = s.site_name || 'Avardo Official';
   const custom = s.site_logo ? String(s.site_logo) : '';
   const customText = s.site_logo_text ? String(s.site_logo_text).trim() : '';
   if (custom) {
@@ -244,7 +244,7 @@ function renderNavbar() {
   const user = ctx.user || null;
   const settings = ctx.settings || {};
   const categories = Array.isArray(ctx.categories) ? ctx.categories : [];
-  const siteName = settings.site_name || 'Meowji Official';
+  const siteName = settings.site_name || 'Avardo Official';
   const waNum = waDigits(settings.whatsapp_number);
   const waSupportLink = waNum ? `https://wa.me/${waNum}` : '';
 
@@ -535,7 +535,7 @@ function renderFooter() {
   const ctx = window.MDS || {};
   const settings = ctx.settings || {};
   const categories = Array.isArray(ctx.categories) ? ctx.categories : [];
-  const siteName = settings.site_name || 'Meowji Official';
+  const siteName = settings.site_name || 'Avardo Official';
   const wa = waDigits(settings.whatsapp_number);
   const waLink = wa ? `https://wa.me/${wa}` : '#';
   const year = new Date().getFullYear();
@@ -864,6 +864,7 @@ async function boot() {
   try { settings = await api('/api/settings/public'); } catch (e) { console.warn('settings failed', e); }
   try { categories = await api('/api/categories'); } catch (e) { console.warn('categories failed', e); }
   window.MDS.user = currentUser;
+  if (settings && settings.site_name === 'Avardo') settings.site_name = 'Avardo Official';
   window.MDS.settings = settings;
   window.MDS.categories = categories;
   // Custom favicon uploaded in Admin → Settings (falls back to /favicon.ico).

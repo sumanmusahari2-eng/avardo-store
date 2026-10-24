@@ -410,8 +410,8 @@ CREATE INDEX IF NOT EXISTS ov_order_id ON order_vouchers (order_id);
 CREATE INDEX IF NOT EXISTS st_user_id ON support_threads (user_id);
 CREATE INDEX IF NOT EXISTS st_guest_token ON support_threads (guest_token);
 CREATE INDEX IF NOT EXISTS sm_thread_id ON support_messages (thread_id);
--- Rebrand: GameRefill -> Meowji Official (only touches the default value).
-UPDATE settings SET value = 'Meowji Official' WHERE key = 'site_name' AND value = 'GameRefill';
+-- Rebrand: GameRefill -> Avardo Official (only touches the default value).
+UPDATE settings SET value = 'Avardo Official' WHERE key = 'site_name' AND value = 'GameRefill';
 -- Migrate existing reseller prices into the gold tier.
 UPDATE products SET price_gold = price_reseller WHERE price_gold IS NULL AND price_reseller IS NOT NULL;
 UPDATE products SET price_usd_gold = price_usd_reseller WHERE price_usd_gold IS NULL AND price_usd_reseller IS NOT NULL;

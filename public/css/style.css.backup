@@ -1,5 +1,5 @@
 /* ============================================================
-   Meowji Official — MooGold-style design system
+   Avardo Official — MooGold-style design system
    Font: Manrope (loaded in <head>). Tailwind CDN handles layout;
    these classes carry the brand look.
    ============================================================ */

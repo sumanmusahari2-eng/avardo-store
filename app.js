@@ -99,14 +99,15 @@ async function buildApp() {
   // ---- White-label branding ----
   // Brand name comes from the DB site_name setting (fresh DBs seed it from the
   // BRAND_NAME env var); brand domain comes from PUBLIC_BASE_URL. Text assets
-  // in public/ are served with "Meowji Official" / "www.mlbbstore.in" replaced,
+  // in public/ are served with "Avardo Official" / "www.mlbbstore.in" replaced,
   // so one codebase can serve a rebranded storefront. On the existing
   // deployment both resolve to the current values, so output is unchanged.
-  let brandName = (process.env.BRAND_NAME || 'Meowji Official').trim() || 'Meowji Official';
+  let brandName = (process.env.BRAND_NAME || 'Avardo Official').trim() || 'Avardo Official';
   try {
     const row = await db.prepare('SELECT value FROM settings WHERE key = ?').get('site_name');
     if (row && row.value && String(row.value).trim()) brandName = String(row.value).trim();
   } catch (e) { console.warn('[brand] could not read site_name:', e.message); }
+  if (brandName === 'Avardo') brandName = 'Avardo Official';
   const publicBase = (process.env.PUBLIC_BASE_URL || 'https://www.mlbbstore.in').trim();
   const brandDomain = (publicBase.replace(/^https?:\/\//, '').split('/')[0] || 'www.mlbbstore.in').toLowerCase();
   const brand = { name: brandName, domain: brandDomain };
@@ -121,7 +122,7 @@ async function buildApp() {
     let content = brandedCache.get(absPath);
     if (content === undefined) {
       content = fs.readFileSync(absPath, 'utf8');
-      if (brand.name !== 'Meowji Official') content = content.split('Meowji Official').join(brand.name);
+      if (brand.name !== 'Avardo Official') content = content.split('Avardo Official').join(brand.name);
       if (brand.domain !== 'www.mlbbstore.in') {
         content = content.split('www.mlbbstore.in').join(brand.domain);
         content = content.split('mlbbstore.in').join(brand.domain);
@@ -149,7 +150,7 @@ async function buildApp() {
 
   app.use(express.static(path.join(__dirname, 'public')));
 
-  // Digital Asset Links — verifies the Meowji Official Android app (TWA).
+  // Digital Asset Links — verifies the Avardo Official Android app (TWA).
   app.get('/.well-known/assetlinks.json', (req, res) => {
     res.json([{
       relation: ['delegate_permission/common.handle_all_urls'],

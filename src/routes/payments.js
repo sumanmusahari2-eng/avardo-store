@@ -288,7 +288,7 @@ module.exports = function (db) {
       amount,
       order_id: gwOrderId,
       redirect_url: PUBLIC_BASE + '/payment-return.html?oid=' + orderId,
-      remark1: ((req.app && req.app.get('brand') && req.app.get('brand').name) || 'Meowji Official') + ' order #' + orderId,
+      remark1: ((req.app && req.app.get('brand') && req.app.get('brand').name) || 'Avardo Official') + ' order #' + orderId,
       remark2: req.user.email || '',
     });
 
@@ -355,7 +355,7 @@ module.exports = function (db) {
       // gateway status newly flipped to FAILED.
       if (order.xtra_status !== 'FAILED') {
         notifyOrderFailed({
-          storeName: 'Meowji Official',
+          storeName: 'Avardo Official',
           adminUrl: 'https://www.mlbbstore.in/admin',
           order,
           kind: 'payment_failed',
@@ -624,7 +624,7 @@ function cryptoWebhookHandler(db) {
         ).run(order.id);
         if (updUnder.changes > 0) {
           notifyOrderFailed({
-            storeName: 'Meowji Official',
+            storeName: 'Avardo Official',
             adminUrl: 'https://www.mlbbstore.in/admin',
             order,
             kind: 'underpaid',
@@ -710,7 +710,7 @@ function divinexWebhookHandler(db) {
         ).run(order.id);
         if (updUnder.changes > 0) {
           notifyOrderFailed({
-            storeName: 'Meowji Official',
+            storeName: 'Avardo Official',
             adminUrl: 'https://www.mlbbstore.in/admin',
             order,
             kind: 'underpaid',
@@ -800,7 +800,7 @@ function busanWebhookHandler(db) {
       console.log('[busan] webhook: order #' + order.id + ' busan_status -> ' + busanStatus);
       if (busanStatus === 'failed') {
         notifyOrderFailed({
-          storeName: 'Meowji Official',
+          storeName: 'Avardo Official',
           adminUrl: 'https://www.mlbbstore.in/admin',
           order,
           kind: 'fulfilment_failed',

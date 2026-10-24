@@ -5,10 +5,10 @@
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Product — Meowji Official</title>
-<meta name="description" content="Buy game top-ups, gift cards & subscriptions at Meowji Official. Instant delivery, secure payments.">
+<title>Product — Avardo Official</title>
+<meta name="description" content="Buy game top-ups, gift cards & subscriptions at Avardo Official. Instant delivery, secure payments.">
 <meta property="og:type" content="product">
-<meta property="og:site_name" content="Meowji Official">
+<meta property="og:site_name" content="Avardo Official">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,10 +64,10 @@
   // SEO: dynamic meta + structured data per product (crawlers that render JS pick these up).
   function setSeoMeta(p, variant) {
     const name = variant ? variant.name + ' — ' + p.name : p.name;
-    const title = name + ' — Meowji Official | Buy Online';
+    const title = name + ' — Avardo Official | Buy Online';
     document.title = title;
     const price = variant ? Number(variant.price ?? variant.price_regular ?? p.price) : Number(p.price);
-    const descText = ('Buy ' + name + ' online at Meowji Official.' +
+    const descText = ('Buy ' + name + ' online at Avardo Official.' +
       (Number.isFinite(price) && price > 0 ? ' Price: \u20B9' + price + '.' : '') +
       ' Instant delivery, secure payments.').slice(0, 160);
     const setMeta = (attr, key, val) => {
@@ -77,7 +77,7 @@
     };
     setMeta('name', 'description', descText);
     setMeta('property', 'og:type', 'product');
-    setMeta('property', 'og:site_name', 'Meowji Official');
+    setMeta('property', 'og:site_name', 'Avardo Official');
     setMeta('property', 'og:title', title);
     setMeta('property', 'og:description', descText);
     setMeta('property', 'og:url', location.href.split('?')[0] + '?slug=' + encodeURIComponent(p.slug));
@@ -104,7 +104,7 @@
       name: name,
       description: descText,
       image: p.image_url || undefined,
-      brand: { '@type': 'Brand', name: 'Meowji Official' },
+      brand: { '@type': 'Brand', name: 'Avardo Official' },
       offers: offers,
     });
     // FAQ rich results — mirrors the visible "How to order" steps.

@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order — Meowji Official</title>
+<title>Order — Avardo Official</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
 <script>
 (function () {
   function render(o, settings) {
-    const siteName = settings.site_name || 'Meowji Official';
+    const siteName = settings.site_name || 'Avardo Official';
     const pay = o.payment || {};
     // Order totals are in the order's own currency (locked at checkout).
     const ocur = o.currency === 'USD' ? 'USD' : 'INR';
@@ -241,7 +241,7 @@
       <div class="mt-8 text-center">
         <a href="/account.html" class="text-sm font-semibold text-[#c2410c] hover:text-[#0f4bc0]">View all my orders</a>
       </div>`;
-    document.title = 'Order #' + o.id + ' — Meowji Official';
+    document.title = 'Order #' + o.id + ' — Avardo Official';
 
     // Payment method chooser: online (XtraGateway) vs manual WhatsApp (+ crypto).
     const methodCards = document.querySelectorAll('[data-paymethod]');

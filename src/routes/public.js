@@ -209,7 +209,7 @@ module.exports = function (db) {
       const row = await db.prepare('SELECT value FROM settings WHERE key = ?').get(k);
       return row ? row.value : '';
     };
-    res.json({ site_name: (await get('site_name')) || 'Meowji Official', whatsapp_number: await get('whatsapp_number'), site_logo: await get('site_logo'), site_logo_text: await get('site_logo_text'), favicon: (await get('favicon')) || '', how_to_order_image: (await get('how_to_order_image')) || '/images/how-to-order.webp', social_youtube: await get('social_youtube'), social_instagram: await get('social_instagram'), social_x: await get('social_x'), social_whatsapp: await get('social_whatsapp'), support_whatsapp_url: await get('support_whatsapp_url'), support_telegram_url: await get('support_telegram_url'), support_wechat_id: await get('support_wechat_id'), category_image_ratio: (await get('category_image_ratio')) || 'square', featured_layout: (await get('featured_layout')) || 'grid' });
+    res.json({ site_name: (await get('site_name')) || 'Avardo Official', whatsapp_number: await get('whatsapp_number'), site_logo: await get('site_logo'), site_logo_text: await get('site_logo_text'), favicon: (await get('favicon')) || '', how_to_order_image: (await get('how_to_order_image')) || '/images/how-to-order.webp', social_youtube: await get('social_youtube'), social_instagram: await get('social_instagram'), social_x: await get('social_x'), social_whatsapp: await get('social_whatsapp'), support_whatsapp_url: await get('support_whatsapp_url'), support_telegram_url: await get('support_telegram_url'), support_wechat_id: await get('support_wechat_id'), category_image_ratio: (await get('category_image_ratio')) || 'square', featured_layout: (await get('featured_layout')) || 'grid' });
   });
 
   r.get('/products', async (req, res) => {
@@ -415,7 +415,7 @@ module.exports = function (db) {
     const msg = await db.prepare('SELECT id, sender, body, created_at FROM support_messages WHERE id = ?')
       .get(info.lastInsertRowid);
     notifySupportMessage({
-      storeName: 'Meowji Official',
+      storeName: 'Avardo Official',
       adminUrl: 'https://www.mlbbstore.in/admin',
       customerName: t.customer_name,
       threadId: t.id,

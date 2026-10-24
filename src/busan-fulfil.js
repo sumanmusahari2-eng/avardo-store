@@ -175,7 +175,7 @@ async function fulfilBusanOrder(db, orderId) {
     console.error('[busan] order #' + orderId + ': fulfilment ' + status +
       ' (' + failures + '/' + attempted + ' failed). Admin attention needed; order left as paid, NOT delivered.');
     notifyOrderFailed({
-      storeName: 'Meowji Official',
+      storeName: 'Avardo Official',
       adminUrl: 'https://www.mlbbstore.in/admin',
       order,
       kind: 'fulfilment_failed',

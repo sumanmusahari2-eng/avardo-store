@@ -5,8 +5,8 @@
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search — Meowji Official</title>
-<meta name="description" content="Search Meowji Official for game top-ups, gift cards and subscriptions.">
+<title>Search — Avardo Official</title>
+<meta name="description" content="Search Avardo Official for game top-ups, gift cards and subscriptions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -57,7 +57,7 @@
   async function init() {
     await boot();
     const q = (new URLSearchParams(location.search).get('q') || '').trim();
-    document.title = q ? `Search: ${q} — Meowji Official` : 'Search — Meowji Official';
+    document.title = q ? `Search: ${q} — Avardo Official` : 'Search — Avardo Official';
     // Prefill the header search boxes with the current query
     document.querySelectorAll('form[data-search] input[name="q"]').forEach((i) => { i.value = q; });
 

@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — Meowji Official</title>
+<title>Blog — Avardo Official</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -68,8 +68,8 @@
     try {
       const p = await api('/api/posts/' + encodeURIComponent(slug));
       const canonical = location.origin + '/post/' + encodeURIComponent(p.slug);
-      document.title = p.title + ' — Meowji Official';
-      setMeta('name', 'description', p.excerpt || (p.title + ' — Meowji Official'));
+      document.title = p.title + ' — Avardo Official';
+      setMeta('name', 'description', p.excerpt || (p.title + ' — Avardo Official'));
       setMeta('property', 'og:title', p.title);
       setMeta('property', 'og:description', p.excerpt || '');
       setMeta('property', 'og:type', 'article');

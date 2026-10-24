@@ -12,11 +12,12 @@
   // Build-time branding for static files
   const fs = require('fs');
   const path = require('path');
-  const brandName = (process.env.BRAND_NAME || 'Meowji Official').trim();
+  const brandName = (process.env.BRAND_NAME || 'Avardo Official').trim();
   const baseUrl = (process.env.PUBLIC_BASE_URL || 'https://www.mlbbstore.in').trim();
+  let effectiveBrand = brandName; if (effectiveBrand === 'Avardo') effectiveBrand = 'Avardo Official';
   const brandDomain = baseUrl.replace(/^https?:\/\//, '').split('/')[0].toLowerCase();
   
-  if (brandName !== 'Meowji Official' || brandDomain !== 'www.mlbbstore.in') {
+  if (effectiveBrand !== 'Avardo Official' || brandDomain !== 'www.mlbbstore.in') {
     const publicDir = path.join(__dirname, '..', 'public');
     const files = fs.readdirSync(publicDir).filter(f => f.endsWith('.html'));
     let count = 0;
@@ -24,7 +25,7 @@
       const fp = path.join(publicDir, file);
       let content = fs.readFileSync(fp, 'utf8');
       const orig = content;
-      content = content.split('Meowji Official').join(brandName);
+      content = content.split('Avardo Official').join(effectiveBrand);
       content = content.split('www.mlbbstore.in').join(brandDomain);
       // Also replace bare domain (but not as part of www.)
       content = content.split('mlbbstore.in').join(brandDomain);
@@ -33,7 +34,7 @@
         count++;
       }
     }
-    console.log(`[vercel-build] branded ${count} HTML files as "${brandName}"`);
+    console.log(`[vercel-build] branded ${count} HTML files as "${effectiveBrand}"`);
   }
   process.exit(0);
 })().catch((e) => {
