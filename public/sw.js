@@ -1,7 +1,7 @@
 // Service worker: network-first for pages (design updates show immediately),
 // stale-while-revalidate for static assets, never cache API/admin.
 // Bump CACHE to force clients onto fresh caches.
-const CACHE = 'avardo-v2';
+const CACHE = 'avardo-v3';
 const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
