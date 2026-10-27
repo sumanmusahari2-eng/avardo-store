@@ -11,6 +11,16 @@ module.exports = function (db) {
 
   const tier = (req) => tierOf(req.user && req.user.role);
 
+  // Visitor region for the storefront's default currency (no DB, no login,
+  // no third-party lookup — free). Vercel's edge adds the visitor's country
+  // to every function request as x-vercel-ip-country. Absent/unknown -> null
+  // and the storefront keeps its INR default. Never cached: it varies per visitor.
+  r.get('/geo', async (req, res) => {
+    const raw = String(req.headers['x-vercel-ip-country'] || '').trim().toUpperCase();
+    res.set('Cache-Control', 'private, no-store');
+    res.json({ country: raw || null });
+  });
+
   // ---- Word-order search: every query word must prefix-match a word in the
   // ---- haystack, in the same order ("mobile legends" matches
   // ---- "Mobile Legends: Bang Bang"; "legends mobile" does not).

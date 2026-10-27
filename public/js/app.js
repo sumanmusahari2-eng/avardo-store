@@ -43,6 +43,31 @@ function setCurrency(code) {
   try { localStorage.setItem('mds_currency', code); } catch (_) {}
   location.reload();
 }
+// Region-based default currency: on a first visit (no saved preference),
+// India sees ₹ and everyone else sees $. Runs once — a manual pick always
+// wins, because it overwrites the saved value and this never runs again
+// after a value exists. Skipped on admin pages. If the lookup fails or the
+// region is unknown, nothing changes (INR default stays).
+(function autoCurrencyByRegion() {
+  try {
+    if (localStorage.getItem('mds_currency')) return;
+    if (/admin/i.test(location.pathname)) return;
+  } catch (_) { return; }
+  let timer = null;
+  try {
+    const ctrl = new AbortController();
+    timer = setTimeout(() => ctrl.abort(), 3000);
+    fetch('/api/geo', { credentials: 'include', signal: ctrl.signal })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        const code = data && data.country && data.country !== 'IN' ? 'USD' : 'INR';
+        try { localStorage.setItem('mds_currency', code); } catch (_) { return; }
+        if (code !== 'INR') location.reload();
+      })
+      .catch(() => {})
+      .finally(() => { if (timer) clearTimeout(timer); });
+  } catch (_) {}
+})();
 // fmt(): price in INR -> selected display currency. fmtINR(): always INR.
 const fmt = (n) => {
   const cur = CURRENCIES[getCurrency()];
