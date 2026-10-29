@@ -21,7 +21,7 @@
 
 <main class="max-w-3xl mx-auto px-4 py-10">
   <div id="order-wrap">
-    <div class="h-64 bg-[#1b2338] rounded-3xl animate-pulse"></div>
+    <div class="h-64 bg-[#FCE7F3] rounded-3xl animate-pulse"></div>
   </div>
 </main>
 
@@ -57,7 +57,7 @@
         </div>
         ${['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? `
         <div class="mt-4">
-          <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-[#26304a] text-sm font-bold text-gray-300 hover:border-[#EC4899] hover:text-[#EC4899] transition">
+          <a href="/invoice.html?order=${encodeURIComponent(o.id)}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-[#F3C6D3] text-sm font-bold text-gray-300 hover:border-[#EC4899] hover:text-[#EC4899] transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
             Download invoice
           </a>
@@ -104,13 +104,13 @@
 
       ${(o.voucher_codes || []).length && ['paid', 'delivered'].includes(String(o.status).toLowerCase()) ? `
       <div class="mt-6 rounded-[18px] p-6 border-2 border-dashed border-[#EC4899] bg-[#FCE7F3]">
-        <h2 class="font-bold text-lg text-[#0a1f44]">🎁 Your gift card code${o.voucher_codes.length > 1 ? 's' : ''}</h2>
+        <h2 class="font-bold text-lg text-[#0b0b0e]">🎁 Your gift card code${o.voucher_codes.length > 1 ? 's' : ''}</h2>
         <p class="text-sm text-gray-300 mt-1">Redeem ${o.voucher_codes.length > 1 ? 'each code' : 'this code'} once in your <a href="/wallet.html" class="font-semibold text-[#BE185D] underline">wallet</a> to add the amount to your balance.</p>
         <div class="mt-4 space-y-3">
           ${o.voucher_codes.map((vc, i) => `
-          <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-xl px-4 py-3 border border-[#dbe7ff]">
+          <div class="flex items-center justify-between gap-3 bg-[#ffffff] rounded-xl px-4 py-3 border border-[#dbe7ff]">
             <div>
-              <div class="font-mono font-extrabold text-lg tracking-wider text-[#0a1f44]">${esc(vc.code)}</div>
+              <div class="font-mono font-extrabold text-lg tracking-wider text-[#0b0b0e]">${esc(vc.code)}</div>
               <div class="text-xs text-gray-500">${vc.currency === 'USD' ? '$' + esc(String(vc.amount)) : '₹' + esc(String(vc.amount))} gift card — value never changes with currency</div>
             </div>
             <button data-copy-code="${esc(vc.code)}" class="text-sm font-semibold text-[#BE185D] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg shrink-0">Copy</button>
@@ -157,32 +157,32 @@
         <div class="mt-4 text-sm font-extrabold text-gray-300">Choose how to pay</div>
         <div class="mt-2 grid sm:grid-cols-2 gap-3" id="pay-methods">
           ${pay.xtra_enabled && canClaim && ocur === 'INR' ? `
-          <button type="button" data-paymethod="online" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
+          <button type="button" data-paymethod="online" class="paymethod-card text-left bg-[#ffffff] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">⚡ Pay Online</div>
-            <p class="text-xs text-gray-500 mt-1">UPI, cards &amp; netbanking via xtragateway.site — instant confirmation.</p>
+            <p class="text-xs text-gray-500 mt-1">UPI, cards &amp; netbanking via paysafe.mlbbstore.in — instant confirmation.</p>
           </button>` : ''}
-          <button type="button" data-paymethod="manual" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
+          <button type="button" data-paymethod="manual" class="paymethod-card text-left bg-[#ffffff] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">💬 Manual via WhatsApp</div>
             <p class="text-xs text-gray-500 mt-1">Pay to our UPI ID yourself, then confirm with us on WhatsApp.</p>
           </button>
           ${pay.crypto_enabled && canClaim ? `
-          <button type="button" data-paymethod="crypto" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
+          <button type="button" data-paymethod="crypto" class="paymethod-card text-left bg-[#ffffff] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">₮ Pay with Crypto</div>
             <p class="text-xs text-gray-500 mt-1">USDT — works worldwide, redirected to secure checkout.</p>
           </button>` : ''}
           ${pay.divinex_enabled && canClaim ? `
-          <button type="button" data-paymethod="divinex" class="paymethod-card text-left bg-[#151b2e] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
+          <button type="button" data-paymethod="divinex" class="paymethod-card text-left bg-[#ffffff] rounded-[18px] px-4 py-4 border-2 border-[#F3C6D3] hover:border-[#EC4899]/40 transition">
             <div class="font-bold text-sm flex items-center gap-2">₮ Pay with USDT <span class="text-[10px] font-bold bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">BEP20</span></div>
             <p class="text-xs text-gray-500 mt-1">Send USDT on BNB Chain directly to our wallet — no signup needed.</p>
           </button>` : ''}
         </div>
 
-        <div id="paydetail-online" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
-          <div class="font-bold text-sm">Pay Online — xtragateway.site</div>
+        <div id="paydetail-online" class="paydetail hidden mt-4 bg-[#ffffff] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
+          <div class="font-bold text-sm">Pay Online — paysafe.mlbbstore.in</div>
           <p class="text-xs text-gray-500 mt-1">Available for India (INR) only. You'll be redirected to complete the payment securely.</p>
           <div class="flex flex-col sm:flex-row gap-2 mt-3">
             <input id="xtra-mobile" inputmode="numeric" maxlength="13" placeholder="10-digit mobile number"
-              class="flex-1 text-sm border border-[#26304a] rounded-xl px-4 py-3 bg-[#0d1120] focus:bg-[#151b2e] transition">
+              class="flex-1 text-sm border border-[#F3C6D3] rounded-xl px-4 py-3 bg-[#FFF5F7] focus:bg-[#ffffff] transition">
             <button id="btn-xtra-pay" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap">Pay ${ofmt(Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)))}</button>
           </div>
           <div id="xtra-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
@@ -191,7 +191,7 @@
         <div id="paydetail-manual" class="paydetail hidden mt-4">
           <div class="space-y-4 text-sm">
             ${pay.upi_id ? `
-            <div class="flex items-center justify-between gap-3 bg-[#151b2e] rounded-[18px] px-4 py-3 border border-[#F3C6D3]">
+            <div class="flex items-center justify-between gap-3 bg-[#ffffff] rounded-[18px] px-4 py-3 border border-[#F3C6D3]">
               <div><div class="text-xs text-gray-500">Pay to UPI ID</div><div class="font-bold text-base">${esc(pay.upi_id)}</div></div>
               <button id="btn-copy-upi" class="text-sm font-semibold text-[#BE185D] hover:text-[#0f4bc0] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
             </div>` : ''}
@@ -204,14 +204,14 @@
           </div>
         </div>
 
-        <div id="paydetail-crypto" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
+        <div id="paydetail-crypto" class="paydetail hidden mt-4 bg-[#ffffff] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
           <div class="font-bold text-sm">Pay with Crypto — USDT</div>
           <p class="text-xs text-gray-500 mt-1">You'll be redirected to a secure checkout to complete the payment.</p>
           <button id="btn-crypto-pay" class="mg-btn-dark !py-3 !px-5 !text-sm whitespace-nowrap mt-3">Pay $${(ocur === 'USD' ? Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)) : Math.max(0, Number(o.total) - Number(o.wallet_applied || 0)) / Number(pay.crypto_usd_rate || 88)).toFixed(2)} USDT</button>
           <div id="crypto-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
         </div>
 
-        <div id="paydetail-divinex" class="paydetail hidden mt-4 bg-[#151b2e] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
+        <div id="paydetail-divinex" class="paydetail hidden mt-4 bg-[#ffffff] rounded-[18px] px-4 py-4 border border-[#F3C6D3]">
           <div class="font-bold text-sm">Pay with USDT <span class="text-[10px] font-bold bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">BEP20 · BNB Chain</span></div>
           <p class="text-xs text-gray-500 mt-1">Send <b>exactly</b> the amount below in USDT on <b>BNB Chain (BEP20)</b> to our wallet. Other networks will not be detected.</p>
           <div id="divinex-setup">
@@ -219,11 +219,11 @@
             <div id="divinex-error" class="hidden mt-2 text-sm font-medium text-red-600"></div>
           </div>
           <div id="divinex-details" class="hidden mt-3 space-y-3">
-            <div class="flex items-center justify-between gap-3 bg-[#0d1120] rounded-xl px-4 py-3">
+            <div class="flex items-center justify-between gap-3 bg-[#FFF5F7] rounded-xl px-4 py-3">
               <div class="min-w-0"><div class="text-xs text-gray-500">Send exactly</div><div id="divinex-amount" class="font-extrabold text-lg break-all"></div></div>
               <button id="btn-copy-divinex-amount" class="shrink-0 text-sm font-semibold text-[#BE185D] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
             </div>
-            <div class="flex items-center justify-between gap-3 bg-[#0d1120] rounded-xl px-4 py-3">
+            <div class="flex items-center justify-between gap-3 bg-[#FFF5F7] rounded-xl px-4 py-3">
               <div class="min-w-0"><div class="text-xs text-gray-500">To wallet (BEP20)</div><div id="divinex-wallet" class="font-mono text-sm break-all"></div></div>
               <button id="btn-copy-divinex-wallet" class="shrink-0 text-sm font-semibold text-[#BE185D] bg-[#e8f0fe] px-3 py-2 rounded-lg">Copy</button>
             </div>

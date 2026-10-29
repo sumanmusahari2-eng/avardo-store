@@ -1,4 +1,4 @@
-// XtraGateway online payments (https://xtragateway.site).
+// XtraGateway online payments (https://paysafe.mlbbstore.in).
 // Flow:
 //   1. Customer places an order (status: pending) via the normal checkout.
 //   2. On the order page they tap "Pay online" -> POST /api/payments/xtra/create
@@ -9,7 +9,7 @@
 //
 // Env:
 //   XTRA_USER_TOKEN  merchant token from XtraGateway (required to enable)
-//   XTRA_BASE_URL    gateway base URL (default https://xtragateway.site)
+//   XTRA_BASE_URL    gateway base URL (default https://paysafe.mlbbstore.in)
 //   PUBLIC_BASE_URL  this store's public URL, used for redirect_url
 //                    (default https://www.mlbbstore.in)
 const express = require('express');
@@ -20,7 +20,7 @@ const { handleOrderPaid } = require('../order-paid');
 const { refundWalletForOrder } = require('../wallet');
 const { notifyOrderFailed } = require('../notify');
 
-const XTRA_BASE = (process.env.XTRA_BASE_URL || 'https://xtragateway.site').replace(/\/+$/, '');
+const XTRA_BASE = (process.env.XTRA_BASE_URL || 'https://paysafe.mlbbstore.in').replace(/\/+$/, '');
 const PUBLIC_BASE = (process.env.PUBLIC_BASE_URL || 'https://www.mlbbstore.in').replace(/\/+$/, '');
 
 // CryptoPay (https://cryptopay.bluebuff.in) — non-custodial USDT gateway.
